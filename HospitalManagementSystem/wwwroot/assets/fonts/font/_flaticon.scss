@@ -1,0 +1,148 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 14/07/2019 14:28
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff2") format("woff2"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+    .fi:before{
+        display: inline-block;
+  font-family: "Flaticon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+    }
+
+    .flaticon-doctor:before { content: "\f100"; }
+.flaticon-doctor-1:before { content: "\f101"; }
+.flaticon-medal:before { content: "\f102"; }
+.flaticon-quote:before { content: "\f103"; }
+.flaticon-back:before { content: "\f104"; }
+.flaticon-next:before { content: "\f105"; }
+.flaticon-plus:before { content: "\f106"; }
+.flaticon-minus:before { content: "\f107"; }
+.flaticon-automation:before { content: "\f108"; }
+.flaticon-tooth:before { content: "\f109"; }
+.flaticon-tooth-1:before { content: "\f10a"; }
+.flaticon-tooth-2:before { content: "\f10b"; }
+.flaticon-tooth-3:before { content: "\f10c"; }
+.flaticon-search:before { content: "\f10d"; }
+.flaticon-supermarket:before { content: "\f10e"; }
+.flaticon-envelope:before { content: "\f10f"; }
+.flaticon-calendar:before { content: "\f110"; }
+.flaticon-phone:before { content: "\f111"; }
+.flaticon-placeholder:before { content: "\f112"; }
+.flaticon-phone-1:before { content: "\f113"; }
+.flaticon-brain:before { content: "\f114"; }
+.flaticon-heart:before { content: "\f115"; }
+.flaticon-eye:before { content: "\f116"; }
+.flaticon-heart-1:before { content: "\f117"; }
+.flaticon-time:before { content: "\f118"; }
+.flaticon-medal-1:before { content: "\f119"; }
+.flaticon-lab:before { content: "\f11a"; }
+.flaticon-multimedia:before { content: "\f11b"; }
+.flaticon-doctor-2:before { content: "\f11c"; }
+.flaticon-breast:before { content: "\f11d"; }
+.flaticon-fat:before { content: "\f11e"; }
+.flaticon-power:before { content: "\f11f"; }
+.flaticon-cell:before { content: "\f120"; }
+.flaticon-test:before { content: "\f121"; }
+.flaticon-slim-right:before { content: "\f122"; }
+.flaticon-phrase:before { content: "\f123"; }
+.flaticon-close:before { content: "\f124"; }
+.flaticon-edit:before { content: "\f125"; }
+.flaticon-star:before { content: "\f126"; }
+.flaticon-correct:before { content: "\f127"; }
+.flaticon-eye-drops:before { content: "\f128"; }
+.flaticon-heart-2:before { content: "\f129"; }
+.flaticon-bacteria:before { content: "\f12a"; }
+.flaticon-blood:before { content: "\f12b"; }
+.flaticon-stomach:before { content: "\f12c"; }
+.flaticon-joint:before { content: "\f12d"; }
+.flaticon-lung:before { content: "\f12e"; }
+.flaticon-cheek:before { content: "\f12f"; }
+.flaticon-face:before { content: "\f130"; }
+.flaticon-cell-1:before { content: "\f131"; }
+.flaticon-drug:before { content: "\f132"; }
+.flaticon-physiotherapy:before { content: "\f133"; }
+.flaticon-tooth-4:before { content: "\f134"; }
+.flaticon-bones:before { content: "\f135"; }
+    
+    $font-Flaticon-doctor: "\f100";
+    $font-Flaticon-doctor-1: "\f101";
+    $font-Flaticon-medal: "\f102";
+    $font-Flaticon-quote: "\f103";
+    $font-Flaticon-back: "\f104";
+    $font-Flaticon-next: "\f105";
+    $font-Flaticon-plus: "\f106";
+    $font-Flaticon-minus: "\f107";
+    $font-Flaticon-automation: "\f108";
+    $font-Flaticon-tooth: "\f109";
+    $font-Flaticon-tooth-1: "\f10a";
+    $font-Flaticon-tooth-2: "\f10b";
+    $font-Flaticon-tooth-3: "\f10c";
+    $font-Flaticon-search: "\f10d";
+    $font-Flaticon-supermarket: "\f10e";
+    $font-Flaticon-envelope: "\f10f";
+    $font-Flaticon-calendar: "\f110";
+    $font-Flaticon-phone: "\f111";
+    $font-Flaticon-placeholder: "\f112";
+    $font-Flaticon-phone-1: "\f113";
+    $font-Flaticon-brain: "\f114";
+    $font-Flaticon-heart: "\f115";
+    $font-Flaticon-eye: "\f116";
+    $font-Flaticon-heart-1: "\f117";
+    $font-Flaticon-time: "\f118";
+    $font-Flaticon-medal-1: "\f119";
+    $font-Flaticon-lab: "\f11a";
+    $font-Flaticon-multimedia: "\f11b";
+    $font-Flaticon-doctor-2: "\f11c";
+    $font-Flaticon-breast: "\f11d";
+    $font-Flaticon-fat: "\f11e";
+    $font-Flaticon-power: "\f11f";
+    $font-Flaticon-cell: "\f120";
+    $font-Flaticon-test: "\f121";
+    $font-Flaticon-slim-right: "\f122";
+    $font-Flaticon-phrase: "\f123";
+    $font-Flaticon-close: "\f124";
+    $font-Flaticon-edit: "\f125";
+    $font-Flaticon-star: "\f126";
+    $font-Flaticon-correct: "\f127";
+    $font-Flaticon-eye-drops: "\f128";
+    $font-Flaticon-heart-2: "\f129";
+    $font-Flaticon-bacteria: "\f12a";
+    $font-Flaticon-blood: "\f12b";
+    $font-Flaticon-stomach: "\f12c";
+    $font-Flaticon-joint: "\f12d";
+    $font-Flaticon-lung: "\f12e";
+    $font-Flaticon-cheek: "\f12f";
+    $font-Flaticon-face: "\f130";
+    $font-Flaticon-cell-1: "\f131";
+    $font-Flaticon-drug: "\f132";
+    $font-Flaticon-physiotherapy: "\f133";
+    $font-Flaticon-tooth-4: "\f134";
+    $font-Flaticon-bones: "\f135";
