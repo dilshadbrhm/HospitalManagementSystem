@@ -1,0 +1,15 @@
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\bin\Debug\net8.0\HospitalManagement.Application.deps.json
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\bin\Debug\net8.0\HospitalManagement.Application.runtimeconfig.json
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\bin\Debug\net8.0\HospitalManagement.Application.dll
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\bin\Debug\net8.0\HospitalManagement.Application.pdb
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.AssemblyInfo.cs
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.sourcelink.json
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.dll
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\refint\HospitalManagement.Application.dll
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.pdb
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\HospitalManagement.Application.genruntimeconfig.cache
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\Core\HospitalManagement.Application\obj\Debug\net8.0\ref\HospitalManagement.Application.dll
