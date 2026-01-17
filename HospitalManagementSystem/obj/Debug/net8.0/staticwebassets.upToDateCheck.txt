@@ -114,6 +114,7 @@ wwwroot\assets\image\client\hm-5-client-2.png
 wwwroot\assets\image\client\hm-5-client-3.png
 wwwroot\assets\image\client\hm-5-client-4.png
 wwwroot\assets\image\client\hm-5-client-5.png
+wwwroot\assets\image\default-doctor.jpg
 wwwroot\assets\image\default-logo.png
 wwwroot\assets\image\departments\dep_sidebar_right_ban-1.jpg
 wwwroot\assets\image\departments\dep_sidebar_right_ban-2.jpg
