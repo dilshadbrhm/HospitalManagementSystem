@@ -21,8 +21,8 @@
     <link rel="stylesheet" type="text/css" href="~/assets/css/responsive.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/font/flaticon.css">
     <!-- Favicon -->
-    <link rel="icon" type="~/assets/image/png" href="~/assets/image/fav/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="~/assets/image/png" href="~/assets/image/fav/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="~/assets/image/fav/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="~/assets/image/fav/favicon-16x16.png" sizes="16x16">
 
 </head>
 <body class="sbar_color_one">
@@ -71,51 +71,31 @@
                     <button class="navbar-toggler toggler-spring"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav navbar-mobile ml-auto mr-auto">
-                            <li class="nav-item dropdown activee">
-                                <a class="nav-link link_hd" href="#">  Home  </a>
-                                <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="index.html">Home-1</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="index-2.html">Home-2</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="index-3.html">Home-3</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="index-4.html">Home-4</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="index-5.html">Home-5</a></li>
-
-                                </ul>
+                            <li class="nav-item activee no-dropdown">
+                                <a class="nav-link link_hd" href="index.html">Home</a>
                             </li>
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link link_hd" href="#">  Departments </a>
                                 <ul class="navbar-nav submenu">
                                     <li class="nav-item"><a class="nav-link" href="department-grid-3-column.html">Department grid 3 column</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="department-grid-4-column.html">Department grid 4 column</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="department-listing.html">Department listing</a></li>
                                     <li class="nav-item"><a class="nav-link" href="department-with-icon.html">Department with icons</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="department-with-sidebar.html">Single department with sidebar</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="department-with-no-sidebar.html">Single department no sidebar</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link link_hd" href="#">  Pages  </a>
                                 <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="case-grid.html">Case gird</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="case-masonry.html">Case masonry</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="care-listing.html">Care listing</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="single-case.html">Single case</a></li>
                                     <li class="nav-item"><a class="nav-link" href="aboutus.html">About us</a></li>
                                     <li class="nav-item"><a class="nav-link" href="contact.html">Contact us</a></li>
                                     <li class="nav-item"><a class="nav-link" href="our-doctors.html">Our doctors</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="single-doctors.html">Single doctor</a></li>
                                     <li class="nav-item"><a class="nav-link" href="book-an-appoinment.html">Book an appointment</a></li>
                                     <li class="nav-item"><a class="nav-link" href="time-table.html">Timetable</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="faqs.html">FAQs</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link link_hd" href="#">  Blog  </a>
                                 <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="blog-grid.html">Blog grid</a></li>
                                     <li class="nav-item"><a class="nav-link" href="blog-with-sidebar.html">Blog with sidebar</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="blog-single-post.html">Single post</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -188,112 +168,113 @@
                     </div>
                 </div>
             </div>
-            @RenderBody()
-            <!--------footer-------->
-            <div class="footer home-one">
-                <div class="container">
-                    <div class="row">
+            <!--End Main Header -->
+        </header>
+        @RenderBody()
+        <div class="footer home-one">
+            <div class="container">
+                <div class="row">
 
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="footer-widget first">
-                                <h2>ABOUT US</h2>
-                                <div class="footer-text">
-                                    <p>As the only hospital in our growing county, things are buzzing as we expand our facilities and services. We are an intimate, 200 licensed bed hospital and the caregivers of neighbors we love.</p>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="footer-widget first">
+                            <h2>ABOUT US</h2>
+                            <div class="footer-text">
+                                <p>As the only hospital in our growing county, things are buzzing as we expand our facilities and services. We are an intimate, 200 licensed bed hospital and the caregivers of neighbors we love.</p>
 
-                                    <ul class="social-media">
-                                        <li><a href="#" target="_blank"><i class="fa fa-facebook-f"></i></a>  </li>
-                                        <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a>  </li>
-                                        <li><a href="#" target="_blank"><i class="fa fa-vimeo"></i></a>  </li>
-                                        <li><a href="#" target="_blank"><i class="fa fa-wifi"></i></a>  </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-                            <div class="footer-widget two">
-                                <h2>DEPARTMENTS</h2>
-                                <div class="footer-text">
-                                    <ul>
-                                        <li><a href="#"> Psychiatry</a></li>
-                                        <li><a href="#">Ophthalmology</a></li>
-                                        <li><a href="#">Cardiology </a></li>
-                                        <li><a href="#">Immunology </a></li>
-                                        <li><a href="#">Hematology </a></li>
-                                        <li><a href="#">Gastroenterology </a></li>
-                                        <li><a href="#">Orthopedics </a></li>
-                                        <li><a href="#">Pulmonary</a></li>
-                                    </ul>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
-                            <div class="footer-widget two">
-                                <h2>LINKS</h2>
-                                <div class="footer-text">
-                                    <ul>
-                                        <li><a href="#"> About Us</a></li>
-                                        <li><a href="#">Appointment</a></li>
-                                        <li><a href="#">Contact Us </a></li>
-                                        <li><a href="#">Blog </a></li>
-                                        <li><a href="#">Doctors</a></li>
-                                        <li><a href="#">Gallery </a></li>
-                                        <li><a href="#">Timetable </a></li>
-                                        <li><a href="#">FAQs</a></li>
-                                    </ul>
-
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                            <div class="footer-widget third">
-                                <h2>NEWSLETTER</h2>
-                                <div class="footer-text">
-                                    <p>Subscribe to our newsletter. We are not spammers.!</p>
-                                    <form>
-                                        <div class="form-group">
-                                            <input type="email" id="email" placeholder="Enter Your Email*"><br />
-                                            <button class="theme-btn" type="submit">SUBSCRIBE</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-last home-one">
-                <div class="container">
-                    <div class="row clearfix">
-                        <div class="col-lg-12">
-                            <div class="left">
-                                <p>© 2019 <span>Meditex.</span> All rights reserved.</p>
-                            </div>
-                            <div class="right">
-                                <ul>
-                                    <li><a href="#">Privacy Policy    </a></li>
-                                    <li><a href="#"> Terms & Conditions   </a></li>
-                                    <li><a href="#">  Help Center</a></li>
+                                <ul class="social-media">
+                                    <li><a href="#" target="_blank"><i class="fa fa-facebook-f"></i></a>  </li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a>  </li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-vimeo"></i></a>  </li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-wifi"></i></a>  </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="footer-widget two">
+                            <h2>DEPARTMENTS</h2>
+                            <div class="footer-text">
+                                <ul>
+                                    <li><a href="#"> Psychiatry</a></li>
+                                    <li><a href="#">Ophthalmology</a></li>
+                                    <li><a href="#">Cardiology </a></li>
+                                    <li><a href="#">Immunology </a></li>
+                                    <li><a href="#">Hematology </a></li>
+                                    <li><a href="#">Gastroenterology </a></li>
+                                    <li><a href="#">Orthopedics </a></li>
+                                    <li><a href="#">Pulmonary</a></li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="footer-widget two">
+                            <h2>LINKS</h2>
+                            <div class="footer-text">
+                                <ul>
+                                    <li><a href="#"> About Us</a></li>
+                                    <li><a href="#">Appointment</a></li>
+                                    <li><a href="#">Contact Us </a></li>
+                                    <li><a href="#">Blog </a></li>
+                                    <li><a href="#">Doctors</a></li>
+                                    <li><a href="#">Gallery </a></li>
+                                    <li><a href="#">Timetable </a></li>
+                                    <li><a href="#">FAQs</a></li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="footer-widget third">
+                            <h2>NEWSLETTER</h2>
+                            <div class="footer-text">
+                                <p>Subscribe to our newsletter. We are not spammers.!</p>
+                                <form>
+                                    <div class="form-group">
+                                        <input type="email" id="email" placeholder="Enter Your Email*"><br />
+                                        <button class="theme-btn" type="submit">SUBSCRIBE</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
+        </div>
 
-            <!--------footer-------->
-            <!-------backtotop-------->
-            <a href="#" id="scroll" class="default-bg" style="display: none;"><span></span></a>
-            <!-------backtotop-------->
-            <!------main-content------>
-            </main>
-            <!------main-slider------>
+        <div class="footer-last home-one">
+            <div class="container">
+                <div class="row clearfix">
+                    <div class="col-lg-12">
+                        <div class="left">
+                            <p>© 2019 <span>Meditex.</span> All rights reserved.</p>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><a href="#">Privacy Policy    </a></li>
+                                <li><a href="#"> Terms & Conditions   </a></li>
+                                <li><a href="#">  Help Center</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--------footer-------->
+        <!-------backtotop-------->
+        <a href="#" id="scroll" class="default-bg" style="display: none;"><span></span></a>
+        <!-------backtotop-------->
+        <!------main-content------>
+        </main>
+        <!------main-slider------>
     </div>
 
 

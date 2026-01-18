@@ -2,6 +2,8 @@ using HospitalManagement.Domain;
 using HospitalManagement.Infrastructure.Persistence;
 using HospitalManagementSystem.Models;
 using HospitalManagementSystem.ViewModels;
+using HospitalManagementSystem.ViewModels.Department;
+using HospitalManagementSystem.ViewModels.Doctors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -19,29 +21,31 @@ namespace HospitalManagementSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Department> departments = await _context.Departments
-                .Where(d => !d.IsDeleted)
-                .OrderBy(d => d.Name)
-                .Take(6)
-                .ToListAsync();
-
-            List<Doctor> doctors = await _context.Doctors
-                .Where(d => !d.IsDeleted)
-                .OrderByDescending(d => d.CreatedAt)
-                .Take(8)
-                .Include(d => d.Department)
-                .ToListAsync();
-
-            HomeVM homeVM = new HomeVM
+            var model = new HomeVM
             {
-                Departments = departments,
-                FeaturedDoctors = doctors,
-                TotalDoctors = await _context.Doctors.CountAsync(d => !d.IsDeleted),
-                TotalPatients = await _context.Patients.CountAsync(p => !p.IsDeleted),
-                TotalDepartments = await _context.Departments.CountAsync(d => !d.IsDeleted)
+                Departments = _context.Departments
+              .Select(d => new DepartmentListVM
+              {
+                  Id = d.Id,
+                  Name = d.Name,
+                    ShortDescription = d.ShortDescription
+
+              })
+              .ToList(),
+
+                Doctors = _context.Doctors
+              .Select(d => new DoctorListVM
+              {
+                  Id = d.Id,
+                  FullName = d.FullName,
+                  ImagePath = d.ImagePath,
+                  DepartmentName = d.Department.Name,
+                  InternshipDetails = d.InternshipDetails
+              })
+              .ToList()
             };
 
-            return View(homeVM);
+            return View(model);
         }
         public IActionResult About()
         {

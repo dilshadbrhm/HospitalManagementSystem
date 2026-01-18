@@ -1,11 +1,13 @@
 ﻿using HospitalManagement.Domain;
+using HospitalManagementSystem.ViewModels.Department;
+using HospitalManagementSystem.ViewModels.Doctors;
 
 namespace HospitalManagementSystem.ViewModels
 {
     public class HomeVM
     {
-        public List<Department> Departments { get; set; }
-        public List<Doctor> FeaturedDoctors { get; set; }
+        public List<DepartmentListVM>? Departments { get; set; }
+        public List<DoctorListVM> Doctors { get; set; }
         public int TotalDoctors { get; set; }
         public int TotalPatients { get; set; }
         public int TotalDepartments { get; set; }

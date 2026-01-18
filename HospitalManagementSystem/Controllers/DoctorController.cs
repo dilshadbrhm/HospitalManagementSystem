@@ -21,55 +21,9 @@ namespace HospitalManagementSystem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string? search, int? departmentId, int page = 1)
+        public async Task<IActionResult> Index()
         {
-            IQueryable<Doctor> query = _context.Doctors.Where(d => !d.IsDeleted);
-
-            if (search != null)
-            {
-                query = query.Where(d => d.FirstName.Contains(search) ||
-                                        d.LastName.Contains(search) ||
-                                        d.Specialization.Contains(search));
-            }
-
-            if (departmentId != null)
-            {
-                query = query.Where(d => d.DepartmentId == departmentId);
-            }
-
-            query = query.OrderBy(d => d.LastName);
-
-            int totalCount = await query.CountAsync();
-            int totalPage = (int)Math.Ceiling((double)totalCount / 9);
-
-            query = query.Skip((page - 1) * 9).Take(9);
-
-            DoctorListVM doctorListVM = new()
-            {
-                Doctors = await query.Select(d => new GetDoctorVM
-                {
-                    Id = d.Id,
-                    FirstName = d.FirstName,
-                    LastName = d.LastName,
-                    Specialization = d.Specialization,
-                    DepartmentName = d.Department.Name,
-                    ConsultationFee = d.ConsultationFee,
-                    ProfilePicture = d.ProfilePicture,
-                    Bio = d.Bio
-                }).ToListAsync(),
-
-                Departments = await _context.Departments
-                    .Where(d => !d.IsDeleted)
-                    .OrderBy(d => d.Name)
-                    .ToListAsync(),
-
-                Search = search,
-                DepartmentId = departmentId,
-                CurrentPage = page,
-                TotalPages = totalPage
-            };
-
-            return View(doctorListVM);
+            return View();
         }
 
         public async Task<IActionResult> Details(int? id)
