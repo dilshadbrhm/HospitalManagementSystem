@@ -35,3 +35,5 @@ C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\HospitalManageme
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\HospitalManagement.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-Thin.ttf
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\HospitalManagement.Infrastructure\bin\Debug\net8.0\LatoFont\Lato-ThinItalic.ttf
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\HospitalManagement.Infrastructure\bin\Debug\net8.0\LatoFont\OFL.txt
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\HospitalManagement.Infrastructure\bin\Debug\net8.0\HospitalManagement.Application.dll
+C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\src\HospitalManagement.Infrastructure\bin\Debug\net8.0\HospitalManagement.Application.pdb

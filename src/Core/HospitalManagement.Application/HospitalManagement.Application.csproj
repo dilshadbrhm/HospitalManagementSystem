@@ -8,20 +8,16 @@
 
   <ItemGroup>
     <Folder Include="Dtos\Appointment\" />
-    <Folder Include="Dtos\Doctor\" />
     <Folder Include="Dtos\LabResult\" />
-    <Folder Include="Dtos\Department\" />
     <Folder Include="Dtos\Payment\" />
     <Folder Include="Dtos\Prescription\" />
-    <Folder Include="Dtos\Patient\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Mappings\" />
     <Folder Include="Validators\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.14.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
       <PrivateAssets>all</PrivateAssets>
@@ -34,6 +30,10 @@
     <PackageReference Include="MimeKit" Version="4.14.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="QuestPDF" Version="2025.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HospitalManagement.Domain\HospitalManagement.Domain.csproj" />
   </ItemGroup>
 
 </Project>

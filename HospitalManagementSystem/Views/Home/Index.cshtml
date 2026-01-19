@@ -1,4 +1,4 @@
-﻿@model HospitalManagementSystem.ViewModels.HomeVM
+﻿@model HospitalManagement.Application.Dtos.HomeDto
 
 <main class="main-content">
     <!------main-slider------>
@@ -268,13 +268,13 @@
                          { 
                              <div class="best-doctor-outer">
                                 <div class="image">
-                                <img src="~/assets/image/@doctor.ImagePath" class="img-fluid" alt="best-doctors" />
+                                <img src="~/assets/image/@doctor.ProfilePicture" class="img-fluid" alt="best-doctors" />
                                     <a asp-controller="Doctor" asp-action="Details" asp-route-id="@doctor.Id" class="link"></a>
                                 </div>
                                 <div class="content-inner">
                                     <h2> <a asp-controller="Doctor" asp-action="Details" asp-route-id="@doctor.Id">Dr.@doctor.FullName </a> </h2>
                                     <span>@doctor.DepartmentName</span>
-                                    <p>@doctor.InternshipDetails</p>
+                                    <p>@doctor.Bio</p>
                                 <ul>
                                  <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                                     <li><a href="#"><i class="fa fa-twitter"></i></a></li>

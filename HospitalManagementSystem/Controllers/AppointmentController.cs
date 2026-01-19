@@ -2,7 +2,6 @@
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Domain.Enums;
 using HospitalManagement.Infrastructure.Persistence;
-using HospitalManagementSystem.ViewModels.Appointment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

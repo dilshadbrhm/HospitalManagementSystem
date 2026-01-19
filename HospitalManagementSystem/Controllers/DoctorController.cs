@@ -2,9 +2,6 @@
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Domain.Enums;
 using HospitalManagement.Infrastructure.Persistence;
-using HospitalManagementSystem.ViewModels;
-using HospitalManagementSystem.ViewModels.Appointment;
-using HospitalManagementSystem.ViewModels.Doctors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +20,7 @@ namespace HospitalManagementSystem.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            return  View();
         }
 
         public async Task<IActionResult> Details(int? id)

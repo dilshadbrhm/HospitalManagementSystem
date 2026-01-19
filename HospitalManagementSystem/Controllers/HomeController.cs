@@ -1,9 +1,7 @@
+using HospitalManagement.Application.Interfaces;
 using HospitalManagement.Domain;
 using HospitalManagement.Infrastructure.Persistence;
 using HospitalManagementSystem.Models;
-using HospitalManagementSystem.ViewModels;
-using HospitalManagementSystem.ViewModels.Department;
-using HospitalManagementSystem.ViewModels.Doctors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -12,40 +10,18 @@ namespace HospitalManagementSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context;
 
-        public HomeController(AppDbContext context)
+        private readonly IHomeService _homeService;
+
+        public HomeController(IHomeService homeService)
         {
-            _context = context;
+            _homeService = homeService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var model = new HomeVM
-            {
-                Departments = _context.Departments
-              .Select(d => new DepartmentListVM
-              {
-                  Id = d.Id,
-                  Name = d.Name,
-                    ShortDescription = d.ShortDescription
-
-              })
-              .ToList(),
-
-                Doctors = _context.Doctors
-              .Select(d => new DoctorListVM
-              {
-                  Id = d.Id,
-                  FullName = d.FullName,
-                  ImagePath = d.ImagePath,
-                  DepartmentName = d.Department.Name,
-                  InternshipDetails = d.InternshipDetails
-              })
-              .ToList()
-            };
-
-            return View(model);
+            var viewModel = await _homeService.GetHomeDataAsync();
+            return View(viewModel);
         }
         public IActionResult About()
         {

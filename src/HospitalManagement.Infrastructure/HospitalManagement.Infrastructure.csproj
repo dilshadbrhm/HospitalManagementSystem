@@ -10,9 +10,7 @@
     <Folder Include="Identity\" />
     <Folder Include="Services\" />
     <Folder Include="Persistence\Configurations\" />
-    <Folder Include="Persistence\Migrations\" />
     <Folder Include="Persistence\Seeds\" />
-    <Folder Include="Persistence\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core\HospitalManagement.Application\HospitalManagement.Application.csproj" />
     <ProjectReference Include="..\Core\HospitalManagement.Domain\HospitalManagement.Domain.csproj" />
   </ItemGroup>
 
