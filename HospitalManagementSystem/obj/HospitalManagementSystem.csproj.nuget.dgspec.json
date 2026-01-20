@@ -190,6 +190,10 @@
               "target": "Package",
               "version": "[8.0.22, )"
             },
+            "Microsoft.Extensions.Options.ConfigurationExtensions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "MimeKit": {
               "target": "Package",
               "version": "[4.14.0, )"

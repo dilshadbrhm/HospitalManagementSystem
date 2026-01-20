@@ -32,25 +32,26 @@
                                     <input asp-for="FirstName" placeholder="First Name" />
                                     <span class="text-danger" asp-validation-for="FirstName"></span>
                                 </div>
+                                <br />
 
                                 <div class="col-md-6 col-12">
                                     <label asp-for="LastName">Last Name</label>
                                     <input asp-for="LastName" placeholder="Last Name" />
                                     <span class="text-danger" asp-validation-for="LastName"></span>
                                 </div>
-
+                                <br />
                                 <div class="col-md-12 col-12">
                                     <label asp-for="Email">Email</label>
                                     <input asp-for="Email" placeholder="Email" />
                                     <span class="text-danger" asp-validation-for="Email"></span>
                                 </div>
-
+                                <br />
                                 <div class="col-md-12 col-12">
                                     <label asp-for="Phone">Phone</label>
                                     <input asp-for="Phone" placeholder="Phone" />
                                     <span class="text-danger" asp-validation-for="Phone"></span>
                                 </div>
-
+                                <br />
                                 <div class="col-md-12 col-12">
                                     <label asp-for="UserType">User Type</label>
                                     <select asp-for="UserType" id="userTypeSelect">
@@ -60,7 +61,7 @@
                                     </select>
                                     <span class="text-danger" asp-validation-for="UserType"></span>
                                 </div>
-
+                                <br />
                                 <div id="doctorFields" style="display: none;">
                                     <div class="col-md-12 col-12">
                                         <label asp-for="DepartmentId">Department</label>
@@ -75,38 +76,38 @@
                                             }
                                         </select>
                                     </div>
-
+                                    <br />
                                     <div class="col-md-12 col-12">
                                         <label asp-for="Specialization">Specialization</label>
                                         <input asp-for="Specialization" placeholder="Specialization" />
                                     </div>
-
+                                    <br />
                                     <div class="col-md-12 col-12">
                                         <label asp-for="LicenseNumber">License Number</label>
                                         <input asp-for="LicenseNumber" placeholder="License Number" />
                                     </div>
                                 </div>
-
+                                <br />
                                 <div class="col-md-6 col-12">
                                     <label asp-for="Password">Password</label>
                                     <input asp-for="Password" type="password" placeholder="Password" />
                                     <span class="text-danger" asp-validation-for="Password"></span>
                                 </div>
-
+                                <br />
                                 <div class="col-md-6 col-12">
                                     <label asp-for="ConfirmPassword">Confirm Password</label>
                                     <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" />
                                     <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
                                 </div>
-
+                                <br />
                                 <div class="col-12">
                                     <button type="submit" class="theme-btn">Register</button>
                                 </div>
-
+                                <br />
                                 <div class="col-12 mt-3">
                                     <p>Already have an account? <a asp-action="Login">Login here</a></p>
                                 </div>
-
+                                <br />
                                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                             </div>
                         </div>

@@ -110,19 +110,42 @@
 
                         </ul>
                         <ul class="navbar-nav navbar-mobile right-nav ml-auto ">
+                        
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link link_hd" href="#"> <i class="fa fa-user"></i> @User.Identity.Name </a>
+                                    <ul class="navbar-nav submenu">
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
+                                                <button type="submit" class="nav-link" style="background:none; border:none; cursor:pointer; width:100%; text-align:left;">
+                                                    <i class="fa fa-sign-out"></i> Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link link_hd" asp-controller="Account" asp-action="Login">
+                                        <i class="fa fa-sign-in"></i> Login
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link link_hd" asp-controller="Account" asp-action="Register">
+                                        <i class="fa fa-user-plus"></i> Register
+                                    </a>
+                                </li>
+                            }
+                       
+
                             <li class="nav-item dropdown">
-                                <a class="nav-link" href="#"> <span class="flaticon-search head-icon"></span>   </a>
-                                <ul class="navbar-nav submenu">
-                                    <li>
-                                        <form action="#">
-                                            <div class="form-group">
-                                                <input name="search" type="text" placeholder="Enter a Keywords">
-                                                <button type="submit" class="theme-btn">GO</button>
-                                            </div>
-                                        </form>
-                                    <li>
-                                </ul>
-                            </li>
+                                <a class="nav-link" href="#"> <span class="flaticon-search head-icon"></span> </a>
 
                             <li class="nav-item  dropdown cart_dropdown">
                                 <a class="nav-link" href="#"> <span class="flaticon-supermarket head-icon"></span>   </a>

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace HospitalManagement.Application.Services
 {
-
     public class AccountService : IAccountService
     {
         private readonly UserManager<AppUser> _userManager;
@@ -33,14 +32,13 @@ namespace HospitalManagement.Application.Services
             _doctorRepository = doctorRepository;
             _patientRepository = patientRepository;
         }
-
-        public async Task<(bool Success, string Message)> RegisterAsync(RegisterDto model)
+        public async Task<(bool Success, string Message, string? Token, string? UserId)> RegisterAsync(RegisterDto model)
         {
             AppUser? existingUser = await _userManager.FindByEmailAsync(model.Email);
             if (existingUser != null)
-                return (false, "This email is already in use");
+                return (false, "This email is already in use", null, null);
 
-            var user = new AppUser
+            AppUser user = new AppUser
             {
                 UserName = model.Email,
                 Email = model.Email,
@@ -50,61 +48,50 @@ namespace HospitalManagement.Application.Services
                 CreatedAt = DateTime.Now
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return (false, string.Join(", ", result.Errors.Select(e => e.Description)));
+                return (false, string.Join(", ", result.Errors.Select(e => e.Description)), null, null);
 
-   
+            string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+
             if (!await _roleManager.RoleExistsAsync(model.UserType))
                 await _roleManager.CreateAsync(new IdentityRole(model.UserType));
 
             await _userManager.AddToRoleAsync(user, model.UserType);
 
-
             if (model.UserType == "Doctor")
             {
-                var existingDoctor = await _doctorRepository.GetByUserIdAsync(user.Id);
+                Doctor existingDoctor = await _doctorRepository.GetByUserIdAsync(user.Id);
 
                 if (existingDoctor == null)
                 {
-                    var doctor = new Doctor
+                    Doctor doctor = new Doctor
                     {
                         UserId = user.Id,
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Email = model.Email,
-                        Phone = model.Phone
+                        Phone = model.Phone,
+                        DepartmentId = model.DepartmentId ?? 0,
+                        Specialization = model.Specialization ?? "",
+                        LicenseNumber = model.LicenseNumber ?? ""
                     };
-
-                    if (model.DepartmentId != null)
-                        doctor.DepartmentId = model.DepartmentId.Value;
-                    else
-                        doctor.DepartmentId = 0;
-
-                    if (model.Specialization != null)
-                        doctor.Specialization = model.Specialization;
-                    else
-                        doctor.Specialization = "";
-
-                    if (model.LicenseNumber != null)
-                        doctor.LicenseNumber = model.LicenseNumber;
-                    else
-                        doctor.LicenseNumber = "";
-
                     await _doctorRepository.AddAsync(doctor);
                 }
                 else
                 {
-                    return (false, "This user is already registered as a doctor");
+                    return (false, "This user is already registered as a doctor", null, null);
                 }
             }
+
             else if (model.UserType == "Patient")
             {
-                var existingPatient = await _patientRepository.GetByUserIdAsync(user.Id);
+                Patient existingPatient = await _patientRepository.GetByUserIdAsync(user.Id);
 
                 if (existingPatient == null)
                 {
-                    var patient = new Patient
+                    Patient patient = new Patient
                     {
                         UserId = user.Id,
                         FirstName = model.FirstName,
@@ -116,30 +103,73 @@ namespace HospitalManagement.Application.Services
                 }
                 else
                 {
-                    return (false, "This user is already registered as a patient");
+                    return (false, "This user is already registered as a patient", null, null);
                 }
             }
             else
             {
-                return (false, "User type not selected");
+                return (false, "User type not selected", null, null);
             }
 
-            return (true, "Registration completed successfully");
+            return (true, "Registration completed. Please check your email to confirm.", token, user.Id);
         }
+
+        public async Task<(bool Success, string Message)> ConfirmEmailAsync(string userId, string token)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return (false, "User not found");
+
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+                return (false, "Email confirmation failed");
+
+            return (true, "Email confirmed successfully. You can now login.");
+        }
+
 
         public async Task<(bool Success, string Message)> LoginAsync(LoginDto model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            AppUser user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
                 return (false, "The email or password is incorrect");
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+                return (false, "Please confirm your email first");
+
+            SignInResult result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
             if (!result.Succeeded)
                 return (false, "The email or password is incorrect");
 
             return (true, "You have successfully logged in");
         }
 
+        public async Task<(bool Success, string Message, string? Token)> ForgotPasswordAsync(string email)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return (true, "If this email exists, a reset link will be sent", null);
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return (true, "Password reset link sent to your email", token);
+        }
+
+        public async Task<(bool Success, string Message)> ResetPasswordAsync(ResetPasswordDto model)
+        {
+            AppUser? user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return (false, "Invalid request");
+
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (!result.Succeeded)
+                return (false, string.Join(", ", result.Errors.Select(e => e.Description)));
+
+            return (true, "Password reset successfully. You can now login.");
+        }
+
+  
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
