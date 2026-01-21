@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Appointment\" />
     <Folder Include="Dtos\LabResult\" />
     <Folder Include="Dtos\Payment\" />
     <Folder Include="Dtos\Prescription\" />

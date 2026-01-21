@@ -110,15 +110,27 @@
 
                         </ul>
                         <ul class="navbar-nav navbar-mobile right-nav ml-auto ">
-                        
+
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link link_hd" href="#"> <i class="fa fa-user"></i> @User.Identity.Name </a>
                                     <ul class="navbar-nav submenu">
-                                        <li class="nav-item">
-                                            <a class="nav-link" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
-                                        </li>
+                                        @if (User.IsInRole("Doctor"))
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Doctor" asp-action="Cabinet">My Cabinet</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Doctor" asp-action="TimeTable">My Schedule</a>
+                                            </li>
+                                        }
+                                        @if (User.IsInRole("Patient"))
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Patient" asp-action="Dashboard"></a>
+                                            </li>
+                                        }
                                         <li class="nav-item">
                                             <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
                                                 <button type="submit" class="nav-link" style="background:none; border:none; cursor:pointer; width:100%; text-align:left;">
@@ -142,7 +154,7 @@
                                     </a>
                                 </li>
                             }
-                       
+
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link" href="#"> <span class="flaticon-search head-icon"></span> </a>

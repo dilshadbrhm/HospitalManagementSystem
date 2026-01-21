@@ -17,11 +17,13 @@ namespace HospitalManagement.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("Default")));
 
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
             return services;
         }

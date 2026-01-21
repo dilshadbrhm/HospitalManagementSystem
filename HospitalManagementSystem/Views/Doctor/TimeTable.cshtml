@@ -1,0 +1,47 @@
+﻿@model List<HospitalManagement.Application.Dtos.Doctor.TimeSlotDto>
+
+<div class="container" style="padding:50px 0;">
+    <h2>My Schedule</h2>
+
+    <a asp-action="AddTimeSlot" class="btn btn-success" style="margin-bottom:20px;">Add New Slot</a>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.DayName</td>
+                        <td>@item.StartTime.ToString(@"hh\:mm")</td>
+                        <td>@item.EndTime.ToString(@"hh\:mm")</td>
+                        <td>@item.Location</td>
+                        <td>@(item.IsAvailable ? "Active" : "Inactive")</td>
+                        <td>
+                            <a asp-action="EditTimeSlot" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <form asp-action="DeleteTimeSlot" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No schedule added yet</p>
+    }
+
+    <a asp-action="Cabinet" class="btn btn-secondary">Back</a>
+</div>

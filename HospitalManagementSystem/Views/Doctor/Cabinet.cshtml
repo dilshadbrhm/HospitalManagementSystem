@@ -1,0 +1,84 @@
+﻿@model HospitalManagement.Application.Dtos.Doctor.DoctorCabinetDto
+
+<div class="container" style="padding:50px 0;">
+    <h2>Welcome, Dr. @Model.DoctorName</h2>
+    <p>@Model.Specialization</p>
+
+    <div class="row" style="margin-top:30px;">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Today's Appointments (@Model.TodayAppointments.Count)</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.TodayAppointments.Any())
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.TodayAppointments)
+                                {
+                                    <tr>
+                                        <td>@item.PatientName</td>
+                                        <td>@item.StartTime.ToString(@"hh\:mm")</td>
+                                        <td>@item.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No appointments for today</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Upcoming Appointments (@Model.UpcomingAppointments.Count)</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model.UpcomingAppointments.Any())
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.UpcomingAppointments)
+                                {
+                                    <tr>
+                                        <td>@item.PatientName</td>
+                                        <td>@item.Date.ToString("dd.MM.yyyy")</td>
+                                        <td>@item.StartTime.ToString(@"hh\:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No upcoming appointments</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top:20px;">
+        <a asp-action="TimeTable" class="btn btn-primary">My Schedule</a>
+    </div>
+</div>

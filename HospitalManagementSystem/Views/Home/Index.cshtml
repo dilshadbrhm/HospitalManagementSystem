@@ -140,13 +140,27 @@
             <div class="department_inner">
                 <div class="row">
                     <div class="col-lg-12">
-
                         @foreach (var department in Model.Departments)
                         {
                             <div class="department_icon_content">
                                 <a href="#"><span class="flaticon-brain dep_icon"></span></a>
-                                <a asp-controller="Department" asp-action="Details" asp-route-departmentId="@department.Id"> <h2>@department.Name</h2></a>
-                                <p>@department.ShortDescription.Substring(0, 80)</p>
+                                <a asp-controller="Department" asp-action="Details" asp-route-departmentId="@department.Id">
+                                    <h2>@department.Name</h2>
+                                </a>
+                                <p>
+                                    @if (department.ShortDescription == null)
+                                    {
+                                        @:No description available
+                                    }
+                                    else if (department.ShortDescription.Length > 80)
+                                    {
+                                        @(department.ShortDescription.Substring(0, 80))
+                                                    }
+                                    else
+                                    {
+                                        @department.ShortDescription
+                                    }
+                                </p>
                             </div>
                         }
 

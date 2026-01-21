@@ -15,5 +15,6 @@ namespace HospitalManagement.Domain
         public int SlotDurationMinutes { get; set; }
         public bool IsAvailable { get; set; } = true;
         public Doctor Doctor { get; set; }
+        public string? Location { get; set; }
     }
 }

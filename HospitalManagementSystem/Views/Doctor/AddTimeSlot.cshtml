@@ -1,0 +1,38 @@
+﻿@model HospitalManagement.Application.Dtos.Doctor.CreateTimeSlotDto
+
+<div class="container" style="padding:50px 0;">
+    <h2>Add New Time Slot</h2>
+
+    <form method="post" style="max-width:400px;">
+        <div class="form-group">
+            <label>Day</label>
+            <select asp-for="DayOfWeek" class="form-control">
+                <option value="1">Monday</option>
+                <option value="2">Tuesday</option>
+                <option value="3">Wednesday</option>
+                <option value="4">Thursday</option>
+                <option value="5">Friday</option>
+                <option value="6">Saturday</option>
+                <option value="0">Sunday</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Start Time</label>
+            <input asp-for="StartTime" type="time" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>End Time</label>
+            <input asp-for="EndTime" type="time" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Location</label>
+            <input asp-for="Location" class="form-control" placeholder="Ex: Hospital, Clinic" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+        <a asp-action="TimeTable" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

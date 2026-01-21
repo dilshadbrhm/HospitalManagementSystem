@@ -1,4 +1,6 @@
-﻿using HospitalManagement.Domain;
+﻿using HospitalManagement.Application.Dtos.Doctor;
+using HospitalManagement.Application.Interfaces;
+using HospitalManagement.Domain;
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Domain.Enums;
 using HospitalManagement.Infrastructure.Persistence;
@@ -6,41 +8,93 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace HospitalManagementSystem.Controllers
 {
+    [Authorize(Roles = "Doctor")]
     public class DoctorController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IDoctorCabinetService _cabinetService;
 
-        public DoctorController(AppDbContext context)
+        public DoctorController(IDoctorCabinetService cabinetService)
         {
-            _context = context;
+            _cabinetService = cabinetService;
         }
 
-        public async Task<IActionResult> Index()
+        private string GetUserId()
         {
-            return  View();
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Cabinet()
         {
-            if (id == null || id < 1)
+            DoctorCabinetDto result = await _cabinetService.GetCabinetAsync(GetUserId());
+
+            if (result is null) return RedirectToAction("Index", "Home");
+
+            return View(result);
+        }
+
+        public async Task<IActionResult> TimeTable()
+        {
+            List<TimeSlotDto> result = await _cabinetService.GetTimeSlotsAsync(GetUserId());
+
+            return View(result);
+        }
+
+        public IActionResult AddTimeSlot()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTimeSlot(CreateTimeSlotDto dto)
+        {
+            if (!ModelState.IsValid) return View(dto);
+
+            bool result = await _cabinetService.AddTimeSlotAsync(GetUserId(), dto);
+
+            if (!result)
             {
-                return BadRequest();
+                ModelState.AddModelError("", "Something went wrong");
+                return View(dto);
             }
 
-            Doctor? doctor = await _context.Doctors
-                .Include(d => d.Department)
-                .Include(d => d.TimeSlots.Where(ts => ts.IsAvailable))
-                .FirstOrDefaultAsync(d => d.Id == id && !d.IsDeleted);
+            return RedirectToAction("TimeTable");
+        }
 
-            if (doctor == null)
+        public async Task<IActionResult> EditTimeSlot(int id)
+        {
+            TimeSlotDto result = await _cabinetService.GetTimeSlotByIdAsync(GetUserId(), id);
+
+            if (result is null) return RedirectToAction("TimeTable");
+
+            return View(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTimeSlot(TimeSlotDto dto)
+        {
+            if (!ModelState.IsValid) return View(dto);
+
+            bool result = await _cabinetService.UpdateTimeSlotAsync(GetUserId(), dto);
+
+            if (!result)
             {
-                return NotFound();
+                ModelState.AddModelError("", "Something went wrong");
+                return View(dto);
             }
 
-            return View(doctor);
+            return RedirectToAction("TimeTable");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTimeSlot(int id)
+        {
+            await _cabinetService.DeleteTimeSlotAsync(GetUserId(), id);
+
+            return RedirectToAction("TimeTable");
         }
     }
 }

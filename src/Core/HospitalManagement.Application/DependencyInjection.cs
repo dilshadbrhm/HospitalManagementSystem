@@ -20,6 +20,8 @@ namespace HospitalManagement.Application
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IDoctorCabinetService, DoctorCabinetService>();
+            services.AddScoped<IDoctorCabinetService, DoctorCabinetService>();
 
             return services;
         }
