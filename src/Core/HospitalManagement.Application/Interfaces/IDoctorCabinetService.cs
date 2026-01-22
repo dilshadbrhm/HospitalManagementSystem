@@ -1,4 +1,5 @@
 ﻿using HospitalManagement.Application.Dtos.Doctor;
+using HospitalManagement.Application.Dtos.Timeslot;
 using System;
 using System.Collections.Generic;
 using System.Linq;

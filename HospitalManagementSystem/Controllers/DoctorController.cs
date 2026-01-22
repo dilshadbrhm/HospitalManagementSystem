@@ -1,4 +1,5 @@
 ﻿using HospitalManagement.Application.Dtos.Doctor;
+using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
 using HospitalManagement.Domain;
 using HospitalManagement.Domain.Entities;
@@ -31,7 +32,7 @@ namespace HospitalManagementSystem.Controllers
         {
             DoctorCabinetDto result = await _cabinetService.GetCabinetAsync(GetUserId());
 
-            if (result is null) return RedirectToAction("Index", "Home");
+            if (result == null) return RedirectToAction("Index", "Home");
 
             return View(result);
         }
@@ -68,7 +69,7 @@ namespace HospitalManagementSystem.Controllers
         {
             TimeSlotDto result = await _cabinetService.GetTimeSlotByIdAsync(GetUserId(), id);
 
-            if (result is null) return RedirectToAction("TimeTable");
+            if (result == null) return RedirectToAction("TimeTable");
 
             return View(result);
         }

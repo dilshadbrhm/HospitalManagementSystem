@@ -1,7 +1,9 @@
 ﻿using HospitalManagement.Application.Dtos.Appointment;
 using HospitalManagement.Application.Dtos.Doctor;
+using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
 using HospitalManagement.Domain;
+using HospitalManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +53,7 @@ namespace HospitalManagement.Application.Services
                 {
                     Id = a.Id,
                     PatientName = a.Patient.FirstName + " " + a.Patient.LastName,
-                    Date = a.AppointmentDate,
+                    AppointmentDate = a.AppointmentDate,
                     StartTime = a.StartTime,
                     Status = a.Status.ToString(),
                     Symptoms = a.Symptoms
@@ -60,7 +62,7 @@ namespace HospitalManagement.Application.Services
                 {
                     Id = a.Id,
                     PatientName = a.Patient.FirstName + " " + a.Patient.LastName,
-                    Date = a.AppointmentDate,
+                    AppointmentDate = a.AppointmentDate,
                     StartTime = a.StartTime,
                     Status = a.Status.ToString(),
                     Symptoms = a.Symptoms
@@ -158,5 +160,7 @@ namespace HospitalManagement.Application.Services
             await _timeSlotRepository.DeleteAsync(id);
             return true;
         }
+        
+
     }
 }

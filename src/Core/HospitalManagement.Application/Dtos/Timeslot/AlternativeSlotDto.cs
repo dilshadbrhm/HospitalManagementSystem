@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HospitalManagement.Application.Dtos.Doctor
+namespace HospitalManagement.Application.Dtos.Timeslot
 {
-    public class CreateTimeSlotDto
+    public class AlternativeSlotDto
     {
-        public int DayOfWeek { get; set; }
+        public DateTime Date { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public string Location { get; set; }
+        public string Message { get; set; }
     }
 }

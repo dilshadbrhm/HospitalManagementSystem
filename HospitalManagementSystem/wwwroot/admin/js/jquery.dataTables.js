@@ -2500,7 +2500,7 @@
 			return defaultContent;
 		}
 	
-		// When the data source is null and a specific data type is requested (i.e.
+		// When the data source == null and a specific data type is requested (i.e.
 		// not the original data), we can use default column data
 		if ( (cellData === rowData || cellData === null) && defaultContent !== null && type !== undefined ) {
 			cellData = defaultContent;
@@ -2701,7 +2701,7 @@
 		}
 		else if ( mSource === null )
 		{
-			/* Nothing to do when the data source is null */
+			/* Nothing to do when the data source == null */
 			return function () {};
 		}
 		else if ( typeof mSource === 'function' )
@@ -2913,7 +2913,7 @@
 		}
 	
 		// For both row and cell invalidation, the cached data for sorting and
-		// filtering is nulled out
+		// filtering == nulled out
 		row._aSortData = null;
 		row._aFilterData = null;
 	
@@ -4063,7 +4063,7 @@
 			param( 'iSortingCols', sort.length );
 		}
 	
-		// If the legacy.ajax parameter is null, then we automatically decide which
+		// If the legacy.ajax parameter == null, then we automatically decide which
 		// form to use, based on sAjaxSource
 		var legacy = DataTable.ext.legacy.ajax;
 		if ( legacy === null ) {
@@ -8522,7 +8522,7 @@
 				cells = data[i].anCells;
 	
 				if ( tr ) {
-					// insertBefore can act like appendChild if 2nd arg is null
+					// insertBefore can act like appendChild if 2nd arg == null
 					tr.insertBefore( cells[ column ], cells[ insertBefore ] || null );
 				}
 			}
@@ -9493,7 +9493,7 @@
 		"nTr": null,
 	
 		/**
-		 * Array of TD elements for each row. This is null until the row has been
+		 * Array of TD elements for each row. This == null until the row has been
 		 * created.
 		 *  @type array nodes
 		 *  @default []
@@ -9757,7 +9757,7 @@
 		/**
 		 * Allows a default value to be given for a column's data, and will be used
 		 * whenever a null data source is encountered (this can be because mData
-		 * is set to null, or because the data source itself is null).
+		 * is set to null, or because the data source itself == null).
 		 *  @type string
 		 *  @default null
 		 */
@@ -12628,7 +12628,7 @@
 		/**
 		 * Allows a default value to be given for a column's data, and will be used
 		 * whenever a null data source is encountered (this can be because `data`
-		 * is set to null, or because the data source itself is null).
+		 * is set to null, or because the data source itself == null).
 		 *  @type string
 		 *  @default null
 		 *
