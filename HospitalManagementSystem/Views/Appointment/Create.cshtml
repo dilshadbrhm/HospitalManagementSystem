@@ -1,0 +1,313 @@
+﻿@model HospitalManagement.Application.Dtos.Appointment.CreateAppointmentDto
+
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/Appointment">My Appointments</a></li>
+                        <li class="breadcrumb-item active">Book Appointment</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="contact_address book_appointment">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="heading">
+                    <h1>Book <span>An Appointment</span></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="contact_pg_form">
+                    <form asp-action="Create" method="post" id="appointmentForm">
+                        @Html.AntiForgeryToken()
+
+                        <div class="messages">
+                            @if (ViewBag.AlternativeSlots != null)
+                            {
+                                <div class="alert alert-warning">
+                                    <strong>This time slot is not available!</strong> Alternative slots:
+                                    <ul id="alternativeList">
+                                        @foreach (var slot in ViewBag.AlternativeSlots as List<HospitalManagement.Application.Dtos.Timeslot.AlternativeSlotDto>)
+                                        {
+                                            <li>
+                                                <a href="#" class="alternative-slot"
+                                                   data-date="@slot.Date.ToString("yyyy-MM-dd")"
+                                                   data-time="@slot.StartTime">
+                                                    @slot.Date.ToString("dd.MM.yyyy") - @slot.StartTime.ToString(@"hh\:mm") - @slot.EndTime.ToString(@"hh\:mm")
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        </div>
+
+                        <div class="controls">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Department *</label>
+                                        <select asp-for="DepartmentId" id="departmentSelect" class="form-control">
+                                            <option value="">-- Select Department --</option>
+                                            @if (Model.Departments != null)
+                                            {
+                                                @foreach (var dept in Model.Departments)
+                                                {
+                                                    <option value="@dept.Id">@dept.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Doctor *</label>
+                                        <select asp-for="DoctorId" id="doctorSelect" class="form-control" disabled>
+                                            <option value="">-- Select Department First --</option>
+                                        </select>
+                                        <span asp-validation-for="DoctorId" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Date *</label>
+                                        <input asp-for="AppointmentDate" type="date" id="dateSelect" class="form-control" disabled
+                                               min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Time *</label>
+                                        <select asp-for="StartTime" id="timeSelect" class="form-control" disabled>
+                                            <option value="">-- Select Date First --</option>
+                                        </select>
+                                        <span asp-validation-for="StartTime" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Symptoms *</label>
+                                        <textarea asp-for="Symptoms" class="form-control" rows="4"
+                                                  placeholder="Describe your symptoms..."></textarea>
+                                        <span asp-validation-for="Symptoms" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Additional Notes</label>
+                                        <textarea asp-for="Notes" class="form-control" rows="2"
+                                                  placeholder="Any additional notes..."></textarea>
+                                        <span asp-validation-for="Notes" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div id="loadingIndicator" style="display: none;">
+                                        <i class="fa fa-spinner fa-spin"></i> Loading...
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button type="submit" class="theme-btn btn-send" id="submitBtn">
+                                        Book Appointment
+                                    </button>
+                                    <a href="/Appointment" class="btn btn-secondary">Back</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-12"></div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <div class="contact_address_inner">
+                    <div class="contact_our_office">
+                        <h2>Selected <span>Info</span></h2>
+                        <div id="selectedInfo">
+                            <p><strong>Department:</strong> <span id="infoDepart">-</span></p>
+                            <p><strong>Doctor:</strong> <span id="infoDoctor">-</span></p>
+                            <p><strong>Date:</strong> <span id="infoDate">-</span></p>
+                            <p><strong>Time:</strong> <span id="infoTime">-</span></p>
+                            <p><strong>Fee:</strong> <span id="infoFee">-</span></p>
+                        </div>
+                    </div>
+                    <div class="contact_get_in_touch">
+                        <h2>Note</h2>
+                        <p>You will receive a confirmation after booking.</p>
+                        <p>Please cancel at least 24 hours before if needed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('#departmentSelect').change(function () {
+                var departmentId = $(this).val();
+                var departmentName = $('#departmentSelect option:selected').text();
+
+                $('#infoDepart').text(departmentName);
+                $('#infoDoctor').text('-');
+                $('#infoDate').text('-');
+                $('#infoTime').text('-');
+                $('#infoFee').text('-');
+
+                if (departmentId == '' || departmentId == null) {
+                    $('#doctorSelect').prop('disabled', true);
+                    $('#doctorSelect').html('<option value="">-- Select Department First --</option>');
+                    $('#dateSelect').prop('disabled', true);
+                    $('#timeSelect').prop('disabled', true);
+                    return;
+                }
+
+                $('#loadingIndicator').show();
+
+                $.ajax({
+                    url: '/Appointment/GetDoctorsByDepartment',
+                    type: 'GET',
+                    data: { departmentId: departmentId },
+                    success: function (data) {
+                        $('#doctorSelect').html('<option value="">-- Select Doctor --</option>');
+
+                        for (var i = 0; i < data.length; i++) {
+                            var doctor = data[i];
+                            var optionText = doctor.fullName + ' - ' + doctor.specialization + ' (' + doctor.consultationFee + ' AZN)';
+                            $('#doctorSelect').append('<option value="' + doctor.id + '" data-fee="' + doctor.consultationFee + '">' + optionText + '</option>');
+                        }
+
+                        $('#doctorSelect').prop('disabled', false);
+                        $('#loadingIndicator').hide();
+                    },
+                    error: function () {
+                        alert('Error loading doctors');
+                        $('#loadingIndicator').hide();
+                    }
+                });
+            });
+
+            $('#doctorSelect').change(function () {
+                var doctorId = $(this).val();
+                var doctorName = $('#doctorSelect option:selected').text();
+                var fee = $('#doctorSelect option:selected').data('fee');
+
+                $('#infoDoctor').text(doctorName);
+                $('#infoFee').text(fee + ' AZN');
+                $('#infoDate').text('-');
+                $('#infoTime').text('-');
+
+                if (doctorId == '' || doctorId == null) {
+                    $('#dateSelect').prop('disabled', true);
+                    $('#timeSelect').prop('disabled', true);
+                    $('#timeSelect').html('<option value="">-- Select Date First --</option>');
+                    return;
+                }
+
+                $('#dateSelect').prop('disabled', false);
+                $('#dateSelect').val('');
+                $('#timeSelect').prop('disabled', true);
+                $('#timeSelect').html('<option value="">-- Select Date First --</option>');
+            });
+
+            $('#dateSelect').change(function () {
+                var doctorId = $('#doctorSelect').val();
+                var date = $(this).val();
+
+                $('#infoDate').text(date);
+                $('#infoTime').text('-');
+
+                if (date == '' || date == null) {
+                    $('#timeSelect').prop('disabled', true);
+                    $('#timeSelect').html('<option value="">-- Select Date First --</option>');
+                    return;
+                }
+
+                $('#loadingIndicator').show();
+
+                $.ajax({
+                    url: '/Appointment/GetAvailableSlots',
+                    type: 'GET',
+                    data: { doctorId: doctorId, date: date },
+                    success: function (data) {
+                        $('#timeSelect').html('<option value="">-- Select Time --</option>');
+
+                        if (data.length == 0) {
+                            $('#timeSelect').html('<option value="">No available slots</option>');
+                            $('#timeSelect').prop('disabled', true);
+                        } else {
+                            for (var i = 0; i < data.length; i++) {
+                                var slot = data[i];
+                                var startTime = slot.startTime.substring(0, 5);
+                                var endTime = slot.endTime.substring(0, 5);
+                                var optionText = startTime + ' - ' + endTime;
+                                $('#timeSelect').append('<option value="' + slot.startTime + '">' + optionText + '</option>');
+                            }
+                            $('#timeSelect').prop('disabled', false);
+                        }
+
+                        $('#loadingIndicator').hide();
+                    },
+                    error: function () {
+                        alert('Error loading time slots');
+                        $('#loadingIndicator').hide();
+                    }
+                });
+            });
+
+            $('#timeSelect').change(function () {
+                var time = $(this).val();
+                if (time != '' && time != null) {
+                    var timeText = $('#timeSelect option:selected').text();
+                    $('#infoTime').text(timeText);
+                } else {
+                    $('#infoTime').text('-');
+                }
+            });
+
+            $('.alternative-slot').click(function (e) {
+                e.preventDefault();
+                var date = $(this).data('date');
+                var time = $(this).data('time');
+
+                $('#dateSelect').val(date);
+                $('#dateSelect').trigger('change');
+
+                setTimeout(function () {
+                    $('#timeSelect').val(time);
+                    $('#timeSelect').trigger('change');
+                }, 1000);
+            });
+
+        });
+    </script>
+}
+

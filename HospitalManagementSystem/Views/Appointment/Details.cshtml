@@ -1,0 +1,155 @@
+﻿@model HospitalManagement.Application.Dtos.Appointment.DetailsAppointmentDto
+
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/Appointment">My Appointments</a></li>
+                        <li class="breadcrumb-item active">Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="contact_address">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="heading">
+                    <h1>Appointment <span>Details</span></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Appointment #@Model.Id</h4>
+                        @if (Model.Status == "Pending")
+                        {
+                            <span class="badge badge-warning">Pending</span>
+                        }
+                        else if (Model.Status == "Confirmed")
+                        {
+                            <span class="badge badge-success">Confirmed</span>
+                        }
+                        else if (Model.Status == "Cancelled")
+                        {
+                            <span class="badge badge-danger">Cancelled</span>
+                        }
+                        else if (Model.Status == "Completed")
+                        {
+                            <span class="badge badge-info">Completed</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Doctor Information</h5>
+                                <p><strong>Doctor:</strong> @Model.DoctorName</p>
+                                <p><strong>Specialization:</strong> @Model.DoctorSpecialization</p>
+                                <p><strong>Department:</strong> @Model.DepartmentName</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Schedule Information</h5>
+                                <p><strong>Date:</strong> @Model.AppointmentDate.ToString("dd.MM.yyyy")</p>
+                                <p><strong>Time:</strong> @Model.StartTime.ToString(@"hh\:mm") - @Model.EndTime.ToString(@"hh\:mm")</p>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>Symptoms</h5>
+                                <p>@Model.Symptoms</p>
+                            </div>
+                        </div>
+
+                        @if (Model.Notes != null && Model.Notes != "")
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Notes</h5>
+                                    <p>@Model.Notes</p>
+                                </div>
+                            </div>
+                        }
+
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Payment Information</h5>
+                                <p><strong>Fee:</strong> @Model.Fee AZN</p>
+                                <p>
+                                    <strong>Status:</strong>
+                                    @if (Model.IsPaid)
+                                    {
+                                        <span class="badge badge-success">Paid</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">Unpaid</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+
+                        @if (Model.Status == "Cancelled")
+                        {
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 class="text-danger">Cancellation Information</h5>
+                                    <p><strong>Reason:</strong> @Model.CancellationReason</p>
+                                    @if (Model.CancelledAt != null)
+                                    {
+                                        <p><strong>Cancelled at:</strong> @Model.CancelledAt.Value.ToString("dd.MM.yyyy HH:mm")</p>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-footer">
+                        <a href="/Appointment" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Back
+                        </a>
+                        @if (Model.Status != "Cancelled" && Model.Status != "Completed")
+                        {
+                            <a href="/Appointment/Cancel/@Model.Id" class="btn btn-danger">
+                                <i class="fa fa-times"></i> Cancel
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="contact_address_inner">
+                    <div class="contact_our_office">
+                        <h2>Patient <span>Information</span></h2>
+                        <p><strong>Name:</strong> @Model.PatientName</p>
+                        <p><strong>Email:</strong> @Model.PatientEmail</p>
+                        <p><strong>Phone:</strong> @Model.PatientPhone</p>
+                    </div>
+                    <div class="contact_get_in_touch">
+                        <h2>Note</h2>
+                        <p>Please cancel at least 24 hours before if needed.</p>
+                        <p>Contact us if you have any questions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 ﻿using HospitalManagement.Application.Interfaces;
-using HospitalManagement.Infrastructure.Persistence;
 using HospitalManagement.Infrastructure.Persistence.Repositories;
+using HospitalManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace HospitalManagement.Infrastructure
 {
     public static class DependencyInjection
@@ -24,7 +23,8 @@ namespace HospitalManagement.Infrastructure
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<ITimeSlotRepository, TimeSlotRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
             return services;
         }
     }

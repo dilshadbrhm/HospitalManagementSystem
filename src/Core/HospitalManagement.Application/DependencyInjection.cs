@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-
 namespace HospitalManagement.Application
 {
     public static class DependencyInjection
@@ -22,6 +21,8 @@ namespace HospitalManagement.Application
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IDoctorCabinetService, DoctorCabinetService>();
             services.AddScoped<IDoctorCabinetService, DoctorCabinetService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+           
 
             return services;
         }

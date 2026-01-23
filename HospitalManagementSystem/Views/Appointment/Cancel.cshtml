@@ -1,0 +1,90 @@
+﻿@model HospitalManagement.Application.Dtos.Appointment.CancelAppointmentDto
+
+@{
+    ViewData["Title"] = "Cancel Appointment";
+    var appointment = ViewBag.Appointment as HospitalManagement.Application.Dtos.Appointment.DetailsAppointmentDto;
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/Appointment">My Appointments</a></li>
+                        <li class="breadcrumb-item active">Cancel</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="contact_address">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="heading">
+                    <h1>Cancel <span>Appointment</span></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h4><i class="fa fa-exclamation-triangle"></i> Warning!</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Are you sure you want to cancel this appointment?</p>
+
+                        @if (appointment != null)
+                        {
+                            <div class="alert alert-info">
+                                <p><strong>Doctor:</strong> @appointment.DoctorName</p>
+                                <p><strong>Department:</strong> @appointment.DepartmentName</p>
+                                <p><strong>Date:</strong> @appointment.AppointmentDate.ToString("dd.MM.yyyy")</p>
+                                <p><strong>Time:</strong> @appointment.StartTime.ToString(@"hh\:mm") - @appointment.EndTime.ToString(@"hh\:mm")</p>
+                                <p><strong>Fee:</strong> @appointment.Fee AZN</p>
+                            </div>
+                        }
+
+                        <form asp-action="Cancel" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="AppointmentId" />
+
+                            <div class="form-group">
+                                <label>Cancellation Reason *</label>
+                                <textarea asp-for="CancellationReason" class="form-control" rows="4"
+                                          placeholder="Please provide a reason for cancellation..."></textarea>
+                                <span asp-validation-for="CancellationReason" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-times"></i> Cancel Appointment
+                                </button>
+                                <a href="/Appointment" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Back
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="contact_address_inner">
+                    <div class="contact_our_office">
+                        <h2>Note</h2>
+                        <p>This action cannot be undone.</p>
+                        <p>You can book a new appointment after cancellation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

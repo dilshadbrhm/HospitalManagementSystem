@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace HospitalManagement.Application.Services
 {
-
     public class AppointmentService : IAppointmentService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -118,46 +117,67 @@ namespace HospitalManagement.Application.Services
         public async Task<AppointmentResultDto> CreateAsync(CreateAppointmentDto dto, int patientId)
         {
             Doctor doctor = await _unitOfWork.Doctors.GetByIdAsync(dto.DoctorId);
+
             if (doctor == null)
             {
-                return new AppointmentResultDto { Success = false, Message = "Doctor not found" };
+                AppointmentResultDto result = new AppointmentResultDto();
+                result.Success = false;
+                result.Message = "The doctor was not found";
+                return result;
+            }
+
+            if (dto.AppointmentDate.Date < DateTime.Now.Date)
+            {
+                AppointmentResultDto result = new AppointmentResultDto();
+                result.Success = false;
+                result.Message = "You can not create an opinion on past history";
+                return result;
             }
 
             bool isAvailable = await IsSlotAvailableAsync(dto.DoctorId, dto.AppointmentDate, dto.StartTime);
+
             if (!isAvailable)
             {
-                return new AppointmentResultDto { Success = false, Message = "This time slot is already booked" };
+                List<AlternativeSlotDto> alternatives = await GetAlternativeSlotsAsync(dto.DoctorId, dto.AppointmentDate, dto.StartTime);
+
+                AppointmentResultDto result = new AppointmentResultDto();
+                result.Success = false;
+                result.Message = "This hour is already full";
+                result.AlternativeSlots = alternatives;
+                return result;
             }
 
-            Appointment appointment = new Appointment
-            {
-                PatientId = patientId,
-                DoctorId = dto.DoctorId,
-                AppointmentDate = dto.AppointmentDate,
-                StartTime = dto.StartTime,
-                EndTime = dto.StartTime.Add(TimeSpan.FromMinutes(30)),
-                Status = AppointmentStatus.Pending,
-                Symptoms = dto.Symptoms,
-                Fee = doctor.ConsultationFee,
-                IsPaid = false,
-                IsDeleted = false
-            };
+            Appointment appointment = new Appointment();
+            appointment.PatientId = patientId;
+            appointment.DoctorId = dto.DoctorId;
+            appointment.AppointmentDate = dto.AppointmentDate;
+            appointment.StartTime = dto.StartTime;
+            appointment.EndTime = dto.StartTime.Add(TimeSpan.FromMinutes(30));
+            appointment.Status = AppointmentStatus.Pending;
+            appointment.Symptoms = dto.Symptoms;
+            appointment.Notes = dto.Notes;
+            appointment.Fee = doctor.ConsultationFee;
+            appointment.IsPaid = false;
+            appointment.IsDeleted = false;
 
             await _unitOfWork.Appointments.AddAsync(appointment);
             await _unitOfWork.SaveChangesAsync();
 
-            return new AppointmentResultDto
-            {
-                Success = true,
-                Message = "Appointment created successfully",
-                AppointmentId = appointment.Id
-            };
+            AppointmentResultDto successResult = new AppointmentResultDto();
+            successResult.Success = true;
+            successResult.Message = "The view was created successfully";
+            successResult.AppointmentId = appointment.Id;
+            return successResult;
         }
 
         public async Task<bool> CancelAsync(CancelAppointmentDto dto)
         {
             Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
-            if (appointment == null) return false;
+
+            if (appointment == null)
+            {
+                return false;
+            }
 
             appointment.Status = AppointmentStatus.Cancelled;
             appointment.CancellationReason = dto.CancellationReason;
@@ -170,7 +190,11 @@ namespace HospitalManagement.Application.Services
         public async Task<bool> UpdateStatusAsync(int id, string status)
         {
             Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(id);
-            if (appointment == null) return false;
+
+            if (appointment == null)
+            {
+                return false;
+            }
 
             appointment.Status = Enum.Parse<AppointmentStatus>(status);
             await _unitOfWork.SaveChangesAsync();
@@ -179,41 +203,44 @@ namespace HospitalManagement.Application.Services
 
         public async Task<bool> IsSlotAvailableAsync(int doctorId, DateTime date, TimeSpan startTime)
         {
-            IEnumerable<Appointment> appointments = await _unitOfWork.Appointments
-                .FindAsync(a => a.DoctorId == doctorId
-                             && a.AppointmentDate.Date == date.Date
-                             && a.StartTime == startTime
-                             && !a.IsDeleted);
+            bool exists = await _unitOfWork.Appointments.AnyAsync(a =>
+                a.DoctorId == doctorId &&
+                a.AppointmentDate.Date == date.Date &&
+                a.StartTime == startTime &&
+                a.Status != AppointmentStatus.Cancelled &&
+                !a.IsDeleted);
 
-            Appointment existing = appointments.FirstOrDefault();
-            return existing == null;
+            if (exists)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<List<AlternativeSlotDto>> GetAlternativeSlotsAsync(int doctorId, DateTime date, TimeSpan requestedTime)
         {
             List<AlternativeSlotDto> alternatives = new List<AlternativeSlotDto>();
 
-            TimeSpan[] possibleTimes = new TimeSpan[]
-            {
-                requestedTime.Add(TimeSpan.FromMinutes(-60)),
-                requestedTime.Add(TimeSpan.FromMinutes(-30)),
-                requestedTime.Add(TimeSpan.FromMinutes(30)),
-                requestedTime.Add(TimeSpan.FromMinutes(60))
-            };
+            List<TimeSpan> times = new List<TimeSpan>();
+            times.Add(requestedTime.Add(TimeSpan.FromMinutes(-60)));
+            times.Add(requestedTime.Add(TimeSpan.FromMinutes(-30)));
+            times.Add(requestedTime.Add(TimeSpan.FromMinutes(30)));
+            times.Add(requestedTime.Add(TimeSpan.FromMinutes(60)));
 
-            foreach (TimeSpan time in possibleTimes)
+            foreach (TimeSpan time in times)
             {
                 if (time.Hours >= 9 && time.Hours < 18)
                 {
                     bool available = await IsSlotAvailableAsync(doctorId, date, time);
+
                     if (available)
                     {
-                        alternatives.Add(new AlternativeSlotDto
-                        {
-                            Date = date,
-                            StartTime = time,
-                            EndTime = time.Add(TimeSpan.FromMinutes(30))
-                        });
+                        AlternativeSlotDto slot = new AlternativeSlotDto();
+                        slot.Date = date;
+                        slot.StartTime = time;
+                        slot.EndTime = time.Add(TimeSpan.FromMinutes(30));
+                        alternatives.Add(slot);
                     }
                 }
             }
@@ -225,20 +252,22 @@ namespace HospitalManagement.Application.Services
         {
             List<TimeSlotSelectDto> slots = new List<TimeSlotSelectDto>();
 
-            TimeSpan startHour = new TimeSpan(9, 0, 0);
-            TimeSpan endHour = new TimeSpan(18, 0, 0);
+            TimeSpan time = new TimeSpan(9, 0, 0);
+            TimeSpan endTime = new TimeSpan(18, 0, 0);
 
-            for (TimeSpan time = startHour; time < endHour; time = time.Add(TimeSpan.FromMinutes(30)))
+            while (time < endTime)
             {
                 bool available = await IsSlotAvailableAsync(doctorId, date, time);
+
                 if (available)
                 {
-                    slots.Add(new TimeSlotSelectDto
-                    {
-                        StartTime = time,
-                        EndTime = time.Add(TimeSpan.FromMinutes(30))
-                    });
+                    TimeSlotSelectDto slot = new TimeSlotSelectDto();
+                    slot.StartTime = time;
+                    slot.EndTime = time.Add(TimeSpan.FromMinutes(30));
+                    slots.Add(slot);
                 }
+
+                time = time.Add(TimeSpan.FromMinutes(30));
             }
 
             return slots;
@@ -252,11 +281,10 @@ namespace HospitalManagement.Application.Services
 
             foreach (Department department in departments)
             {
-                result.Add(new DepartmentSelectDto
-                {
-                    Id = department.Id,
-                    Name = department.Name
-                });
+                DepartmentSelectDto dto = new DepartmentSelectDto();
+                dto.Id = department.Id;
+                dto.Name = department.Name;
+                result.Add(dto);
             }
 
             return result;
@@ -271,13 +299,12 @@ namespace HospitalManagement.Application.Services
 
             foreach (Doctor doctor in doctors)
             {
-                result.Add(new DoctorSelectDto
-                {
-                    Id = doctor.Id,
-                    FullName = doctor.FirstName + " " + doctor.LastName,
-                    Specialization = doctor.Specialization,
-                    ConsultationFee = doctor.ConsultationFee
-                });
+                DoctorSelectDto dto = new DoctorSelectDto();
+                dto.Id = doctor.Id;
+                dto.FullName = doctor.FirstName + " " + doctor.LastName;
+                dto.Specialization = doctor.Specialization;
+                dto.ConsultationFee = doctor.ConsultationFee;
+                result.Add(dto);
             }
 
             return result;
