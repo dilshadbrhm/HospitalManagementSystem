@@ -162,7 +162,7 @@ namespace HospitalManagement.Application.Services
 
             await _unitOfWork.Appointments.AddAsync(appointment);
             await _unitOfWork.SaveChangesAsync();
-
+                                                                                                               
             AppointmentResultDto successResult = new AppointmentResultDto();
             successResult.Success = true;
             successResult.Message = "The view was created successfully";
@@ -321,6 +321,8 @@ namespace HospitalManagement.Application.Services
             dto.Fee = appointment.Fee;
             dto.IsPaid = appointment.IsPaid;
             dto.Symptoms = appointment.Symptoms;
+            appointment.CancellationReason = string.Empty;  
+            appointment.CancelledAt = null;
 
             if (appointment.Doctor != null)
             {

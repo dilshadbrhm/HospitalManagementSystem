@@ -35,8 +35,21 @@
                 <div class="contact_pg_form">
                     <form asp-action="Create" method="post" id="appointmentForm">
                         @Html.AntiForgeryToken()
-
                         <div class="messages">
+                            @if (TempData["Error"] != null)
+                            {
+                                <div class="alert alert-danger">
+                                    <strong>Error!</strong> @TempData["Error"]
+                                </div>
+                            }
+
+                            @if (TempData["Success"] != null)
+                            {
+                                <div class="alert alert-success">
+                                    <strong>Success!</strong> @TempData["Success"]
+                                </div>
+                            }
+
                             @if (ViewBag.AlternativeSlots != null)
                             {
                                 <div class="alert alert-warning">
@@ -55,6 +68,7 @@
                                     </ul>
                                 </div>
                             }
+
                             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                         </div>
 

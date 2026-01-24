@@ -68,6 +68,16 @@ namespace HospitalManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
+                string errors = "";
+                foreach (var key in ModelState.Keys)
+                {
+                    foreach (var error in ModelState[key].Errors)
+                    {
+                        errors = errors + key + ": " + error.ErrorMessage + " | ";
+                    }
+                }
+                TempData["Error"] = errors;
+
                 dto.Departments = await _appointmentService.GetDepartmentsAsync();
 
                 if (dto.DepartmentId > 0)
@@ -83,33 +93,43 @@ namespace HospitalManagementSystem.Controllers
                 return View(dto);
             }
 
-            int patientId = await GetCurrentPatientIdAsync();
-
-            if (patientId == 0)
+            try
             {
-                return RedirectToAction("Login", "Account");
-            }
+                int patientId = await GetCurrentPatientIdAsync();
 
-            AppointmentResultDto result = await _appointmentService.CreateAsync(dto, patientId);
+                AppointmentResultDto result = await _appointmentService.CreateAsync(dto, patientId);
 
-            if (!result.Success)
-            {
-                ModelState.AddModelError("", result.Message);
-
-                dto.Departments = await _appointmentService.GetDepartmentsAsync();
-                dto.Doctors = await _appointmentService.GetDoctorsByDepartmentAsync(dto.DepartmentId);
-                dto.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(dto.DoctorId, dto.AppointmentDate);
-
-                if (result.AlternativeSlots != null && result.AlternativeSlots.Count > 0)
+                if (!result.Success)
                 {
-                    ViewBag.AlternativeSlots = result.AlternativeSlots;
+                    TempData["Error"] = result.Message;
+
+                    dto.Departments = await _appointmentService.GetDepartmentsAsync();
+                    dto.Doctors = await _appointmentService.GetDoctorsByDepartmentAsync(dto.DepartmentId);
+                    dto.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(dto.DoctorId, dto.AppointmentDate);
+
+                    if (result.AlternativeSlots != null && result.AlternativeSlots.Count > 0)
+                    {
+                        ViewBag.AlternativeSlots = result.AlternativeSlots;
+                    }
+
+                    return View(dto);
+                }
+                TempData["Success"] = "Appointment created successfully";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = ex.Message;
+
+                if (ex.InnerException != null)
+                {
+                    errorMessage = errorMessage + " | Inner: " + ex.InnerException.Message;
                 }
 
+                TempData["Error"] = errorMessage;
+                dto.Departments = await _appointmentService.GetDepartmentsAsync();
                 return View(dto);
             }
-
-            TempData["Success"] = "The view was created successfully";
-            return RedirectToAction("Details", new { id = result.AppointmentId });
         }
 
         [HttpGet]
