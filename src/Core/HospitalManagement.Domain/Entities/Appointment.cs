@@ -19,7 +19,7 @@ namespace HospitalManagement.Domain
         public string Notes { get; set; }
         public decimal Fee { get; set; }
         public bool IsPaid { get; set; }
-        public string CancellationReason { get; set; }
+        public string? CancellationReason { get; set; }
         public DateTime? CancelledAt { get; set; }        
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }

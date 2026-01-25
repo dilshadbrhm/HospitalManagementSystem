@@ -13,14 +13,15 @@ using System.Security.Claims;
 
 namespace HospitalManagementSystem.Controllers
 {
-    [Authorize(Roles = "Doctor")]
     public class DoctorController : Controller
     {
         private readonly IDoctorCabinetService _cabinetService;
+        private readonly IDoctorService _doctorService;
 
-        public DoctorController(IDoctorCabinetService cabinetService)
+        public DoctorController(IDoctorCabinetService cabinetService, IDoctorService doctorService)
         {
             _cabinetService = cabinetService;
+            _doctorService = doctorService;
         }
 
         private string GetUserId()
@@ -28,31 +29,67 @@ namespace HospitalManagementSystem.Controllers
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            List<DoctorItemDto> doctors = await _doctorService.GetAllDoctorsAsync();
+            return View(doctors);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile(int id)
+        {
+            if (id == null || id == 0)
+            {
+                return RedirectToAction("Index");
+            }
+            DoctorProfileDto doctor = await _doctorService.GetDoctorProfileAsync(id);
+
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            return View(doctor);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
         public async Task<IActionResult> Cabinet()
         {
             DoctorCabinetDto result = await _cabinetService.GetCabinetAsync(GetUserId());
 
-            if (result == null) return RedirectToAction("Index", "Home");
+            if (result == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             return View(result);
         }
 
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
         public async Task<IActionResult> TimeTable()
         {
             List<TimeSlotDto> result = await _cabinetService.GetTimeSlotsAsync(GetUserId());
-
             return View(result);
         }
 
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
         public IActionResult AddTimeSlot()
         {
             return View();
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpPost]
         public async Task<IActionResult> AddTimeSlot(CreateTimeSlotDto dto)
         {
-            if (!ModelState.IsValid) return View(dto);
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
 
             bool result = await _cabinetService.AddTimeSlotAsync(GetUserId(), dto);
 
@@ -65,19 +102,28 @@ namespace HospitalManagementSystem.Controllers
             return RedirectToAction("TimeTable");
         }
 
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
         public async Task<IActionResult> EditTimeSlot(int id)
         {
             TimeSlotDto result = await _cabinetService.GetTimeSlotByIdAsync(GetUserId(), id);
 
-            if (result == null) return RedirectToAction("TimeTable");
+            if (result == null)
+            {
+                return RedirectToAction("TimeTable");
+            }
 
             return View(result);
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpPost]
         public async Task<IActionResult> EditTimeSlot(TimeSlotDto dto)
         {
-            if (!ModelState.IsValid) return View(dto);
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
 
             bool result = await _cabinetService.UpdateTimeSlotAsync(GetUserId(), dto);
 
@@ -90,11 +136,11 @@ namespace HospitalManagementSystem.Controllers
             return RedirectToAction("TimeTable");
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpPost]
         public async Task<IActionResult> DeleteTimeSlot(int id)
         {
             await _cabinetService.DeleteTimeSlotAsync(GetUserId(), id);
-
             return RedirectToAction("TimeTable");
         }
     }

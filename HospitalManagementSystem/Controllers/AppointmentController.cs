@@ -29,11 +29,17 @@ namespace HospitalManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Doctor"))
+            {
+                return RedirectToAction("Cabinet", "Doctor");
+            }
+
             int patientId = await GetCurrentPatientIdAsync();
 
             if (patientId == 0)
             {
-                return RedirectToAction("Login", "Account");
+                TempData["Error"] = "Patient profile not found.";
+                return RedirectToAction("Index", "Home");
             }
 
             List<AppointmentItemDto> appointments = await _appointmentService.GetByPatientIdAsync(patientId);
@@ -41,9 +47,16 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(id);
+            if (id == null || id == 0)
+            {
+                int patientId = await GetCurrentPatientIdAsync();
+                List<AppointmentItemDto> appointments = await _appointmentService.GetByPatientIdAsync(patientId);
+                return View("Index", appointments); 
+            }
+
+            DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(id.Value);
 
             if (appointment == null)
             {
@@ -56,6 +69,20 @@ namespace HospitalManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            if (User.IsInRole("Doctor"))
+            {
+                TempData["Error"] = "Doctors cannot book appointments.";
+                return RedirectToAction("Cabinet", "Doctor");
+            }
+
+            int patientId = await GetCurrentPatientIdAsync();
+
+            if (patientId == 0)
+            {
+                TempData["Error"] = "Patient profile not found.";
+                return RedirectToAction("Index", "Home");
+            }
+
             CreateAppointmentDto dto = new CreateAppointmentDto();
             dto.Departments = await _appointmentService.GetDepartmentsAsync();
             dto.AppointmentDate = DateTime.Now.Date.AddDays(1);
@@ -196,17 +223,19 @@ namespace HospitalManagementSystem.Controllers
         private async Task<int> GetCurrentPatientIdAsync()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null || userId == "")
+
+            if (string.IsNullOrEmpty(userId))
             {
-                throw new Exception("User not found");
+                return 0;
             }
 
             Patient patient = await _patientService.GetByUserIdAsync(userId);
 
             if (patient == null)
             {
-                throw new Exception("Patient not found");
+                return 0;
             }
+
             return patient.Id;
         }
     }

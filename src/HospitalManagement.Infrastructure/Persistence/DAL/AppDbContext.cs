@@ -25,6 +25,7 @@ namespace HospitalManagement.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+           
 
             modelBuilder.Entity<Doctor>()
                 .Property(d => d.ConsultationFee)

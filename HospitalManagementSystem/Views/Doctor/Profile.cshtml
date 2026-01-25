@@ -1,0 +1,117 @@
+﻿@model HospitalManagement.Application.Dtos.Doctor.DoctorProfileDto
+
+@{
+    ViewData["Title"] = "Dr. " + Model.FullName;
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Doctor" asp-action="Index">Our Doctors</a></li>
+                        <li class="breadcrumb-item active">Dr. @Model.FullName</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="single_doctors">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="single_doctors_left">
+                    <div class="quick_profile">
+                        <h2>Quick Profile</h2>
+                        <ul>
+                            <li>Name: @Model.FullName</li>
+                            <li>Phone: @Model.Phone</li>
+                            <li>Email: @Model.Email</li>
+                            <li>Speciality: @Model.Specialization</li>
+                            <li>Department: @Model.DepartmentName</li>
+                            <li>Fee: @Model.ConsultationFee AZN</li>
+                        </ul>
+                    </div>
+
+                    <div class="book_appoint_ment">
+                        <h2>Book An Appointment</h2>
+                        <p>Ready to schedule your visit?</p>
+                        <a asp-controller="Appointment" asp-action="Create" class="theme-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="single_doctor_right">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="heading mg_btm">
+                                <h1>Dr. <span>@Model.FullName</span></h1>
+                                <p>@Model.Specialization</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="single_doc_banner">
+                        @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                        {
+                            <img src="@Model.ProfilePicture" class="img-fluid" alt="@Model.FullName" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/image/best-doctors/single-doctor-banner.jpg" class="img-fluid" alt="@Model.FullName" />
+                        }
+                    </div>
+
+                    <div class="single_doctor_content">
+                        @if (!string.IsNullOrEmpty(Model.Bio))
+                        {
+                            <div class="content_one">
+                                <p>@Model.Bio</p>
+                            </div>
+                        }
+
+                        <div class="simple_text" style="margin-top: 30px;">
+                            <h2>Working <span>Schedule</span></h2>
+
+                            @if (Model.TimeSlots != null && Model.TimeSlots.Count > 0)
+                            {
+                                <div class="table-responsive" style="margin-top: 20px;">
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Day</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                                <th>Location</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var slot in Model.TimeSlots.OrderBy(s => s.DayOfWeek))
+                                            {
+                                                <tr>
+                                                    <td>@slot.DayName</td>
+                                                    <td>@slot.StartTime.ToString(@"hh\:mm")</td>
+                                                    <td>@slot.EndTime.ToString(@"hh\:mm")</td>
+                                                    <td>@slot.Location</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p style="margin-top: 20px;">No schedule available at the moment.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

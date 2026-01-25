@@ -1,0 +1,81 @@
+﻿@model HospitalManagement.Application.Dtos.Department.DepartmentDetailsDto
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Department" asp-action="Index">Departments</a></li>
+                        <li class="breadcrumb-item active">@Model.Name</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="department-details" style="padding: 50px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="heading">
+                    <h1>@Model.Name <span>Department</span></h1>
+                </div>
+                <p style="text-align: center; margin-bottom: 40px;">@Model.ShortDescription</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 style="margin-bottom: 30px;">Our Doctors</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            @if (Model.Doctors == null || Model.Doctors.Count == 0)
+            {
+                <div class="col-lg-12">
+                    <p>No doctors in this department.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var doctor in Model.Doctors)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-12" style="margin-bottom: 30px;">
+                        <div class="best-doctor-outer">
+                            <div class="image">
+                                @if (!string.IsNullOrEmpty(doctor.ProfilePicture))
+                                {
+                                    <img src="@doctor.ProfilePicture" class="img-fluid" alt="@doctor.FullName" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/image/best-doctors/best-doctors1.jpg" class="img-fluid" alt="@doctor.FullName" />
+                                }
+                                <a asp-controller="Doctor" asp-action="Profile" asp-route-id="@doctor.Id" class="link"></a>
+                            </div>
+                            <div class="content-inner">
+                                <h2><a asp-controller="Doctor" asp-action="Profile" asp-route-id="@doctor.Id">Dr. @doctor.FullName</a></h2>
+                                <span>@doctor.Specialization</span>
+                                <a asp-controller="Doctor" asp-action="Profile" asp-route-id="@doctor.Id" class="theme-btn">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-lg-12">
+                <a asp-action="Index" class="btn btn-secondary">Back to Departments</a>
+            </div>
+        </div>
+    </div>
+</section>

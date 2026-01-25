@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 namespace HospitalManagement.Application
 {
-    public static class DependencyInjection
+    public static class ServiceRegistration
     {
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
@@ -22,7 +22,8 @@ namespace HospitalManagement.Application
             services.AddScoped<IDoctorCabinetService, DoctorCabinetService>();
             services.AddScoped<IDoctorCabinetService, DoctorCabinetService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
-           
+            services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
 
             return services;
         }

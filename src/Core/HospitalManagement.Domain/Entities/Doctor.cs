@@ -19,6 +19,7 @@ namespace HospitalManagement.Domain
         public decimal ConsultationFee { get; set; }
         public string? Bio { get; set; }
         public string? ProfilePicture { get; set; }
+
         public Department Department { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<TimeSlot> TimeSlots { get; set; }

@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
     <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-    <title>Homepage-1 | Meditex | Responsive  HTML 5 Template</title>
+    <title>Homepage | Meditex | Responsive  HTML 5 Template</title>
     <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/responsive.css">
     <link rel="stylesheet" type="text/css" href="assets/fonts/font/flaticon.css">
@@ -67,29 +67,37 @@
             </div>
             <div class="navbar navbar-expand-lg bsnav bsnav-sticky bsnav-sticky-slide">
                 <div class="container">
-                    <a class="navbar-brand" href="index.html"><img src="~/assets/image/default-logo.png" class="img-fluid" alt="img"></a>
+                    <a class="navbar-brand" asp-controller="Home" asp-action="Index"><img src="~/assets/image/default-logo.png" class="img-fluid" alt="img"></a>
                     <button class="navbar-toggler toggler-spring"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav navbar-mobile ml-auto mr-auto">
                             <li class="nav-item activee no-dropdown">
-                                <a class="nav-link link_hd" href="index.html">Home</a>
+                                <a class="nav-link link_hd" asp-controller="Home" asp-action="Index">Home</a>
+
                             </li>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link link_hd" href="#">  Departments </a>
-                                <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="department-grid-3-column.html">Department grid 3 column</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="department-with-icon.html">Department with icons</a></li>
-                                </ul>
+                            <li class="nav-item no-dropdown">
+                                <a class="nav-link link_hd" asp-controller="Department" asp-action="Index">Departments</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link link_hd" href="#">  Pages  </a>
                                 <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="aboutus.html">About us</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact us</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="our-doctors.html">Our doctors</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="book-an-appoinment.html">Book an appointment</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="time-table.html">Timetable</a></li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Home" asp-action="About">About us</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact us</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Doctor" asp-action="Index">Our doctors</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Appointment" asp-action="Create">Book an appointment</a>
+                                    </li>
+
+                                    <li class="nav-item no-dropdown">
+                                        <a class="nav-link link_hd" asp-controller="Appointment" asp-action="Index">My Appointments</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -249,11 +257,10 @@
                             <h2>LINKS</h2>
                             <div class="footer-text">
                                 <ul>
-                                    <li><a href="#"> About Us</a></li>
-                                    <li><a href="#">Appointment</a></li>
-                                    <li><a href="#">Contact Us </a></li>
-                                    <li><a href="#">Blog </a></li>
-                                    <li><a href="#">Doctors</a></li>
+                                    <li><a asp-controller="Home" asp-action="About">About Us</a></li>
+                                    <li><a asp-controller="Appointment" asp-action="Create">Appointment</a></li>
+                                    <li><a asp-controller="Home" asp-action="Contact">Contact Us</a></li>
+                                    <li><a asp-controller="Doctor" asp-action="Index">Doctors</a></li>
                                     <li><a href="#">Gallery </a></li>
                                     <li><a href="#">Timetable </a></li>
                                     <li><a href="#">FAQs</a></li>
