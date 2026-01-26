@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HospitalManagement.Infrastructure.Persistence.Repositories
 {
-    public class DepartmentRepository: IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         private readonly AppDbContext _context;
 
@@ -24,9 +24,31 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
             return await _context.Departments.ToListAsync();
         }
 
-        public async Task<Department?> GetByIdAsync(int id)
+        public async Task<Department> GetByIdAsync(int id)
         {
             return await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
+        }
+
+        public async Task AddAsync(Department department)
+        {
+            await _context.Departments.AddAsync(department);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Department department)
+        {
+            _context.Departments.Update(department);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Department department = await _context.Departments.FindAsync(id);
+            if (department != null)
+            {
+                _context.Departments.Remove(department);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

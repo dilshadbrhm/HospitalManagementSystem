@@ -13,5 +13,6 @@ namespace HospitalManagement.Application.Interfaces
         Task<Patient> GetByIdAsync(int id);
         Task<Patient> GetByUserIdAsync(string userId);
         Task AddAsync(Patient patient);
+        Task DeleteAsync(int id);
     }
 }

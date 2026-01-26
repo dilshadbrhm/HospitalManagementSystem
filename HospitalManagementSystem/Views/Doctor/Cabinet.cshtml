@@ -19,6 +19,7 @@
                                     <th>Patient</th>
                                     <th>Time</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -27,7 +28,38 @@
                                     <tr>
                                         <td>@item.PatientName</td>
                                         <td>@item.StartTime.ToString(@"hh\:mm")</td>
-                                        <td>@item.Status</td>
+                                        <td>
+                                            @if (item.Status == "Pending")
+                                            {
+                                                <span class="badge badge-warning">Pending</span>
+                                            }
+                                            else if (item.Status == "Confirmed")
+                                            {
+                                                <span class="badge badge-success">Confirmed</span>
+                                            }
+                                            else if (item.Status == "Completed")
+                                            {
+                                                <span class="badge badge-info">Completed</span>
+                                            }
+                                            else if (item.Status == "Cancelled")
+                                            {
+                                                <span class="badge badge-danger">Cancelled</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Status != "Cancelled" && item.Status != "Completed")
+                                            {
+                                                <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                    <input type="hidden" name="appointmentId" value="@item.Id" />
+                                                    <select name="status" class="form-control form-control-sm" style="width:auto; display:inline;" onchange="this.form.submit()">
+                                                        <option value="" disabled>Change</option>
+                                                        <option value="Confirmed">Confirm</option>
+                                                        <option value="Completed">Complete</option>
+                                                        <option value="Cancelled">Cancel</option>
+                                                    </select>
+                                                </form>
+                                            }
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -55,6 +87,8 @@
                                     <th>Patient</th>
                                     <th>Date</th>
                                     <th>Time</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,6 +98,29 @@
                                         <td>@item.PatientName</td>
                                         <td>@item.AppointmentDate.ToString("dd.MM.yyyy")</td>
                                         <td>@item.StartTime.ToString(@"hh\:mm")</td>
+                                        <td>
+                                            @if (item.Status == "Pending")
+                                            {
+                                                <span class="badge badge-warning">Pending</span>
+                                            }
+                                            else if (item.Status == "Confirmed")
+                                            {
+                                                <span class="badge badge-success">Confirmed</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Status != "Cancelled" && item.Status != "Completed")
+                                            {
+                                                <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                    <input type="hidden" name="appointmentId" value="@item.Id" />
+                                                    <select name="status" class="form-control form-control-sm" style="width:auto; display:inline;" onchange="this.form.submit()">
+                                                        <option value="">Change</option>
+                                                        <option value="Confirmed">Confirm</option>
+                                                        <option value="Cancelled">Cancel</option>
+                                                    </select>
+                                                </form>
+                                            }
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

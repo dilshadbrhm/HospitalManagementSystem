@@ -143,6 +143,23 @@ namespace HospitalManagementSystem.Controllers
             await _cabinetService.DeleteTimeSlotAsync(GetUserId(), id);
             return RedirectToAction("TimeTable");
         }
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, string status)
+        {
+            bool result = await _cabinetService.UpdateAppointmentStatusAsync(GetUserId(), appointmentId, status);
+
+            if (result)
+            {
+                TempData["Success"] = "Status updated successfully";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to update status";
+            }
+
+            return RedirectToAction("Cabinet");
+        }
     }
 }
 

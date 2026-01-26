@@ -16,5 +16,6 @@ namespace HospitalManagement.Application.Interfaces
         Task<bool> AddTimeSlotAsync(string userId, CreateTimeSlotDto dto);
         Task<bool> UpdateTimeSlotAsync(string userId, TimeSlotDto dto);
         Task<bool> DeleteTimeSlotAsync(string userId, int id);
+        Task<bool> UpdateAppointmentStatusAsync(string userId, int appointmentId, string status);
     }
 }

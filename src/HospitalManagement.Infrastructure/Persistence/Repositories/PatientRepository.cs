@@ -38,5 +38,14 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
             await _context.Patients.AddAsync(patient);
             await _context.SaveChangesAsync();
         }
+        public async Task DeleteAsync(int id)
+        {
+            Patient patient = await _context.Patients.FindAsync(id);
+            if (patient != null)
+            {
+                _context.Patients.Remove(patient);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

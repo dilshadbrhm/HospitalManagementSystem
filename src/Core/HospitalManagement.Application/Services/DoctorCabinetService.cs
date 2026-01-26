@@ -160,7 +160,18 @@ namespace HospitalManagement.Application.Services
             await _timeSlotRepository.DeleteAsync(id);
             return true;
         }
-        
+        public async Task<bool> UpdateAppointmentStatusAsync(string userId, int appointmentId, string status)
+        {
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
+            if (doctor == null) return false;
+
+            Appointment appointment = await _appointmentRepository.GetByIdAsync(appointmentId);
+            if (appointment == null || appointment.DoctorId != doctor.Id) return false;
+
+            appointment.Status = (AppointmentStatus)Enum.Parse(typeof(AppointmentStatus), status);
+            await _appointmentRepository.UpdateAsync(appointment);
+            return true;
+        }
 
     }
 }

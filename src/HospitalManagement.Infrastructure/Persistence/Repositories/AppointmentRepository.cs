@@ -57,5 +57,23 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<Appointment>> GetAllAsync()
+        {
+            return await _context.Appointments
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Department)
+                .Include(a => a.Patient)
+                .ToListAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Appointment appointment = await _context.Appointments.FindAsync(id);
+            if (appointment != null)
+            {
+                _context.Appointments.Remove(appointment);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
