@@ -1,4 +1,6 @@
 using HospitalManagement.Application;
+using HospitalManagement.Application.Interfaces.Admin;
+using HospitalManagement.Application.Services.Admin;
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Infrastructure;
 using HospitalManagement.Infrastructure.Persistence;
@@ -48,5 +50,40 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (IServiceScope scope = app.Services.CreateScope())
+{
+    RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    UserManager<AppUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+
+    string[] roles = { "Admin", "Doctor", "Patient" };
+
+    foreach (string role in roles)
+    {
+        bool roleExists = await roleManager.RoleExistsAsync(role);
+        if (!roleExists)
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    string adminEmail = "admin@hospital.com";
+    AppUser adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (adminUser == null)
+    {
+        adminUser = new AppUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FirstName = "Admin",
+            LastName = "User",
+            EmailConfirmed = true
+        };
+
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
+}
 
 app.Run();

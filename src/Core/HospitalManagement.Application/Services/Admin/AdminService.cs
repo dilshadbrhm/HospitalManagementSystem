@@ -40,7 +40,7 @@ namespace HospitalManagement.Application.Services.Admin
             _roleManager = roleManager;
         }
 
-        public async Task<AdminDto> GetDashboardDataAsync()
+        public async Task<AdminDto> GetAdminHomeAsync()
         {
             IEnumerable<Doctor> doctors = await _doctorRepository.GetAllAsync();
             IEnumerable<Patient> patients = await _patientRepository.GetAllAsync();

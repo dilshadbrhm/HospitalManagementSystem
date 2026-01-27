@@ -1,0 +1,56 @@
+﻿@model List<HospitalManagement.Application.Dtos.Admin.AdminDoctorListDto>
+@{
+    ViewData["Title"] = "Doctors";
+}
+
+<div class="row">
+    <div class="col-md-12 grid-margin">
+        <div class="d-flex justify-content-between">
+            <h4 class="card-title">All Doctors</h4>
+            <a asp-action="CreateDoctor" class="btn btn-primary">Add New Doctor</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Department</th>
+                                <th>Specialization</th>
+                                <th>Fee</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (HospitalManagement.Application.Dtos.Admin.AdminDoctorListDto doctor in Model)
+                            {
+                                <tr>
+                                    <td>@doctor.FirstName @doctor.LastName</td>
+                                    <td>@doctor.Email</td>
+                                    <td>@doctor.Phone</td>
+                                    <td>@doctor.DepartmentName</td>
+                                    <td>@doctor.Specialization</td>
+                                    <td>@doctor.ConsultationFee AZN</td>
+                                    <td>
+                                        <a asp-action="EditDoctor" asp-route-id="@doctor.Id" class="btn btn-sm btn-warning">Edit</a>
+                                        <form asp-action="DeleteDoctor" asp-route-id="@doctor.Id" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

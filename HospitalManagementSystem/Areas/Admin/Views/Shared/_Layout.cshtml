@@ -1,36 +1,20 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewData["Title"] - Admin Panel</title>
-
     <link rel="stylesheet" href="~/admin/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="~/admin/vendors/base/vendor.bundle.base.css">
-    <link rel="stylesheet" href="~/admin/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <link rel="stylesheet" href="~/admin/css/style.css">
-    <link rel="shortcut icon" href="~/admin/images/favicon.png" />
-
-    @RenderSection("Styles", required: false)
 </head>
-
 <body>
-    @{
-        var controller = ViewContext.RouteData.Values["controller"]?.ToString();
-    }
-
     <div class="container-scroller">
-
-        <!-- Navbar -->
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex justify-content-center">
                 <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-                    <a class="navbar-brand brand-logo" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                        <img src="~/admin/images/logo.svg" alt="logo" />
-                    </a>
-                    <a class="navbar-brand brand-logo-mini" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                        <img src="~/admin/images/logo-mini.svg" alt="logo" />
+                    <a class="navbar-brand brand-logo" asp-controller="Admin" asp-action="Index">
+                        <span style="font-size: 20px; font-weight: bold; color: #fff;">Hospital Admin</span>
                     </a>
                     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                         <span class="mdi mdi-sort-variant"></span>
@@ -38,37 +22,20 @@
                 </div>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-                <ul class="navbar-nav mr-lg-4 w-100">
-                    <li class="nav-item nav-search d-none d-lg-block w-100">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="search">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Axtar..." aria-label="search" aria-describedby="search">
-                        </div>
-                    </li>
-                </ul>
                 <ul class="navbar-nav navbar-nav-right">
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-                            <img src="~/admin/images/faces/face5.jpg" alt="profile" />
-                            <span class="nav-profile-name">Admin</span>
+                            <span class="nav-profile-name">@User.Identity.Name</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="mdi mdi-home text-primary"></i>
-                                Sayta qayıt
+                            <a class="dropdown-item" asp-controller="Home" asp-action="Index">
+                                <i class="mdi mdi-home text-primary"></i> Main Site
                             </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="mdi mdi-settings text-primary"></i>
-                                Tənzimləmələr
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="mdi mdi-logout text-primary"></i>
-                                Çıxış
-                            </a>
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="mdi mdi-logout text-primary"></i> Logout
+                                </button>
+                            </form>
                         </div>
                     </li>
                 </ul>
@@ -79,74 +46,58 @@
         </nav>
 
         <div class="container-fluid page-body-wrapper">
-
-            <!-- Sidebar -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-
-                    <!-- Dashboard -->
-                    <li class="nav-item @(controller == "Dashboard" ? "active" : "")">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Index">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-
-                    <!-- Departments -->
-                    <li class="nav-item @(controller == "Department" ? "active" : "")">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Department" asp-action="Index">
-                            <i class="mdi mdi-hospital-building menu-icon"></i>
-                            <span class="menu-title">Şöbələr</span>
-                        </a>
-                    </li>
-
-                    <!-- Doctors -->
-                    <li class="nav-item @(controller == "Doctor" ? "active" : "")">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Doctor" asp-action="Index">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Doctors">
                             <i class="mdi mdi-doctor menu-icon"></i>
-                            <span class="menu-title">Həkimlər</span>
+                            <span class="menu-title">Doctors</span>
                         </a>
                     </li>
-
-                    <!-- Services -->
-                    <li class="nav-item @(controller == "Service" ? "active" : "")">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Service" asp-action="Index">
-                            <i class="mdi mdi-medical-bag menu-icon"></i>
-                            <span class="menu-title">Xidmətlər</span>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Patients">
+                            <i class="mdi mdi-account-multiple menu-icon"></i>
+                            <span class="menu-title">Patients</span>
                         </a>
                     </li>
-
-                    <!-- Sliders -->
-                    <li class="nav-item @(controller == "Slider" ? "active" : "")">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Slider" asp-action="Index">
-                            <i class="mdi mdi-image-multiple menu-icon"></i>
-                            <span class="menu-title">Sliderlər</span>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Departments">
+                            <i class="mdi mdi-hospital-building menu-icon"></i>
+                            <span class="menu-title">Departments</span>
                         </a>
                     </li>
-
-                    <!-- Settings -->
-                    <li class="nav-item @(controller == "Setting" ? "active" : "")">
-                        <a class="nav-link" asp-area="Admin" asp-controller="Setting" asp-action="Index">
-                            <i class="mdi mdi-settings menu-icon"></i>
-                            <span class="menu-title">Tənzimləmələr</span>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Admin" asp-action="Appointments">
+                            <i class="mdi mdi-calendar-check menu-icon"></i>
+                            <span class="menu-title">Appointments</span>
                         </a>
                     </li>
-
                 </ul>
             </nav>
 
-            <!-- Main Content -->
             <div class="main-panel">
                 <div class="content-wrapper">
-
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Success"]</div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["Error"]</div>
+                    }
                     @RenderBody()
-
                 </div>
 
                 <footer class="footer">
                     <div class="d-sm-flex justify-content-center justify-content-sm-between">
                         <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
-                            © @DateTime.Now.Year Meditex Admin Panel
+                            Hospital Management System
                         </span>
                     </div>
                 </footer>
@@ -155,15 +106,9 @@
     </div>
 
     <script src="~/admin/vendors/base/vendor.bundle.base.js"></script>
-    <script src="~/admin/vendors/chart.js/Chart.min.js"></script>
-    <script src="~/admin/vendors/datatables.net/jquery.dataTables.js"></script>
-    <script src="~/admin/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
     <script src="~/admin/js/off-canvas.js"></script>
     <script src="~/admin/js/hoverable-collapse.js"></script>
     <script src="~/admin/js/template.js"></script>
-    <script src="~/admin/js/jquery.cookie.js" type="text/javascript"></script>
-
     @RenderSection("Scripts", required: false)
 </body>
-
 </html>

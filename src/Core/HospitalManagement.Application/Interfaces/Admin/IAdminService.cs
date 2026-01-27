@@ -12,7 +12,7 @@ namespace HospitalManagement.Application.Interfaces.Admin
 {
     public interface IAdminService
     {
-        Task<AdminDto> GetDashboardDataAsync();
+        Task<AdminDto> GetAdminHomeAsync();
 
         Task<List<AdminDoctorListDto>> GetAllDoctorsAsync();
         Task<AdminDoctorEditDto> GetDoctorByIdAsync(int id);

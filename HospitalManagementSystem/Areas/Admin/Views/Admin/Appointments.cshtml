@@ -1,0 +1,94 @@
+﻿@model List<HospitalManagement.Application.Dtos.Appointment.AppointmentItemDto>
+@{
+    ViewData["Title"] = "Appointments";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 grid-margin">
+        <h4>All Appointments</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th>Department</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.PatientName</td>
+                                    <td>@item.DoctorName</td>
+                                    <td>@item.DepartmentName</td>
+                                    <td>@item.AppointmentDate.ToString("dd.MM.yyyy")</td>
+                                    <td>@item.StartTime.ToString(@"hh\:mm")</td>
+                                    <td>
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <span class="badge badge-warning">Pending</span>
+                                        }
+                                        else if (item.Status == "Confirmed")
+                                        {
+                                            <span class="badge badge-success">Confirmed</span>
+                                        }
+                                        else if (item.Status == "Completed")
+                                        {
+                                            <span class="badge badge-info">Completed</span>
+                                        }
+                                        else if (item.Status == "Cancelled")
+                                        {
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="status" value="Confirmed" />
+                                                <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                                            </form>
+                                        }
+                                        @if (item.Status == "Confirmed")
+                                        {
+                                            <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="status" value="Completed" />
+                                                <button type="submit" class="btn btn-sm btn-info">Complete</button>
+                                            </form>
+                                        }
+                                        @if (item.Status != "Cancelled" && item.Status != "Completed")
+                                        {
+                                            <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="status" value="Cancelled" />
+                                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                            </form>
+                                        }
+                                        <form asp-action="DeleteAppointment" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-sm btn-dark" onclick="return confirm('Are you sure?')">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
