@@ -39,13 +39,16 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHttpsRedirection();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",
@@ -67,7 +70,7 @@ using (IServiceScope scope = app.Services.CreateScope())
         }
     }
 
-    string adminEmail = "admin@hospital.com";
+    string adminEmail = "admin@test.com";
     AppUser adminUser = await userManager.FindByEmailAsync(adminEmail);
 
     if (adminUser == null)
@@ -81,7 +84,7 @@ using (IServiceScope scope = app.Services.CreateScope())
             EmailConfirmed = true
         };
 
-        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.CreateAsync(adminUser, "Admin123");
         await userManager.AddToRoleAsync(adminUser, "Admin");
     }
 }
