@@ -58,7 +58,7 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
 
             public async Task DeleteAsync(int id)
             {
-                var doctor = await _context.Doctors.FindAsync(id);
+                Doctor? doctor = await _context.Doctors.FindAsync(id);
                 if (doctor != null)
                 {
                     _context.Doctors.Remove(doctor);

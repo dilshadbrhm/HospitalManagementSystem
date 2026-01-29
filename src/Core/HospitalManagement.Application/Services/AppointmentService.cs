@@ -31,20 +31,23 @@ namespace HospitalManagement.Application.Services
                 throw new Exception("Appointment not found");
             }
 
-            DetailsAppointmentDto dto = new DetailsAppointmentDto();
-            dto.Id = appointment.Id;
-            dto.PatientId = appointment.PatientId;
-            dto.DoctorId = appointment.DoctorId;
-            dto.AppointmentDate = appointment.AppointmentDate;
-            dto.StartTime = appointment.StartTime;
-            dto.EndTime = appointment.EndTime;
-            dto.Status = appointment.Status.ToString();
-            dto.Symptoms = appointment.Symptoms;
-            dto.Notes = appointment.Notes;
-            dto.Fee = appointment.Fee;
-            dto.IsPaid = appointment.IsPaid;
-            dto.CancellationReason = appointment.CancellationReason;
-            dto.CancelledAt = appointment.CancelledAt;
+            DetailsAppointmentDto dto = new DetailsAppointmentDto
+            {
+              Id = appointment.Id,
+              PatientId = appointment.PatientId,
+              DoctorId = appointment.DoctorId,
+              AppointmentDate = appointment.AppointmentDate,
+              StartTime = appointment.StartTime,
+              EndTime = appointment.EndTime,
+              Status = appointment.Status.ToString(),
+              Symptoms = appointment.Symptoms,
+              Notes = appointment.Notes,
+              Fee = appointment.Fee,
+              IsPaid = appointment.IsPaid,
+              CancellationReason = appointment.CancellationReason,
+              CancelledAt = appointment.CancelledAt
+            };
+          
 
             if (appointment.Doctor != null)
             {
@@ -299,11 +302,14 @@ namespace HospitalManagement.Application.Services
 
             foreach (Doctor doctor in doctors)
             {
-                DoctorSelectDto dto = new DoctorSelectDto();
-                dto.Id = doctor.Id;
-                dto.FullName = doctor.FirstName + " " + doctor.LastName;
-                dto.Specialization = doctor.Specialization;
-                dto.ConsultationFee = doctor.ConsultationFee;
+                DoctorSelectDto dto = new DoctorSelectDto
+                {
+                   Id = doctor.Id,
+                   FullName = doctor.FirstName + " " + doctor.LastName,
+                   Specialization = doctor.Specialization,
+                   ConsultationFee = doctor.ConsultationFee
+                };
+               
                 result.Add(dto);
             }
 

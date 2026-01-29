@@ -29,10 +29,13 @@ namespace HospitalManagement.Application.Services
 
             foreach (Department department in departments)
             {
-                DepartmentDto dto = new DepartmentDto();
-                dto.Id = department.Id;
-                dto.Name = department.Name;
-                dto.ShortDescription = department.Description;
+                DepartmentDto dto = new DepartmentDto
+                {                  
+                    Id = department.Id,
+                   Name = department.Name,
+                   ShortDescription = department.Description
+                };
+               
 
                 result.Add(dto);
             }
@@ -49,11 +52,14 @@ namespace HospitalManagement.Application.Services
                 return null;
             }
 
-            DepartmentDetailsDto dto = new DepartmentDetailsDto();
-            dto.Id = department.Id;
-            dto.Name = department.Name;
-            dto.ShortDescription = department.Description;
-            dto.Doctors = new List<DoctorItemDto>();
+            DepartmentDetailsDto dto = new DepartmentDetailsDto
+            {
+               Id = department.Id,
+               Name = department.Name,
+               ShortDescription = department.Description,
+               Doctors = new List<DoctorItemDto>()
+            };
+           
 
             IEnumerable<Doctor> doctors = await _doctorRepository.GetAllAsync();
 
@@ -61,15 +67,18 @@ namespace HospitalManagement.Application.Services
             {
                 if (doctor.DepartmentId == id)
                 {
-                    DoctorItemDto doctorDto = new DoctorItemDto();
-                    doctorDto.Id = doctor.Id;
-                    doctorDto.FirstName = doctor.FirstName;
-                    doctorDto.LastName = doctor.LastName;
-                    doctorDto.FullName = doctor.FirstName + " " + doctor.LastName;
-                    doctorDto.Specialization = doctor.Specialization;
-                    doctorDto.ProfilePicture = doctor.ProfilePicture;
-                    doctorDto.Bio = doctor.Bio;
-                    doctorDto.DepartmentName = department.Name;
+                    DoctorItemDto doctorDto = new DoctorItemDto
+                    {
+                       Id = doctor.Id,
+                       FirstName = doctor.FirstName,
+                       LastName = doctor.LastName,
+                       FullName = doctor.FirstName + " " + doctor.LastName,
+                       Specialization = doctor.Specialization,
+                       ProfilePicture = doctor.ProfilePicture,
+                       Bio = doctor.Bio,
+                       DepartmentName = department.Name
+                    };
+                 
 
                     dto.Doctors.Add(doctorDto);
                 }

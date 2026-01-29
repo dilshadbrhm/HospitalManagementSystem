@@ -29,14 +29,17 @@ namespace HospitalManagement.Application.Services
 
             foreach (Doctor doctor in doctors)
             {
-                DoctorItemDto dto = new DoctorItemDto();
-                dto.Id = doctor.Id;
-                dto.FirstName = doctor.FirstName;
-                dto.LastName = doctor.LastName;
-                dto.FullName = doctor.FirstName + " " + doctor.LastName;
-                dto.Specialization = doctor.Specialization;
-                dto.ProfilePicture = doctor.ProfilePicture;
-                dto.Bio = doctor.Bio;
+                DoctorItemDto dto = new DoctorItemDto
+                {
+                    Id = doctor.Id,
+                    FirstName = doctor.FirstName,
+                    LastName = doctor.LastName,
+                    FullName = doctor.FirstName + " " + doctor.LastName,
+                    Specialization = doctor.Specialization,
+                    ProfilePicture = doctor.ProfilePicture,
+                    Bio = doctor.Bio
+                };
+                
 
                 if (doctor.Department != null)
                 {
@@ -62,17 +65,20 @@ namespace HospitalManagement.Application.Services
 
             string[] dayNames = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
-            DoctorProfileDto dto = new DoctorProfileDto();
-            dto.Id = doctor.Id;
-            dto.FirstName = doctor.FirstName;
-            dto.LastName = doctor.LastName;
-            dto.FullName = doctor.FirstName + " " + doctor.LastName;
-            dto.Email = doctor.Email;
-            dto.Phone = doctor.Phone;
-            dto.Specialization = doctor.Specialization;
-            dto.ProfilePicture = doctor.ProfilePicture;
-            dto.Bio = doctor.Bio;
-            dto.ConsultationFee = doctor.ConsultationFee;
+            DoctorProfileDto dto = new DoctorProfileDto
+            {
+               Id = doctor.Id,
+               FirstName = doctor.FirstName,
+               LastName = doctor.LastName,
+               FullName = doctor.FirstName + " " + doctor.LastName,
+               Email = doctor.Email,
+               Phone = doctor.Phone,
+               Specialization = doctor.Specialization,
+               ProfilePicture = doctor.ProfilePicture,
+               Bio = doctor.Bio,
+               ConsultationFee = doctor.ConsultationFee
+            };
+            
 
             if (doctor.Department != null)
             {
@@ -85,14 +91,17 @@ namespace HospitalManagement.Application.Services
             {
                 if (slot.IsAvailable)
                 {
-                    TimeSlotDto slotDto = new TimeSlotDto();
-                    slotDto.Id = slot.Id;
-                    slotDto.DayOfWeek = (int)slot.DayOfWeek;
-                    slotDto.DayName = dayNames[(int)slot.DayOfWeek];
-                    slotDto.StartTime = slot.StartTime;
-                    slotDto.EndTime = slot.EndTime;
-                    slotDto.Location = slot.Location;
-                    slotDto.IsAvailable = slot.IsAvailable;
+                    TimeSlotDto slotDto = new TimeSlotDto
+                    {
+                        Id = slot.Id,
+                        DayOfWeek = (int)slot.DayOfWeek,
+                        DayName = dayNames[(int)slot.DayOfWeek],
+                        StartTime = slot.StartTime,
+                        EndTime = slot.EndTime,
+                        Location = slot.Location,
+                        IsAvailable = slot.IsAvailable
+                    };
+                   
 
                     dto.TimeSlots.Add(slotDto);
                 }
@@ -113,14 +122,17 @@ namespace HospitalManagement.Application.Services
             {
                 if (slot.IsAvailable)
                 {
-                    TimeSlotDto dto = new TimeSlotDto();
-                    dto.Id = slot.Id;
-                    dto.DayOfWeek = (int)slot.DayOfWeek;
-                    dto.DayName = dayNames[(int)slot.DayOfWeek];
-                    dto.StartTime = slot.StartTime;
-                    dto.EndTime = slot.EndTime;
-                    dto.Location = slot.Location;
-                    dto.IsAvailable = slot.IsAvailable;
+                    TimeSlotDto dto = new TimeSlotDto
+                    {
+                       Id = slot.Id,
+                       DayOfWeek = (int)slot.DayOfWeek,
+                       DayName = dayNames[(int)slot.DayOfWeek],
+                       StartTime = slot.StartTime,
+                       EndTime = slot.EndTime,
+                       Location = slot.Location,
+                       IsAvailable = slot.IsAvailable
+                    };
+                   
 
                     result.Add(dto);
                 }

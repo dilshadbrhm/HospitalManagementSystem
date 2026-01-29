@@ -39,7 +39,8 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateDoctor()
         {
-            ViewBag.Departments = await _departmentRepository.GetAllAsync();
+            IEnumerable<Department> departments = await _departmentRepository.GetAllAsync();
+            ViewBag.Departments = departments;
             return View();
         }
 

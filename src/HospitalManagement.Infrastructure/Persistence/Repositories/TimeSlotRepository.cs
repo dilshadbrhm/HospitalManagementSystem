@@ -46,7 +46,7 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var timeSlot = await _context.TimeSlots.FindAsync(id);
+            TimeSlot? timeSlot = await _context.TimeSlots.FindAsync(id);
             if (timeSlot != null)
             {
                 _context.TimeSlots.Remove(timeSlot);

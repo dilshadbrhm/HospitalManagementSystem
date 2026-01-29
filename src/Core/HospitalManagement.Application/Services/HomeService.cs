@@ -2,6 +2,7 @@
 using HospitalManagement.Application.Dtos.Department;
 using HospitalManagement.Application.Dtos.Doctor;
 using HospitalManagement.Application.Interfaces;
+using HospitalManagement.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace HospitalManagement.Application.Services
 
         public async Task<HomeDto> GetHomeDataAsync()
         {
-            var departments = await _departmentRepository.GetAllAsync();
-            var doctors = await _doctorRepository.GetAllWithDepartmentAsync();
+            IEnumerable<Department> departments = await _departmentRepository.GetAllAsync();
+            IEnumerable<Doctor> doctors = await _doctorRepository.GetAllWithDepartmentAsync();
 
             return new HomeDto
             {
