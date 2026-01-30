@@ -65,5 +65,14 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
                     await _context.SaveChangesAsync();
                 }
             }
+        public async Task<Doctor> GetByIdWithTimeSlotsAsync(int id)
+        {
+            Doctor? doctor = await _context.Doctors
+                .Include(d => d.Department)
+                .Include(d => d.TimeSlots)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            return doctor;
         }
+    }
 }

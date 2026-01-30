@@ -64,6 +64,7 @@
                                     <p>@doctor.DepartmentName department specialist.</p>
                                 }
                                 <a asp-action="Profile" asp-route-id="@doctor.Id" class="theme-btn">View Profile</a>
+                                <a asp-controller="Appointment" asp-action="DoctorSchedule" asp-route-doctorId="@doctor.Id" class="theme-btn" style="margin-left:10px; background-color:#28a745;">Book Appointment</a>
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@
 using HospitalManagement.Application.Dtos.Doctor;
 using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
+using HospitalManagement.Application.Services;
 using HospitalManagement.Domain;
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Domain.Enums;
@@ -19,6 +20,7 @@ namespace HospitalManagementSystem.Controllers
     {
         private readonly IAppointmentService _appointmentService;
         private readonly IPatientRepository _patientService;
+        private readonly IDoctorService _doctorService;
 
         public AppointmentController(IAppointmentService appointmentService, IPatientRepository patientRepository)
         {
@@ -237,6 +239,42 @@ namespace HospitalManagementSystem.Controllers
             }
 
             return patient.Id;
+        }
+        [HttpGet]
+        public async Task<IActionResult> DoctorSchedule(int doctorId, string date)
+        {
+            DateTime selectedDate = string.IsNullOrEmpty(date)
+                ? DateTime.Today
+                : DateTime.Parse(date);
+
+            DoctorProfileDto schedule = await _doctorService.GetDoctorScheduleAsync(doctorId, selectedDate);
+
+            if (schedule == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.SelectedDate = selectedDate;
+            ViewBag.AvailableDates = GetNext14Days();
+
+            return View(schedule);
+        }
+
+        private List<DateTime> GetNext14Days()
+        {
+            List<DateTime> dates = new List<DateTime>();
+
+            for (int i = 0; i < 14; i++)
+            {
+                DateTime checkDate = DateTime.Today.AddDays(i);
+
+                if (checkDate.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    dates.Add(checkDate);
+                }
+            }
+
+            return dates;
         }
     }
 }

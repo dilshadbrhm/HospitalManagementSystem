@@ -75,5 +75,15 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<List<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date)
+        {
+            List<Appointment> appointments = await _context.Appointments
+                .Where(a => a.DoctorId == doctorId &&
+                            a.AppointmentDate.Date == date.Date &&
+                            a.Status != Domain.Enums.AppointmentStatus.Cancelled)
+                .ToListAsync();
+
+            return appointments;
+        }
     }
 }

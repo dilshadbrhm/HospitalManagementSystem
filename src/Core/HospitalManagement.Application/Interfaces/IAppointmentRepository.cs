@@ -16,5 +16,6 @@ namespace HospitalManagement.Application.Interfaces
         Task AddAsync(Appointment appointment);
         Task UpdateAsync(Appointment appointment);
         Task DeleteAsync(int id);
+        Task<List<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date);
     }
 }

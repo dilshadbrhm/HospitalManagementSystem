@@ -16,5 +16,6 @@ namespace HospitalManagement.Application.Interfaces
         Task AddAsync(Doctor doctor);
         Task UpdateAsync(Doctor doctor);
         Task DeleteAsync(int id);
+        Task<Doctor> GetByIdWithTimeSlotsAsync(int id);
     }
 }
