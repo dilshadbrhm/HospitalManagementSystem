@@ -24,5 +24,7 @@ namespace HospitalManagement.Application.Interfaces
         Task<List<TimeSlotSelectDto>> GetAvailableSlotsAsync(int doctorId, DateTime date);
         Task<List<DepartmentSelectDto>> GetDepartmentsAsync();
         Task<List<DoctorSelectDto>> GetDoctorsByDepartmentAsync(int departmentId);
+        Task<List<TimeSlotSelectDto>> GetAllSlotsWithStatusAsync(int doctorId, DateTime date);
+        Task<Dictionary<DateTime, int>> GetAvailableSlotsCountByDatesAsync(int doctorId, List<DateTime> dates);
     }
 }

@@ -148,15 +148,19 @@
                                                             <td>
                                                                 @if (appointment.Status == "Pending")
                                                                 {
-                                                                    <a href="/Admin/Home/ApproveAppointment/@appointment.Id" class="btn btn-sm btn-success" title="Approve">
-                                                                        <i class="mdi mdi-check"></i>
-                                                                    </a>
+                                                                    <form action="/Admin/Home/ApproveAppointment/@appointment.Id" method="post" style="display:inline;">
+                                                                        <button type="submit" class="btn btn-sm btn-success" title="Approve">
+                                                                            <i class="mdi mdi-check"></i>
+                                                                        </button>
+                                                                    </form>
                                                                 }
                                                                 @if (appointment.Status != "Cancelled" && appointment.Status != "Completed")
                                                                 {
-                                                                    <a href="/Admin/Home/CancelAppointment/@appointment.Id" class="btn btn-sm btn-danger" title="Cancel" onclick="return confirm('Are you sure?')">
-                                                                        <i class="mdi mdi-close"></i>
-                                                                    </a>
+                                                                    <form action="/Admin/Home/CancelAppointment/@appointment.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure?')">
+                                                                        <button type="submit" class="btn btn-sm btn-danger" title="Cancel">
+                                                                            <i class="mdi mdi-close"></i>
+                                                                        </button>
+                                                                    </form>
                                                                 }
                                                             </td>
                                                         </tr>

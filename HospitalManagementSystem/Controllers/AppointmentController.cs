@@ -22,10 +22,12 @@ namespace HospitalManagementSystem.Controllers
         private readonly IPatientRepository _patientService;
         private readonly IDoctorService _doctorService;
 
-        public AppointmentController(IAppointmentService appointmentService, IPatientRepository patientRepository)
+        public AppointmentController(IAppointmentService appointmentService, IPatientRepository patientRepository,IDoctorService doctorService)
         {
             _appointmentService = appointmentService;
             _patientService = patientRepository;
+            _doctorService = doctorService;
+
         }
 
         [HttpGet]
@@ -241,6 +243,7 @@ namespace HospitalManagementSystem.Controllers
             return patient.Id;
         }
         [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> DoctorSchedule(int doctorId, string date)
         {
             DateTime selectedDate = string.IsNullOrEmpty(date)
@@ -254,12 +257,15 @@ namespace HospitalManagementSystem.Controllers
                 return NotFound();
             }
 
+            List<DateTime> availableDates = GetNext14Days();
+            Dictionary<DateTime, int> slotsCount = await _appointmentService.GetAvailableSlotsCountByDatesAsync(doctorId, availableDates);
+
             ViewBag.SelectedDate = selectedDate;
-            ViewBag.AvailableDates = GetNext14Days();
+            ViewBag.AvailableDates = availableDates;
+            ViewBag.SlotsCount = slotsCount;
 
             return View(schedule);
         }
-
         private List<DateTime> GetNext14Days()
         {
             List<DateTime> dates = new List<DateTime>();
@@ -275,6 +281,12 @@ namespace HospitalManagementSystem.Controllers
             }
 
             return dates;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllSlotsWithStatus(int doctorId, DateTime date)
+        {
+            List<TimeSlotSelectDto> slots = await _appointmentService.GetAllSlotsWithStatusAsync(doctorId, date);
+            return Json(slots);
         }
     }
 }

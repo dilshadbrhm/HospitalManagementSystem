@@ -1,117 +1,214 @@
-﻿@model HospitalManagement.Application.Dtos.Doctor.DoctorProfileDto
+﻿@using System.Collections.Generic
+@model HospitalManagement.Application.Dtos.Doctor.DoctorProfileDto
 @{
     ViewData["Title"] = "Doctor Schedule";
     DateTime selectedDate = (DateTime)ViewBag.SelectedDate;
-    List<DateTime> availableDates = (List<DateTime>)ViewBag.AvailableDates;
-}
+    var availableDates = ViewBag.AvailableDates as System.Collections.Generic.List<DateTime>
+    ;
+    var slotsCount = ViewBag.SlotsCount as System.Collections.Generic.Dictionary<DateTime, int>
+        ;
+        }
 
-<div class="container py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/Doctor">Doctors</a></li>
-                    <li class="breadcrumb-item active">Schedule</li>
-                </ol>
-            </nav>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-3 text-center">
-            @if (!string.IsNullOrEmpty(Model.ProfilePicture))
-            {
-                <img src="@Model.ProfilePicture" alt="@Model.FullName" class="rounded-circle" style="width:120px;height:120px;object-fit:cover;">
-            }
-            else
-            {
-                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto" style="width:120px;height:120px;">
-                    <span class="text-white" style="font-size:40px;">@Model.FirstName[0]@Model.LastName[0]</span>
+        <div class="container py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/Doctor">Doctors</a></li>
+                            <li class="breadcrumb-item active">Schedule</li>
+                        </ol>
+                    </nav>
                 </div>
-            }
-        </div>
-        <div class="col-md-9">
-            <h2>Dr. @Model.FullName</h2>
-            <p class="text-muted mb-1">@Model.Specialization</p>
-            <p class="text-muted mb-1">@Model.DepartmentName</p>
-            <p class="text-success fw-bold">@Model.ConsultationFee AZN</p>
-        </div>
-    </div>
+            </div>
 
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Select Date</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex flex-wrap">
-                        @foreach (DateTime availableDate in availableDates)
-                        {
-                            string btnClass = availableDate.Date == selectedDate.Date
-                                ? "btn-primary"
-                                : "btn-outline-secondary";
-
-                            <a href="/Appointment/DoctorSchedule?doctorId=@Model.Id&date=@availableDate.ToString("yyyy-MM-dd")"
-                               class="btn @btnClass btn-sm m-1" style="min-width:70px;">
-                                <strong>@availableDate.ToString("dd")</strong><br>
-                                <small>@availableDate.ToString("ddd")</small>
-                            </a>
-                        }
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center">
+                                    @if (!string.IsNullOrEmpty(Model.ProfilePicture))
+                                    {
+                                    <img src="@Model.ProfilePicture" alt="@Model.FullName" class="rounded-circle shadow" style="width:100px;height:100px;object-fit:cover;">
+                                    }
+                                    else
+                                    {
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto shadow" style="width:100px;height:100px;">
+                                        <span class="text-white" style="font-size:36px;">@Model.FirstName[0]@Model.LastName[0]</span>
+                                    </div>
+                                    }
+                                </div>
+                                <div class="col-md-7">
+                                    <h3 class="mb-1">Dr. @Model.FullName</h3>
+                                    <p class="text-muted mb-1">@Model.Specialization</p>
+                                    <p class="text-muted mb-0">@Model.DepartmentName</p>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <div class="bg-success bg-opacity-10 rounded p-3">
+                                        <h4 class="text-success mb-0">@Model.ConsultationFee AZN</h4>
+                                        <small class="text-muted">Consultation Fee</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">@selectedDate.ToString("dd MMMM yyyy, dddd")</h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <span class="badge bg-success p-2 me-2">Available</span>
-                        <span class="badge bg-danger p-2">Booked</span>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Select Date</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center mb-3">
+                                <span class="badge bg-success me-2">Available</span>
+                                <span class="badge bg-warning text-dark me-2">Few Left</span>
+                                <span class="badge bg-danger">Full</span>
+                            </div>
+
+                            <div class="d-flex flex-wrap justify-content-center">
+                                @if (availableDates != null && slotsCount != null)
+                                {
+                                @foreach (DateTime availableDate in availableDates)
+                                {
+                                int count = slotsCount.ContainsKey(availableDate) ? slotsCount[availableDate] : 0;
+                                bool isSelected = availableDate.Date == selectedDate.Date;
+
+                                string btnClass = "btn-success";
+                                if (isSelected)
+                                {
+                                btnClass = "btn-primary";
+                                }
+                                else if (count == 0)
+                                {
+                                btnClass = "btn-danger";
+                                }
+                                else if (count <= 5)
+                                {
+                                btnClass = "btn-warning";
+                                }
+
+                                <a href="/Appointment/DoctorSchedule?doctorId=@Model.Id&date=@availableDate.ToString(" yyyy-MM-dd")" class="btn @btnClass btn-sm m-1 position-relative" style="min-width:70px;">
+                                    <strong>@availableDate.ToString("dd")</strong><br />
+                                    <small>@availableDate.ToString("ddd")</small>
+                                    @if (!isSelected && count > 0)
+                                    {
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size:10px;">@count</span>
+                                    }
+                                </a>
+                                }
+                                }
+                            </div>
+                        </div>
                     </div>
 
-                    @if (Model.TimeSlots != null && Model.TimeSlots.Count > 0)
-                    {
-                        <div class="row g-2">
-                            @foreach (HospitalManagement.Application.Dtos.Timeslot.TimeSlotDto slot in Model.TimeSlots)
+                    <div class="card shadow-sm mt-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Working Hours</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Mon - Sat:</strong> 09:00 - 18:00</p>
+                            <p class="mb-0"><strong>Sunday:</strong> <span class="text-danger">Closed</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">@selectedDate.ToString("dd MMMM yyyy, dddd")</h5>
+                            @if (Model.TimeSlots != null)
                             {
+                            int availableCount = 0;
+                            int totalCount = Model.TimeSlots.Count;
+                            foreach (var s in Model.TimeSlots)
+                            {
+                            if (s.IsAvailable)
+                            {
+                            availableCount++;
+                            }
+                            }
+                            <span class="badge bg-info">@availableCount / @totalCount available</span>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4 p-3 bg-light rounded">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <button class="btn btn-success btn-sm" disabled style="width:120px;">Available</button>
+                                        <p class="small text-muted mt-1 mb-0">Click to book</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-danger btn-sm" disabled style="width:120px;">Booked</button>
+                                        <p class="small text-muted mt-1 mb-0">Not available</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (Model.TimeSlots != null && Model.TimeSlots.Count > 0)
+                            {
+                            <h6 class="text-muted mb-3">Morning (09:00 - 12:00)</h6>
+                            <div class="row g-2 mb-4">
+                                @foreach (var slot in Model.TimeSlots)
+                                {
+                                if (slot.StartTime.Hours < 12)
+                                {
                                 string startTime = slot.StartTime.ToString(@"hh\:mm");
                                 string endTime = slot.EndTime.ToString(@"hh\:mm");
 
                                 if (slot.IsAvailable)
                                 {
-                                    <div class="col-md-3 col-6">
-                                        <a href="/Appointment/Create?doctorId=@Model.Id&date=@selectedDate.ToString("yyyy-MM-dd")&startTime=@startTime"
-                                           class="btn btn-success w-100 py-2">
-                                            @startTime - @endTime
-                                        </a>
-                                    </div>
+                                <div class="col-lg-3 col-md-4 col-6">
+                                    <a href="/Appointment/Create?doctorId=@Model.Id&date=@selectedDate.ToString(" yyyy-MM-dd")&startTime=@startTime" class="btn btn-success w-100 py-2">@startTime - @endTime</a>
+                                </div>
                                 }
                                 else
                                 {
-                                    <div class="col-md-3 col-6">
-                                        <button class="btn btn-danger w-100 py-2" disabled>
-                                            @startTime - @endTime
-                                        </button>
-                                    </div>
+                                <div class="col-lg-3 col-md-4 col-6">
+                                    <button class="btn btn-danger w-100 py-2" disabled>@startTime - @endTime</button>
+                                </div>
                                 }
+                                }
+                                }
+                            </div>
+
+                            <h6 class="text-muted mb-3">Afternoon (12:00 - 18:00)</h6>
+                            <div class="row g-2">
+                                @foreach (var slot in Model.TimeSlots)
+                                {
+                                if (slot.StartTime.Hours >= 12)
+                                {
+                                string startTime = slot.StartTime.ToString(@"hh\:mm");
+                                string endTime = slot.EndTime.ToString(@"hh\:mm");
+
+                                if (slot.IsAvailable)
+                                {
+                                <div class="col-lg-3 col-md-4 col-6">
+                                    <a href="/Appointment/Create?doctorId=@Model.Id&date=@selectedDate.ToString(" yyyy-MM-dd")&startTime=@startTime" class="btn btn-success w-100 py-2">@startTime - @endTime</a>
+                                </div>
+                                }
+                                else
+                                {
+                                <div class="col-lg-3 col-md-4 col-6">
+                                    <button class="btn btn-danger w-100 py-2" disabled>@startTime - @endTime</button>
+                                </div>
+                                }
+                                }
+                                }
+                            </div>
+                            }
+                            else
+                            {
+                            <div class="alert alert-warning text-center">
+                                <h5>No Time Slots Available</h5>
+                                <p class="mb-0">The doctor is not available on this day. Please select another date.</p>
+                            </div>
                             }
                         </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-circle"></i>
-                            No time slots available for this day.
-                        </div>
-                    }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>

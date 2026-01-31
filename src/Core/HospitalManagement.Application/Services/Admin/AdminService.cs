@@ -211,6 +211,14 @@ namespace HospitalManagement.Application.Services.Admin
                 return false;
             }
 
+            IEnumerable<Appointment> appointments = await _appointmentRepository.GetAllAsync();
+            bool hasAppointments = appointments.Any(a => a.PatientId == id);
+
+            if (hasAppointments)
+            {
+                return false; 
+            }
+
             await _patientRepository.DeleteAsync(id);
 
             return true;
@@ -249,7 +257,17 @@ namespace HospitalManagement.Application.Services.Admin
 
         public async Task<bool> UpdateDepartmentAsync(Department department)
         {
-            await _departmentRepository.UpdateAsync(department);
+            Department existingDepartment = await _departmentRepository.GetByIdAsync(department.Id);
+
+            if (existingDepartment == null)
+            {
+                return false;
+            }
+
+            existingDepartment.Name = department.Name;
+            existingDepartment.Description = department.Description;
+
+            await _departmentRepository.UpdateAsync(existingDepartment);
             return true;
         }
 

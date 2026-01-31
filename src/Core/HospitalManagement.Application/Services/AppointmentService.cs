@@ -347,6 +347,40 @@ namespace HospitalManagement.Application.Services
 
             return dto;
         }
+        public async Task<List<TimeSlotSelectDto>> GetAllSlotsWithStatusAsync(int doctorId, DateTime date)
+        {
+            List<TimeSlotSelectDto> slots = new List<TimeSlotSelectDto>();
+
+            TimeSpan time = new TimeSpan(9, 0, 0);
+            TimeSpan endTime = new TimeSpan(18, 0, 0);
+
+            while (time < endTime)
+            {
+                bool available = await IsSlotAvailableAsync(doctorId, date, time);
+
+                TimeSlotSelectDto slot = new TimeSlotSelectDto();
+                slot.StartTime = time;
+                slot.EndTime = time.Add(TimeSpan.FromMinutes(30));
+                slot.IsAvailable = available;
+                slots.Add(slot);
+
+                time = time.Add(TimeSpan.FromMinutes(30));
+            }
+
+            return slots;
+        }
+        public async Task<Dictionary<DateTime, int>> GetAvailableSlotsCountByDatesAsync(int doctorId, List<DateTime> dates)
+        {
+            Dictionary<DateTime, int> result = new Dictionary<DateTime, int>();
+
+            foreach (DateTime date in dates)
+            {
+                List<TimeSlotSelectDto> slots = await GetAvailableSlotsAsync(doctorId, date);
+                result.Add(date, slots.Count);
+            }
+
+            return result;
+        }
     }
 }
     

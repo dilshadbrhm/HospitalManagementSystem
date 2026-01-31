@@ -120,7 +120,12 @@
                                         <span asp-validation-for="StartTime" class="text-danger"></span>
                                     </div>
                                 </div>
-
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Available Time Slots</label>
+                                        <div id="slotsVisual"></div>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Symptoms *</label>
@@ -262,31 +267,64 @@
                 if (date == '' || date == null) {
                     $('#timeSelect').prop('disabled', true);
                     $('#timeSelect').html('<option value="">-- Select Date First --</option>');
+                    $('#slotsVisual').html('');
                     return;
                 }
 
                 $('#loadingIndicator').show();
 
                 $.ajax({
-                    url: '/Appointment/GetAvailableSlots',
+                    url: '/Appointment/GetAllSlotsWithStatus',
                     type: 'GET',
                     data: { doctorId: doctorId, date: date },
                     success: function (data) {
                         $('#timeSelect').html('<option value="">-- Select Time --</option>');
 
-                        if (data.length == 0) {
+                        var visualHtml = '<div class="row g-2 mb-3">';
+                        visualHtml += '<div class="col-12 mb-2">';
+                        visualHtml += '<span class="badge bg-success me-2">● Available</span>';
+                        visualHtml += '<span class="badge bg-danger">● Booked</span>';
+                        visualHtml += '</div>';
+
+                        var availableCount = 0;
+
+                        for (var i = 0; i < data.length; i++) {
+                            var slot = data[i];
+                            var startTime = slot.startTime.substring(0, 5);
+                            var endTime = slot.endTime.substring(0, 5);
+                            var optionText = startTime + ' - ' + endTime;
+
+                            if (slot.isAvailable) {
+                                availableCount++;
+                                $('#timeSelect').append('<option value="' + slot.startTime + '">' + optionText + '</option>');
+                                visualHtml += '<div class="col-md-3 col-6">';
+                                visualHtml += '<button type="button" class="btn btn-success w-100 py-2 slot-btn" data-time="' + slot.startTime + '">' + optionText + '</button>';
+                                visualHtml += '</div>';
+                            } else {
+                                visualHtml += '<div class="col-md-3 col-6">';
+                                visualHtml += '<button type="button" class="btn btn-danger w-100 py-2" disabled>' + optionText + '</button>';
+                                visualHtml += '</div>';
+                            }
+                        }
+
+                        visualHtml += '</div>';
+
+                        $('#slotsVisual').html(visualHtml);
+
+                        if (availableCount == 0) {
                             $('#timeSelect').html('<option value="">No available slots</option>');
                             $('#timeSelect').prop('disabled', true);
                         } else {
-                            for (var i = 0; i < data.length; i++) {
-                                var slot = data[i];
-                                var startTime = slot.startTime.substring(0, 5);
-                                var endTime = slot.endTime.substring(0, 5);
-                                var optionText = startTime + ' - ' + endTime;
-                                $('#timeSelect').append('<option value="' + slot.startTime + '">' + optionText + '</option>');
-                            }
                             $('#timeSelect').prop('disabled', false);
                         }
+
+                        $('.slot-btn').click(function () {
+                            var time = $(this).data('time');
+                            $('#timeSelect').val(time);
+                            $('#timeSelect').trigger('change');
+                            $('.slot-btn').removeClass('btn-primary').addClass('btn-success');
+                            $(this).removeClass('btn-success').addClass('btn-primary');
+                        });
 
                         $('#loadingIndicator').hide();
                     },

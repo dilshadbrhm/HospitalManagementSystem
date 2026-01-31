@@ -37,8 +37,16 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
 
         public async Task UpdateAsync(Department department)
         {
-            _context.Departments.Update(department);
-            await _context.SaveChangesAsync();
+            Department existingDepartment = await _context.Departments.FindAsync(department.Id);
+
+            if (existingDepartment != null)
+            {
+                existingDepartment.Name = department.Name;
+                existingDepartment.Description = department.Description;
+                existingDepartment.UpdatedAt = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteAsync(int id)

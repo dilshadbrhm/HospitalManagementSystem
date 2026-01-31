@@ -118,9 +118,11 @@
                                                                 <a href="/Admin/Home/EditDepartment/@department.Id" class="btn btn-sm btn-warning">
                                                                     <i class="mdi mdi-pencil"></i>
                                                                 </a>
-                                                                <a href="/Admin/Home/DeleteDepartment/@department.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                                                    <i class="mdi mdi-delete"></i>
-                                                                </a>
+                                                                <form action="/Admin/Home/DeleteDepartment/@department.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure?')">
+                                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                                        <i class="mdi mdi-delete"></i>
+                                                                    </button>
+                                                                </form>
                                                             </td>
                                                         </tr>
                                                     }

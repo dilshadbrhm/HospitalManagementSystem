@@ -150,12 +150,11 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             }
             else
             {
-                TempData["Error"] = "Failed to delete patient";
+                TempData["Error"] = "Cannot delete patient. Patient has appointments or not found.";
             }
 
             return RedirectToAction("Patients");
         }
-
         [HttpGet]
         public async Task<IActionResult> Departments()
         {
@@ -172,10 +171,17 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDepartment(Department department)
         {
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("UpdatedAt");
+            ModelState.Remove("IsDeleted");
+            ModelState.Remove("Doctors");
+
             if (!ModelState.IsValid)
             {
                 return View(department);
             }
+
+            department.CreatedAt = DateTime.Now;
 
             bool result = await _adminService.CreateDepartmentAsync(department);
 
@@ -205,6 +211,11 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> EditDepartment(Department department)
         {
+            ModelState.Remove("CreatedAt");
+            ModelState.Remove("UpdatedAt");
+            ModelState.Remove("IsDeleted");
+            ModelState.Remove("Doctors");
+
             if (!ModelState.IsValid)
             {
                 return View(department);
@@ -221,7 +232,6 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             TempData["Error"] = "Failed to update department";
             return View(department);
         }
-
         [HttpPost]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
@@ -238,7 +248,6 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Departments");
         }
-
         [HttpGet]
         public async Task<IActionResult> Appointments()
         {
@@ -275,6 +284,22 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             else
             {
                 TempData["Error"] = "Failed to delete appointment";
+            }
+
+            return RedirectToAction("Appointments");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ApproveAppointment(int id)
+        {
+            bool result = await _adminService.UpdateAppointmentStatusAsync(id, "Confirmed");
+
+            if (result)
+            {
+                TempData["Success"] = "Appointment approved successfully";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to approve appointment";
             }
 
             return RedirectToAction("Appointments");
