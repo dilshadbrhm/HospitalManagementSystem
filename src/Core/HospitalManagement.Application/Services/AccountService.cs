@@ -128,21 +128,23 @@ namespace HospitalManagement.Application.Services
         }
 
 
-        public async Task<(bool Success, string Message)> LoginAsync(LoginDto model)
+        public async Task<(bool Success, string Message, string Role)> LoginAsync(LoginDto model)
         {
             AppUser user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return (false, "The email or password is incorrect");
-
+                return (false, "The email or password is incorrect", null);
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
-                return (false, "Please confirm your email first");
+                return (false, "Please confirm your email first", null);
 
             SignInResult result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
             if (!result.Succeeded)
-                return (false, "The email or password is incorrect");
+                return (false, "The email or password is incorrect", null);
 
-            return (true, "You have successfully logged in");
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            string userRole = roles.FirstOrDefault() ?? "Patient";
+
+            return (true, "You have successfully logged in", userRole);
         }
 
         public async Task<(bool Success, string Message, string? Token)> ForgotPasswordAsync(string email)

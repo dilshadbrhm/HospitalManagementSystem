@@ -17,8 +17,8 @@ namespace HospitalManagement.Application.Dtos.Doctor
         public string Phone { get; set; }
         public string Specialization { get; set; }
         public string DepartmentName { get; set; }
-        public string ProfilePicture { get; set; }
-        public string Bio { get; set; }
+        public string? ProfilePicture { get; set; }
+        public string? Bio { get; set; }
         public decimal ConsultationFee { get; set; }
         public List<TimeSlotDto> TimeSlots { get; set; }
 

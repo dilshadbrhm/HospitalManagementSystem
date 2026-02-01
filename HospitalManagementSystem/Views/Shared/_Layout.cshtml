@@ -118,30 +118,58 @@
 
                         </ul>
                         <ul class="navbar-nav navbar-mobile right-nav ml-auto ">
-
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link link_hd" href="#"> <i class="fa fa-user"></i> @User.Identity.Name </a>
                                     <ul class="navbar-nav submenu">
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                                    <i class="fa fa-cogs"></i> Admin Panel
+                                                </a>
+                                            </li>
+                                        }
                                         @if (User.IsInRole("Doctor"))
                                         {
                                             <li class="nav-item">
-                                                <a class="nav-link" asp-controller="Doctor" asp-action="Cabinet">My Cabinet</a>
+                                                <a class="nav-link" asp-controller="Doctor" asp-action="Cabinet">
+                                                    <i class="fa fa-stethoscope"></i> My Cabinet
+                                                </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" asp-controller="Doctor" asp-action="TimeTable">My Schedule</a>
+                                                <a class="nav-link" asp-controller="Doctor" asp-action="TimeTable">
+                                                    <i class="fa fa-clock-o"></i> My Schedule
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Doctor" asp-action="Profile">
+                                                    <i class="fa fa-user"></i> My Profile
+                                                </a>
                                             </li>
                                         }
                                         @if (User.IsInRole("Patient"))
                                         {
                                             <li class="nav-item">
-                                                <a class="nav-link" asp-controller="Patient" asp-action="Dashboard"></a>
+                                                <a class="nav-link" asp-controller="Patient" asp-action="Dashboard">
+                                                    <i class="fa fa-tachometer"></i> My Dashboard
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Patient" asp-action="MyAppointments">
+                                                    <i class="fa fa-calendar"></i> My Appointments
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-controller="Patient" asp-action="Profile">
+                                                    <i class="fa fa-user"></i> My Profile
+                                                </a>
                                             </li>
                                         }
-                                        <li class="nav-item">
-                                            <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0;">
-                                                <button type="submit" class="nav-link" style="background:none; border:none; cursor:pointer; width:100%; text-align:left;">
+                                        <li class="nav-item" style="border-top: 1px solid #eee; margin-top: 5px; padding-top: 5px;">
+                                            <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0; text-align: center;">
+                                                <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer; width: 100%; padding: 10px;">
                                                     <i class="fa fa-sign-out"></i> Logout
                                                 </button>
                                             </form>

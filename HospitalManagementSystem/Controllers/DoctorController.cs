@@ -160,6 +160,66 @@ namespace HospitalManagementSystem.Controllers
 
             return RedirectToAction("Cabinet");
         }
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            string userId = GetUserId();
+            DoctorProfileEditDto profile = await _cabinetService.GetProfileAsync(userId);
+
+            if (profile == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(profile);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        public async Task<IActionResult> Profile(DoctorProfileEditDto dto, IFormFile profileImage)
+        {
+            ModelState.Remove("ProfilePicture");
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            if (profileImage != null && profileImage.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(profileImage.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await profileImage.CopyToAsync(stream);
+                }
+
+                dto.ProfilePicture = "/assets/image/" + uniqueFileName;
+            }
+
+            string userId = GetUserId();
+            bool result = await _cabinetService.UpdateProfileAsync(userId, dto);
+
+            if (result)
+            {
+                TempData["Success"] = "Profile updated successfully";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to update profile";
+            }
+
+            return RedirectToAction("Profile");
+        }
     }
 }
 

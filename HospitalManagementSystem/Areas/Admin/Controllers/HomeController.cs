@@ -304,5 +304,21 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Appointments");
         }
+        [HttpPost]
+        public async Task<IActionResult> CancelAppointment(int id)
+        {
+            bool result = await _adminService.UpdateAppointmentStatusAsync(id, "Cancelled");
+
+            if (result)
+            {
+                TempData["Success"] = "Appointment cancelled successfully";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to cancel appointment";
+            }
+
+            return RedirectToAction("Appointments");
+        }
     }
 }

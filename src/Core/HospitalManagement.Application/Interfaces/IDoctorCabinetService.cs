@@ -17,5 +17,7 @@ namespace HospitalManagement.Application.Interfaces
         Task<bool> UpdateTimeSlotAsync(string userId, TimeSlotDto dto);
         Task<bool> DeleteTimeSlotAsync(string userId, int id);
         Task<bool> UpdateAppointmentStatusAsync(string userId, int appointmentId, string status);
+        Task<DoctorProfileEditDto> GetProfileAsync(string userId);
+        Task<bool> UpdateProfileAsync(string userId, DoctorProfileEditDto dto);
     }
 }

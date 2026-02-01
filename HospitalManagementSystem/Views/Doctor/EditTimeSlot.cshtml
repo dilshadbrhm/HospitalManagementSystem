@@ -1,12 +1,9 @@
 ﻿@using HospitalManagement.Application.Dtos.Timeslot
 @model TimeSlotDto
-
 <div class="container" style="padding:50px 0;">
     <h2>Edit Time Slot</h2>
-
-    <form method="post" style="max-width:400px;">
+    <form asp-action="EditTimeSlot" asp-controller="Doctor" method="post" style="max-width:400px;">
         <input type="hidden" asp-for="Id" />
-
         <div class="form-group">
             <label>Day</label>
             <select asp-for="DayOfWeek" class="form-control">
@@ -16,31 +13,26 @@
                 <option value="4">Thursday</option>
                 <option value="5">Friday</option>
                 <option value="6">Saturday</option>
-                <option value="0">Sunday</option>
+                <option value="">Sunday</option>
             </select>
         </div>
-
         <div class="form-group">
             <label>Start Time</label>
             <input asp-for="StartTime" type="time" class="form-control" />
         </div>
-
         <div class="form-group">
             <label>End Time</label>
             <input asp-for="EndTime" type="time" class="form-control" />
         </div>
-
         <div class="form-group">
             <label>Location</label>
             <input asp-for="Location" class="form-control" />
         </div>
-
         <div class="form-group">
             <label>
                 <input asp-for="IsAvailable" type="checkbox" /> Active
             </label>
         </div>
-
         <button type="submit" class="btn btn-primary">Save</button>
         <a asp-action="TimeTable" class="btn btn-secondary">Cancel</a>
     </form>

@@ -1,6 +1,9 @@
 ﻿@using HospitalManagement.Application.Dtos.Timeslot
 @model List<TimeSlotDto>
-
+@{
+    ViewData["Title"] = "My Schedule";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
 <div class="container" style="padding:50px 0;">
     <h2>My Schedule</h2>
 

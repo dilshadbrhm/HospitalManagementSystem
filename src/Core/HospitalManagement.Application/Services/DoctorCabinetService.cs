@@ -172,6 +172,54 @@ namespace HospitalManagement.Application.Services
             await _appointmentRepository.UpdateAsync(appointment);
             return true;
         }
+        public async Task<DoctorProfileEditDto> GetProfileAsync(string userId)
+        {
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
 
+            if (doctor == null)
+            {
+                return null;
+            }
+
+            DoctorProfileEditDto dto = new DoctorProfileEditDto
+            {
+                Id = doctor.Id,
+                FirstName = doctor.FirstName,
+                LastName = doctor.LastName,
+                Email = doctor.Email,
+                Phone = doctor.Phone,
+                Specialization = doctor.Specialization,
+                Bio = doctor.Bio,
+                ConsultationFee = doctor.ConsultationFee,
+                ProfilePicture = doctor.ProfilePicture
+            };
+
+            return dto;
+        }
+
+        public async Task<bool> UpdateProfileAsync(string userId, DoctorProfileEditDto dto)
+        {
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
+
+            if (doctor == null)
+            {
+                return false;
+            }
+
+            doctor.FirstName = dto.FirstName;
+            doctor.LastName = dto.LastName;
+            doctor.Phone = dto.Phone;
+            doctor.Specialization = dto.Specialization;
+            doctor.Bio = dto.Bio;
+            doctor.ConsultationFee = dto.ConsultationFee;
+
+            if (!string.IsNullOrEmpty(dto.ProfilePicture))
+            {
+                doctor.ProfilePicture = dto.ProfilePicture;
+            }
+
+            await _doctorRepository.UpdateAsync(doctor);
+            return true;
+        }
     }
 }

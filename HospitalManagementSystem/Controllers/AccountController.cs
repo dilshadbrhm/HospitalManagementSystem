@@ -94,25 +94,34 @@ namespace HospitalManagementSystem.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var result = await _accountService.LoginAsync(model);
+            (bool Success, string Message, string Role) result = await _accountService.LoginAsync(model);
 
             if (result.Success)
             {
-                return RedirectToAction("Index", "Home");
+                if (result.Role == "Admin")
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                }
+                else if (result.Role == "Doctor")
+                {
+                    return RedirectToAction("Cabinet", "Doctor");
+                }
+                else
+                {
+                    return RedirectToAction("Dashboard", "Patient");
+                }
             }
 
             ModelState.AddModelError("", result.Message);
             return View(model);
         }
 
-  
         [HttpGet]
         public IActionResult ForgotPassword()
         {

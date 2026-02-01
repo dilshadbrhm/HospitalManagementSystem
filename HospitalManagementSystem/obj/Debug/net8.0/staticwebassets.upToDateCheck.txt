@@ -255,6 +255,7 @@ wwwroot\assets\image\departments\dp_case_-1.jpg
 wwwroot\assets\image\departments\dp_case_-2.jpg
 wwwroot\assets\image\departments\dp_no_banner.jpg
 wwwroot\assets\image\departments\head-doctor.jpg
+wwwroot\assets\image\doctor-profile-photo.jpg
 wwwroot\assets\image\fav\android-icon-36x36.png
 wwwroot\assets\image\fav\favicon-16x16.png
 wwwroot\assets\image\fav\favicon-32x32.png
@@ -280,6 +281,7 @@ wwwroot\assets\image\language-1.jpg
 wwwroot\assets\image\language-2.jpg
 wwwroot\assets\image\language-3.jpg
 wwwroot\assets\image\logo.png
+wwwroot\assets\image\patient-profile-photo.png
 wwwroot\assets\image\post\blog-post-1.jpg
 wwwroot\assets\image\post\blog-post-2.jpg
 wwwroot\assets\image\post\blog-post-3.jpg

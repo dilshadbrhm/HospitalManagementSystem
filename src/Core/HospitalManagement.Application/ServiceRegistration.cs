@@ -27,7 +27,7 @@ namespace HospitalManagement.Application
             services.AddScoped<IDoctorService, DoctorService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IAdminService, AdminService>();
-
+            services.AddScoped<IPatientService, PatientService>();
             return services;
         }
     }

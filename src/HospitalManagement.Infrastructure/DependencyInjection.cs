@@ -25,6 +25,7 @@ namespace HospitalManagement.Infrastructure
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPatientRepository, PatientRepository>();
+           services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             return services;
         }
     }

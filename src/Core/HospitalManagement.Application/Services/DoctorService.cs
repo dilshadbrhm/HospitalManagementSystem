@@ -17,10 +17,11 @@ namespace HospitalManagement.Application.Services
         private readonly ITimeSlotRepository _timeSlotRepository;
         private readonly IAppointmentRepository _appointmentRepository;
 
-        public DoctorService(IDoctorRepository doctorRepository, ITimeSlotRepository timeSlotRepository)
+        public DoctorService(IDoctorRepository doctorRepository, ITimeSlotRepository timeSlotRepository,IAppointmentRepository appointmentRepository)
         {
             _doctorRepository = doctorRepository;
             _timeSlotRepository = timeSlotRepository;
+            _appointmentRepository = appointmentRepository;
         }
 
         public async Task<List<DoctorItemDto>> GetAllDoctorsAsync()
@@ -98,12 +99,12 @@ namespace HospitalManagement.Application.Services
                         Id = slot.Id,
                         DayOfWeek = (int)slot.DayOfWeek,
                         DayName = dayNames[(int)slot.DayOfWeek],
-                        StartTime = slot.StartTime,
-                        EndTime = slot.EndTime,
+                        StartTime = slot.StartTime.Add(TimeSpan.FromHours(4)), 
+                        EndTime = slot.EndTime.Add(TimeSpan.FromHours(4)),     
                         Location = slot.Location,
                         IsAvailable = slot.IsAvailable
                     };
-                   
+
 
                     dto.TimeSlots.Add(slotDto);
                 }
@@ -124,19 +125,19 @@ namespace HospitalManagement.Application.Services
             {
                 if (slot.IsAvailable)
                 {
-                    TimeSlotDto dto = new TimeSlotDto
+                    TimeSlotDto slotDto = new TimeSlotDto
                     {
-                       Id = slot.Id,
-                       DayOfWeek = (int)slot.DayOfWeek,
-                       DayName = dayNames[(int)slot.DayOfWeek],
-                       StartTime = slot.StartTime,
-                       EndTime = slot.EndTime,
-                       Location = slot.Location,
-                       IsAvailable = slot.IsAvailable
+                        Id = slot.Id,
+                        DayOfWeek = (int)slot.DayOfWeek,
+                        DayName = dayNames[(int)slot.DayOfWeek],
+                        StartTime = slot.StartTime.Add(TimeSpan.FromHours(4)),  
+                        EndTime = slot.EndTime.Add(TimeSpan.FromHours(4)),    
+                        Location = slot.Location,
+                        IsAvailable = slot.IsAvailable
                     };
-                   
 
-                    result.Add(dto);
+
+                    result.Add(slotDto);
                 }
             }
 
@@ -170,8 +171,8 @@ namespace HospitalManagement.Application.Services
                         Id = slot.Id,
                         DayOfWeek = (int)slot.DayOfWeek,
                         DayName = date.DayOfWeek.ToString(),
-                        StartTime = slot.StartTime,
-                        EndTime = slot.EndTime,
+                        StartTime = slot.StartTime.Add(TimeSpan.FromHours(4)),  
+                        EndTime = slot.EndTime.Add(TimeSpan.FromHours(4)),      
                         Location = slot.Location,
                         IsAvailable = !isBooked
                     };
@@ -224,8 +225,8 @@ namespace HospitalManagement.Application.Services
 
                     TimeSlotSelectDto selectDto = new TimeSlotSelectDto
                     {
-                        StartTime = slot.StartTime,
-                        EndTime = slot.EndTime,
+                        StartTime = slot.StartTime.Add(TimeSpan.FromHours(4)),  
+                        EndTime = slot.EndTime.Add(TimeSpan.FromHours(4)),    
                         IsAvailable = !isBooked
                     };
 

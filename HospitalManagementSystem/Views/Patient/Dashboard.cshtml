@@ -1,0 +1,140 @@
+﻿@model HospitalManagement.Application.Dtos.Patient.PatientDashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h3>@Model.TotalAppointments</h3>
+            <p>Total Appointments</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+            <h3>@Model.UpcomingCount</h3>
+            <p>Upcoming</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);">
+            <h3>@Model.CompletedCount</h3>
+            <p>Completed</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card" style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);">
+            <h3>@Model.CancelledCount</h3>
+            <p>Cancelled</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-calendar-check"></i> Upcoming Appointments
+            </div>
+            <div class="card-body">
+                @if (Model.UpcomingAppointments.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Department</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (HospitalManagement.Application.Dtos.Appointment.AppointmentItemDto appointment in Model.UpcomingAppointments)
+                            {
+                                <tr>
+                                    <td>@appointment.DoctorName</td>
+                                    <td>@appointment.DepartmentName</td>
+                                    <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                                    <td>@appointment.StartTime.ToString(@"hh\:mm")</td>
+                                    <td>
+                                        @if (appointment.Status == "Confirmed")
+                                        {
+                                            <span class="badge badge-success">Confirmed</span>
+                                        }
+                                        else if (appointment.Status == "Pending")
+                                        {
+                                            <span class="badge badge-warning">Pending</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">@appointment.Status</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted">No upcoming appointments. <a asp-controller="Appointment" asp-action="Create">Book one now!</a></p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-history"></i> Recent Appointments
+            </div>
+            <div class="card-body">
+                @if (Model.PastAppointments.Any())
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Department</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (HospitalManagement.Application.Dtos.Appointment.AppointmentItemDto appointment in Model.PastAppointments)
+                            {
+                                <tr>
+                                    <td>@appointment.DoctorName</td>
+                                    <td>@appointment.DepartmentName</td>
+                                    <td>@appointment.AppointmentDate.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        @if (appointment.Status == "Completed")
+                                        {
+                                            <span class="badge badge-info">Completed</span>
+                                        }
+                                        else if (appointment.Status == "Cancelled")
+                                        {
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">@appointment.Status</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted">No past appointments.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

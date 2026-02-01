@@ -47,5 +47,10 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task UpdateAsync(Patient patient)
+        {
+            _context.Patients.Update(patient);
+            await _context.SaveChangesAsync();
+        }
     }
 }

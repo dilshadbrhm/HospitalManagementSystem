@@ -29,9 +29,11 @@
                             <span class="nav-profile-name">Admin</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown">
-                            <a class="dropdown-item" href="/Account/Logout">
-                                <i class="mdi mdi-logout text-primary"></i> Logout
-                            </a>
+                            <form action="/Account/Logout" method="post" style="margin: 0;">
+                                <button type="submit" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left; cursor: pointer;">
+                                    <i class="mdi mdi-logout text-primary"></i> Logout
+                                </button>
+                            </form>
                         </div>
                     </li>
                 </ul>
@@ -91,14 +93,14 @@
                                     @if (TempData["Success"] != null)
                                     {
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            <strong>Uğurlu!</strong> @TempData["Success"]
+                                            <strong></strong> @TempData["Success"]
                                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                         </div>
                                     }
                                     @if (TempData["Error"] != null)
                                     {
                                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <strong>Error</strong> @TempData["Error"]
+                                            <strong></strong> @TempData["Error"]
                                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                         </div>
                                     }

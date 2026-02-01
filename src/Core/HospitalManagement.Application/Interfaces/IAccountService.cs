@@ -10,7 +10,7 @@ namespace HospitalManagement.Application.Interfaces
     public interface IAccountService
     {
         Task<(bool Success, string Message, string? Token, string? UserId)> RegisterAsync(RegisterDto model);
-        Task<(bool Success, string Message)> LoginAsync(LoginDto model);
+        Task<(bool Success, string Message, string Role)> LoginAsync(LoginDto model);
         Task LogoutAsync();
         Task<(bool Success, string Message)> ConfirmEmailAsync(string userId, string token);
         Task<(bool Success, string Message, string? Token)> ForgotPasswordAsync(string email);
