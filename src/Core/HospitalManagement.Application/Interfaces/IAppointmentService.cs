@@ -26,6 +26,10 @@ namespace HospitalManagement.Application.Interfaces
         Task<List<DoctorSelectDto>> GetDoctorsByDepartmentAsync(int departmentId);
         Task<List<TimeSlotSelectDto>> GetAllSlotsWithStatusAsync(int doctorId, DateTime date);
         Task<Dictionary<DateTime, int>> GetAvailableSlotsCountByDatesAsync(int doctorId, List<DateTime> dates);
-
+        Task<CancelResultDto> CancelByPatientAsync(int appointmentId, int patientId, string reason);
+        Task<CancelResultDto> CancelByDoctorAsync(int appointmentId, int doctorId, string reason);
+        Task<AppointmentResultDto> RescheduleAsync(RescheduleAppointmentDto dto, int patientId);
+        Task<AppointmentResultDto> RescheduleByDoctorAsync(RescheduleAppointmentDto dto, int doctorId);
+        Task<bool> CanPatientCancelAsync(int appointmentId, int patientId);
     }
 }

@@ -21,13 +21,18 @@ namespace HospitalManagementSystem.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IPatientRepository _patientService;
         private readonly IDoctorService _doctorService;
+        private readonly IEmailService _emailService;
 
-        public AppointmentController(IAppointmentService appointmentService, IPatientRepository patientRepository,IDoctorService doctorService)
+        public AppointmentController(
+            IAppointmentService appointmentService,
+            IPatientRepository patientRepository,
+            IDoctorService doctorService,
+            IEmailService emailService)
         {
             _appointmentService = appointmentService;
             _patientService = patientRepository;
             _doctorService = doctorService;
-
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -243,12 +248,15 @@ namespace HospitalManagementSystem.Controllers
             return patient.Id;
         }
         [HttpGet]
-        [HttpGet]
         public async Task<IActionResult> DoctorSchedule(int doctorId, string date)
         {
-            DateTime selectedDate = string.IsNullOrEmpty(date)
-                ? DateTime.Today
-                : DateTime.Parse(date);
+            DateTime selectedDate;
+
+            if (!DateTime.TryParse(date, out selectedDate))
+            {
+                selectedDate = DateTime.Today;
+            }
+
 
             DoctorProfileDto schedule = await _doctorService.GetDoctorScheduleAsync(doctorId, selectedDate);
 
@@ -286,6 +294,103 @@ namespace HospitalManagementSystem.Controllers
         public async Task<IActionResult> GetAllSlotsWithStatus(int doctorId, DateTime date)
         {
             List<TimeSlotSelectDto> slots = await _appointmentService.GetAllSlotsWithStatusAsync(doctorId, date);
+            return Json(slots);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Reschedule(int id)
+        {
+            DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(id);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            RescheduleAppointmentDto dto = new RescheduleAppointmentDto();
+            dto.AppointmentId = id;
+            dto.NewDate = appointment.AppointmentDate.AddDays(1);
+
+            ViewBag.Appointment = appointment;
+            ViewBag.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(appointment.DoctorId, dto.NewDate);
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reschedule(RescheduleAppointmentDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+                ViewBag.Appointment = appointment;
+                ViewBag.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(appointment.DoctorId, dto.NewDate);
+                return View(dto);
+            }
+
+            int patientId = await GetCurrentPatientIdAsync();
+            AppointmentResultDto result = await _appointmentService.RescheduleAsync(dto, patientId);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+
+                if (result.AlternativeSlots != null && result.AlternativeSlots.Count > 0)
+                {
+                    ViewBag.AlternativeSlots = result.AlternativeSlots;
+                }
+
+                DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+                ViewBag.Appointment = appointment;
+                ViewBag.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(appointment.DoctorId, dto.NewDate);
+                return View(dto);
+            }
+
+            TempData["Success"] = "Appointment rescheduled successfully";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelAppointment(int id, string reason)
+        {
+            int patientId = await GetCurrentPatientIdAsync();
+            CancelResultDto result = await _appointmentService.CancelByPatientAsync(id, patientId, reason);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index");
+            }
+
+            if (!string.IsNullOrEmpty(result.DoctorEmail))
+            {
+                string subject = "Appointment Cancelled";
+                string body = "Dear Dr. " + result.DoctorName + ",<br><br>" +
+                              "The appointment scheduled for " + result.AppointmentDate.ToString("dd MMM yyyy") +
+                              " at " + result.StartTime.ToString(@"hh\:mm") +
+                              " with patient " + result.PatientName + " has been cancelled.<br><br>" +
+                              "Reason: " + reason + "<br><br>" +
+                              "Best regards,<br>Hospital Management System";
+
+                try
+                {
+                    await _emailService.SendEmailAsync(result.DoctorEmail, subject, body);
+                }
+                catch
+                {
+                }
+            }
+
+            TempData["Success"] = "Appointment cancelled successfully";
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableSlotsForReschedule(int doctorId, DateTime date)
+        {
+            List<TimeSlotSelectDto> slots = await _appointmentService.GetAvailableSlotsAsync(doctorId, date);
             return Json(slots);
         }
     }

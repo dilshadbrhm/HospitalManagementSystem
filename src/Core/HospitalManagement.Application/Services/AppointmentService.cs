@@ -33,21 +33,21 @@ namespace HospitalManagement.Application.Services
 
             DetailsAppointmentDto dto = new DetailsAppointmentDto
             {
-              Id = appointment.Id,
-              PatientId = appointment.PatientId,
-              DoctorId = appointment.DoctorId,
-              AppointmentDate = appointment.AppointmentDate,
-              StartTime = appointment.StartTime,
-              EndTime = appointment.EndTime,
-              Status = appointment.Status.ToString(),
-              Symptoms = appointment.Symptoms,
-              Notes = appointment.Notes,
-              Fee = appointment.Fee,
-              IsPaid = appointment.IsPaid,
-              CancellationReason = appointment.CancellationReason,
-              CancelledAt = appointment.CancelledAt
+                Id = appointment.Id,
+                PatientId = appointment.PatientId,
+                DoctorId = appointment.DoctorId,
+                AppointmentDate = appointment.AppointmentDate,
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
+                Status = appointment.Status.ToString(),
+                Symptoms = appointment.Symptoms,
+                Notes = appointment.Notes,
+                Fee = appointment.Fee,
+                IsPaid = appointment.IsPaid,
+                CancellationReason = appointment.CancellationReason,
+                CancelledAt = appointment.CancelledAt
             };
-          
+
 
             if (appointment.Doctor != null)
             {
@@ -150,26 +150,33 @@ namespace HospitalManagement.Application.Services
                 return result;
             }
 
-            Appointment appointment = new Appointment();
-            appointment.PatientId = patientId;
-            appointment.DoctorId = dto.DoctorId;
-            appointment.AppointmentDate = dto.AppointmentDate;
-            appointment.StartTime = dto.StartTime;
-            appointment.EndTime = dto.StartTime.Add(TimeSpan.FromMinutes(30));
-            appointment.Status = AppointmentStatus.Pending;
-            appointment.Symptoms = dto.Symptoms;
-            appointment.Notes = dto.Notes;
-            appointment.Fee = doctor.ConsultationFee;
-            appointment.IsPaid = false;
-            appointment.IsDeleted = false;
+            Appointment appointment = new Appointment
+            {
+                PatientId = patientId,
+                DoctorId = dto.DoctorId,
+                AppointmentDate = dto.AppointmentDate,
+                StartTime = dto.StartTime,
+                EndTime = dto.StartTime.Add(TimeSpan.FromMinutes(30)),
+                Status = AppointmentStatus.Pending,
+                Symptoms = dto.Symptoms,
+                Notes = dto.Notes,
+                Fee = doctor.ConsultationFee,
+                IsPaid = false,
+                IsDeleted = false
+            };
+
 
             await _unitOfWork.Appointments.AddAsync(appointment);
             await _unitOfWork.SaveChangesAsync();
-                                                                                                               
-            AppointmentResultDto successResult = new AppointmentResultDto();
-            successResult.Success = true;
-            successResult.Message = "The view was created successfully";
-            successResult.AppointmentId = appointment.Id;
+
+            AppointmentResultDto successResult = new AppointmentResultDto
+            {
+                Success = true,
+                Message = "The view was created successfully",
+                AppointmentId = appointment.Id
+
+            };
+            
             return successResult;
         }
 
@@ -304,12 +311,12 @@ namespace HospitalManagement.Application.Services
             {
                 DoctorSelectDto dto = new DoctorSelectDto
                 {
-                   Id = doctor.Id,
-                   FullName = doctor.FirstName + " " + doctor.LastName,
-                   Specialization = doctor.Specialization,
-                   ConsultationFee = doctor.ConsultationFee
+                    Id = doctor.Id,
+                    FullName = doctor.FirstName + " " + doctor.LastName,
+                    Specialization = doctor.Specialization,
+                    ConsultationFee = doctor.ConsultationFee
                 };
-               
+
                 result.Add(dto);
             }
 
@@ -327,7 +334,7 @@ namespace HospitalManagement.Application.Services
             dto.Fee = appointment.Fee;
             dto.IsPaid = appointment.IsPaid;
             dto.Symptoms = appointment.Symptoms;
-            appointment.CancellationReason = string.Empty;  
+            appointment.CancellationReason = string.Empty;
             appointment.CancelledAt = null;
 
             if (appointment.Doctor != null)
@@ -382,6 +389,285 @@ namespace HospitalManagement.Application.Services
             return result;
         }
 
+        public async Task<CancelResultDto> CancelByPatientAsync(int appointmentId, int patientId, string reason)
+        {
+            Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
+
+            CancelResultDto result = new CancelResultDto();
+
+            if (appointment == null)
+            {
+                result.Success = false;
+                result.Message = "Appointment not found";
+                return result;
+            }
+
+            if (appointment.PatientId != patientId)
+            {
+                result.Success = false;
+                result.Message = "You can only cancel your own appointments";
+                return result;
+            }
+
+            if (appointment.Status == AppointmentStatus.Cancelled)
+            {
+                result.Success = false;
+                result.Message = "This appointment is already cancelled";
+                return result;
+            }
+
+            if (appointment.Status == AppointmentStatus.Completed)
+            {
+                result.Success = false;
+                result.Message = "Completed appointments cannot be cancelled";
+                return result;
+            }
+
+            DateTime appointmentDateTime = appointment.AppointmentDate.Date.Add(appointment.StartTime);
+            TimeSpan timeDifference = appointmentDateTime - DateTime.Now;
+
+            if (timeDifference.TotalHours < 24)
+            {
+                result.Success = false;
+                result.Message = "Appointments can only be cancelled at least 24 hours in advance";
+                return result;
+            }
+
+            appointment.Status = AppointmentStatus.Cancelled;
+            appointment.CancellationReason = reason;
+            appointment.CancelledAt = DateTime.Now;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            result.Success = true;
+            result.Message = "Appointment cancelled successfully";
+            result.AppointmentDate = appointment.AppointmentDate;
+            result.StartTime = appointment.StartTime;
+
+            if (appointment.Patient != null)
+            {
+                result.PatientName = appointment.Patient.FirstName + " " + appointment.Patient.LastName;
+                result.PatientEmail = appointment.Patient.Email;
+            }
+
+            if (appointment.Doctor != null)
+            {
+                result.DoctorName = appointment.Doctor.FirstName + " " + appointment.Doctor.LastName;
+                result.DoctorEmail = appointment.Doctor.Email;
+            }
+
+            return result;
+        }
+
+        public async Task<CancelResultDto> CancelByDoctorAsync(int appointmentId, int doctorId, string reason)
+        {
+            Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
+
+            CancelResultDto result = new CancelResultDto();
+
+            if (appointment == null)
+            {
+                result.Success = false;
+                result.Message = "Appointment not found";
+                return result;
+            }
+
+            if (appointment.DoctorId != doctorId)
+            {
+                result.Success = false;
+                result.Message = "You can only cancel your own appointments";
+                return result;
+            }
+
+            if (appointment.Status == AppointmentStatus.Cancelled)
+            {
+                result.Success = false;
+                result.Message = "This appointment is already cancelled";
+                return result;
+            }
+
+            if (appointment.Status == AppointmentStatus.Completed)
+            {
+                result.Success = false;
+                result.Message = "Completed appointments cannot be cancelled";
+                return result;
+            }
+
+            appointment.Status = AppointmentStatus.Cancelled;
+            appointment.CancellationReason = "Cancelled by doctor: " + reason;
+            appointment.CancelledAt = DateTime.Now;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            result.Success = true;
+            result.Message = "Appointment cancelled successfully";
+            result.AppointmentDate = appointment.AppointmentDate;
+            result.StartTime = appointment.StartTime;
+
+            if (appointment.Patient != null)
+            {
+                result.PatientName = appointment.Patient.FirstName + " " + appointment.Patient.LastName;
+                result.PatientEmail = appointment.Patient.Email;
+            }
+
+            if (appointment.Doctor != null)
+            {
+                result.DoctorName = appointment.Doctor.FirstName + " " + appointment.Doctor.LastName;
+                result.DoctorEmail = appointment.Doctor.Email;
+            }
+
+            return result;
+        }
+
+        public async Task<AppointmentResultDto> RescheduleAsync(RescheduleAppointmentDto dto, int patientId)
+        {
+            Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
+
+            AppointmentResultDto result = new AppointmentResultDto();
+
+            if (appointment == null)
+            {
+                result.Success = false;
+                result.Message = "Appointment not found";
+                return result;
+            }
+
+            if (appointment.PatientId != patientId)
+            {
+                result.Success = false;
+                result.Message = "You can only reschedule your own appointments";
+                return result;
+            }
+
+            if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
+            {
+                result.Success = false;
+                result.Message = "This appointment cannot be rescheduled";
+                return result;
+            }
+
+            DateTime appointmentDateTime = appointment.AppointmentDate.Date.Add(appointment.StartTime);
+            TimeSpan timeDifference = appointmentDateTime - DateTime.Now;
+
+            if (timeDifference.TotalHours < 24)
+            {
+                result.Success = false;
+                result.Message = "Appointments can only be rescheduled at least 24 hours in advance";
+                return result;
+            }
+
+            if (dto.NewDate.Date < DateTime.Now.Date)
+            {
+                result.Success = false;
+                result.Message = "Cannot reschedule to a past date";
+                return result;
+            }
+
+            bool isAvailable = await IsSlotAvailableAsync(appointment.DoctorId, dto.NewDate, dto.NewStartTime);
+
+            if (!isAvailable)
+            {
+                List<AlternativeSlotDto> alternatives = await GetAlternativeSlotsAsync(appointment.DoctorId, dto.NewDate, dto.NewStartTime);
+
+                result.Success = false;
+                result.Message = "The selected time slot is not available";
+                result.AlternativeSlots = alternatives;
+                return result;
+            }
+
+            appointment.AppointmentDate = dto.NewDate;
+            appointment.StartTime = dto.NewStartTime;
+            appointment.EndTime = dto.NewStartTime.Add(TimeSpan.FromMinutes(30));
+            appointment.Notes = appointment.Notes + " | Rescheduled: " + dto.Reason;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            result.Success = true;
+            result.Message = "Appointment rescheduled successfully";
+            result.AppointmentId = appointment.Id;
+
+            return result;
+        }
+
+        public async Task<AppointmentResultDto> RescheduleByDoctorAsync(RescheduleAppointmentDto dto, int doctorId)
+        {
+            Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(dto.AppointmentId);
+
+            AppointmentResultDto result = new AppointmentResultDto();
+
+            if (appointment == null)
+            {
+                result.Success = false;
+                result.Message = "Appointment not found";
+                return result;
+            }
+
+            if (appointment.DoctorId != doctorId)
+            {
+                result.Success = false;
+                result.Message = "You can only reschedule your own appointments";
+                return result;
+            }
+
+            if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
+            {
+                result.Success = false;
+                result.Message = "This appointment cannot be rescheduled";
+                return result;
+            }
+
+            if (dto.NewDate.Date < DateTime.Now.Date)
+            {
+                result.Success = false;
+                result.Message = "Cannot reschedule to a past date";
+                return result;
+            }
+
+            bool isAvailable = await IsSlotAvailableAsync(appointment.DoctorId, dto.NewDate, dto.NewStartTime);
+
+            if (!isAvailable)
+            {
+                List<AlternativeSlotDto> alternatives = await GetAlternativeSlotsAsync(appointment.DoctorId, dto.NewDate, dto.NewStartTime);
+
+                result.Success = false;
+                result.Message = "The selected time slot is not available";
+                result.AlternativeSlots = alternatives;
+                return result;
+            }
+
+            appointment.AppointmentDate = dto.NewDate;
+            appointment.StartTime = dto.NewStartTime;
+            appointment.EndTime = dto.NewStartTime.Add(TimeSpan.FromMinutes(30));
+            appointment.Notes = appointment.Notes + " | Rescheduled by doctor: " + dto.Reason;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            result.Success = true;
+            result.Message = "Appointment rescheduled successfully";
+            result.AppointmentId = appointment.Id;
+
+            return result;
+        }
+
+        public async Task<bool> CanPatientCancelAsync(int appointmentId, int patientId)
+        {
+            Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(appointmentId);
+
+            if (appointment == null || appointment.PatientId != patientId)
+            {
+                return false;
+            }
+
+            if (appointment.Status == AppointmentStatus.Cancelled || appointment.Status == AppointmentStatus.Completed)
+            {
+                return false;
+            }
+
+            DateTime appointmentDateTime = appointment.AppointmentDate.Date.Add(appointment.StartTime);
+            TimeSpan timeDifference = appointmentDateTime - DateTime.Now;
+
+            return timeDifference.TotalHours >= 24;
+        }
+
     }
 }
-    

@@ -60,7 +60,7 @@ namespace HospitalManagementSystem.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Profile(PatientDto dto, IFormFile profileImage)
         {
             ModelState.Remove("ProfilePicture");

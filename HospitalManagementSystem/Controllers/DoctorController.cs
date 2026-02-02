@@ -39,7 +39,7 @@ namespace HospitalManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile(int id)
         {
-            if (id == null || id == 0)
+            if (id == 0)
             {
                 return RedirectToAction("Index");
             }
@@ -143,6 +143,7 @@ namespace HospitalManagementSystem.Controllers
             await _cabinetService.DeleteTimeSlotAsync(GetUserId(), id);
             return RedirectToAction("TimeTable");
         }
+
         [Authorize(Roles = "Doctor")]
         [HttpPost]
         public async Task<IActionResult> UpdateAppointmentStatus(int appointmentId, string status)
@@ -160,9 +161,10 @@ namespace HospitalManagementSystem.Controllers
 
             return RedirectToAction("Cabinet");
         }
+
         [Authorize(Roles = "Doctor")]
         [HttpGet]
-        public async Task<IActionResult> Profile()
+        public async Task<IActionResult> MyProfile()
         {
             string userId = GetUserId();
             DoctorProfileEditDto profile = await _cabinetService.GetProfileAsync(userId);
@@ -177,7 +179,8 @@ namespace HospitalManagementSystem.Controllers
 
         [Authorize(Roles = "Doctor")]
         [HttpPost]
-        public async Task<IActionResult> Profile(DoctorProfileEditDto dto, IFormFile profileImage)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MyProfile(DoctorProfileEditDto dto, IFormFile profileImage)
         {
             ModelState.Remove("ProfilePicture");
 
@@ -218,7 +221,7 @@ namespace HospitalManagementSystem.Controllers
                 TempData["Error"] = "Failed to update profile";
             }
 
-            return RedirectToAction("Profile");
+            return RedirectToAction("MyProfile");
         }
     }
 }
