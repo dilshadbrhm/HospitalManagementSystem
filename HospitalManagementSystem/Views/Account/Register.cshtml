@@ -55,7 +55,7 @@
                                 <div class="col-md-12 col-12">
                                     <label asp-for="UserType">User Type</label>
                                     <select asp-for="UserType" id="userTypeSelect">
-                                        <option value="">Select</option>
+                                        <option value="" disabled>Select</option>
                                         <option value="Patient">Patient</option>
                                         <option value="Doctor">Doctor</option>
                                     </select>
@@ -66,7 +66,7 @@
                                     <div class="col-md-12 col-12">
                                         <label asp-for="DepartmentId">Department</label>
                                         <select asp-for="DepartmentId">
-                                            <option value="">Select Department</option>
+                                            <option value=""disabled>Select Department</option>
                                             @if (ViewBag.Departments != null)
                                             {
                                                 @foreach (var dept in ViewBag.Departments as IEnumerable<HospitalManagement.Domain.Department>)

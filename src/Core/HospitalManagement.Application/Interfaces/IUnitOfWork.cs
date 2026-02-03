@@ -12,8 +12,9 @@ namespace HospitalManagement.Application.Interfaces
     {
         IGenericRepository<Appointment> Appointments { get; }
         IGenericRepository<Doctor> Doctors { get; }
-        IGenericRepository<Patient> Patients { get; }
+        IDoctorRepository DoctorRepository { get; }
         IGenericRepository<Department> Departments { get; }
+        IGenericRepository<Patient> Patients { get; }
         IGenericRepository<TimeSlot> TimeSlots { get; }
         Task<int> SaveChangesAsync();
     }

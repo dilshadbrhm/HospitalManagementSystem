@@ -55,7 +55,7 @@
                                 <div class="alert alert-warning">
                                     <strong>This time slot is not available!</strong> Alternative slots:
                                     <ul id="alternativeList">
-                                        @foreach (var slot in ViewBag.AlternativeSlots as List<HospitalManagement.Application.Dtos.Timeslot.AlternativeSlotDto>)
+                                        @foreach (HospitalManagement.Application.Dtos.Timeslot.AlternativeSlotDto slot in ViewBag.AlternativeSlots)
                                         {
                                             <li>
                                                 <a href="#" class="alternative-slot"
@@ -79,10 +79,10 @@
                                     <div class="form-group">
                                         <label>Department *</label>
                                         <select asp-for="DepartmentId" id="departmentSelect" class="form-control">
-                                            <option value="">-- Select Department --</option>
+                                            <option value="" disabled>-- Select Department --</option>
                                             @if (Model.Departments != null)
                                             {
-                                                @foreach (var dept in Model.Departments)
+                                                @foreach (HospitalManagement.Application.Dtos.Department.DepartmentSelectDto dept in Model.Departments)
                                                 {
                                                     <option value="@dept.Id">@dept.Name</option>
                                                 }
@@ -94,9 +94,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Doctor *</label>
+                                        <label >Doctor *</label>
                                         <select asp-for="DoctorId" id="doctorSelect" class="form-control" disabled>
-                                            <option value="">-- Select Department First --</option>
+                                            <option value=""disabled>-- Select Department First --</option>
                                         </select>
                                         <span asp-validation-for="DoctorId" class="text-danger"></span>
                                     </div>
@@ -115,17 +115,19 @@
                                     <div class="form-group">
                                         <label>Time *</label>
                                         <select asp-for="StartTime" id="timeSelect" class="form-control" disabled>
-                                            <option value="">-- Select Date First --</option>
+                                            <option value="" disabled>-- Select Date First --</option>
                                         </select>
                                         <span asp-validation-for="StartTime" class="text-danger"></span>
                                     </div>
                                 </div>
+
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Available Time Slots</label>
                                         <div id="slotsVisual"></div>
                                     </div>
                                 </div>
+
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Symptoms *</label>
@@ -173,6 +175,7 @@
                             <p><strong>Doctor:</strong> <span id="infoDoctor">-</span></p>
                             <p><strong>Date:</strong> <span id="infoDate">-</span></p>
                             <p><strong>Time:</strong> <span id="infoTime">-</span></p>
+                            <p><strong>Location:</strong> <span id="infoLocation">-</span></p>
                             <p><strong>Fee:</strong> <span id="infoFee">-</span></p>
                         </div>
                     </div>
@@ -199,7 +202,9 @@
                 $('#infoDoctor').text('-');
                 $('#infoDate').text('-');
                 $('#infoTime').text('-');
+                $('#infoLocation').text('-');
                 $('#infoFee').text('-');
+                $('#slotsVisual').html('');
 
                 if (departmentId == '' || departmentId == null) {
                     $('#doctorSelect').prop('disabled', true);
@@ -243,6 +248,8 @@
                 $('#infoFee').text(fee + ' AZN');
                 $('#infoDate').text('-');
                 $('#infoTime').text('-');
+                $('#infoLocation').text('-');
+                $('#slotsVisual').html('');
 
                 if (doctorId == '' || doctorId == null) {
                     $('#dateSelect').prop('disabled', true);
@@ -263,6 +270,7 @@
 
                 $('#infoDate').text(date);
                 $('#infoTime').text('-');
+                $('#infoLocation').text('-');
 
                 if (date == '' || date == null) {
                     $('#timeSelect').prop('disabled', true);
@@ -280,35 +288,62 @@
                     success: function (data) {
                         $('#timeSelect').html('<option value="">-- Select Time --</option>');
 
-                        var visualHtml = '<div class="row g-2 mb-3">';
-                        visualHtml += '<div class="col-12 mb-2">';
+                        if (data.length == 0) {
+                            $('#slotsVisual').html('<div class="alert alert-warning">No available slots for this date. The doctor does not work on this day.</div>');
+                            $('#timeSelect').html('<option value="">No available slots</option>');
+                            $('#timeSelect').prop('disabled', true);
+                            $('#loadingIndicator').hide();
+                            return;
+                        }
+
+                        var visualHtml = '<div class="mb-3">';
+                        visualHtml += '<div class="mb-2">';
                         visualHtml += '<span class="badge bg-success me-2">● Available</span>';
                         visualHtml += '<span class="badge bg-danger">● Booked</span>';
                         visualHtml += '</div>';
 
                         var availableCount = 0;
+                        var currentLocation = '';
+                        var locationGroups = {};
 
                         for (var i = 0; i < data.length; i++) {
                             var slot = data[i];
-                            var startTime = slot.startTime.substring(0, 5);
-                            var endTime = slot.endTime.substring(0, 5);
-                            var optionText = startTime + ' - ' + endTime;
+                            var location = slot.location || 'Main Hospital';
 
-                            if (slot.isAvailable) {
-                                availableCount++;
-                                $('#timeSelect').append('<option value="' + slot.startTime + '">' + optionText + '</option>');
-                                visualHtml += '<div class="col-md-3 col-6">';
-                                visualHtml += '<button type="button" class="btn btn-success w-100 py-2 slot-btn" data-time="' + slot.startTime + '">' + optionText + '</button>';
-                                visualHtml += '</div>';
-                            } else {
-                                visualHtml += '<div class="col-md-3 col-6">';
-                                visualHtml += '<button type="button" class="btn btn-danger w-100 py-2" disabled>' + optionText + '</button>';
-                                visualHtml += '</div>';
+                            if (!locationGroups[location]) {
+                                locationGroups[location] = [];
                             }
+                            locationGroups[location].push(slot);
+                        }
+
+                        for (var loc in locationGroups) {
+                            visualHtml += '<div class="mt-3 mb-2"><h6><i class="fa fa-hospital-o"></i> ' + loc + '</h6></div>';
+                            visualHtml += '<div class="row g-2">';
+
+                            var slots = locationGroups[loc];
+                            for (var j = 0; j < slots.length; j++) {
+                                var slot = slots[j];
+                                var startTime = slot.startTime.substring(0, 5);
+                                var endTime = slot.endTime.substring(0, 5);
+                                var optionText = startTime + ' - ' + endTime;
+
+                                if (slot.isAvailable) {
+                                    availableCount++;
+                                    $('#timeSelect').append('<option value="' + slot.startTime + '" data-location="' + loc + '">' + optionText + ' (' + loc + ')</option>');
+                                    visualHtml += '<div class="col-md-3 col-6">';
+                                    visualHtml += '<button type="button" class="btn btn-success w-100 py-2 slot-btn" data-time="' + slot.startTime + '" data-location="' + loc + '">' + optionText + '</button>';
+                                    visualHtml += '</div>';
+                                } else {
+                                    visualHtml += '<div class="col-md-3 col-6">';
+                                    visualHtml += '<button type="button" class="btn btn-danger w-100 py-2" disabled>' + optionText + '</button>';
+                                    visualHtml += '</div>';
+                                }
+                            }
+
+                            visualHtml += '</div>';
                         }
 
                         visualHtml += '</div>';
-
                         $('#slotsVisual').html(visualHtml);
 
                         if (availableCount == 0) {
@@ -320,8 +355,10 @@
 
                         $('.slot-btn').click(function () {
                             var time = $(this).data('time');
+                            var location = $(this).data('location');
                             $('#timeSelect').val(time);
-                            $('#timeSelect').trigger('change');
+                            $('#infoTime').text($(this).text());
+                            $('#infoLocation').text(location);
                             $('.slot-btn').removeClass('btn-primary').addClass('btn-success');
                             $(this).removeClass('btn-success').addClass('btn-primary');
                         });
@@ -339,9 +376,12 @@
                 var time = $(this).val();
                 if (time != '' && time != null) {
                     var timeText = $('#timeSelect option:selected').text();
+                    var location = $('#timeSelect option:selected').data('location');
                     $('#infoTime').text(timeText);
+                    $('#infoLocation').text(location || '-');
                 } else {
                     $('#infoTime').text('-');
+                    $('#infoLocation').text('-');
                 }
             });
 
@@ -362,4 +402,3 @@
         });
     </script>
 }
-

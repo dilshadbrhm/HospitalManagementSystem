@@ -27,7 +27,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.TodayAppointments)
+                                @foreach (HospitalManagement.Application.Dtos.Appointment.AppointmentItemDto item in Model.TodayAppointments)
                                 {
                                     <tr>
                                         <td>@item.PatientName</td>
@@ -53,15 +53,52 @@
                                         <td>
                                             @if (item.Status != "Cancelled" && item.Status != "Completed")
                                             {
-                                                <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
-                                                    <input type="hidden" name="appointmentId" value="@item.Id" />
-                                                    <select name="status" class="form-control form-control-sm" style="width:auto; display:inline;" onchange="this.form.submit()">
-                                                        <option value="" disabled>Change</option>
-                                                        <option value="Confirmed">Confirm</option>
-                                                        <option value="Completed">Complete</option>
-                                                        <option value="Cancelled">Cancel</option>
-                                                    </select>
-                                                </form>
+                                                <div class="btn-group-vertical">
+                                                    <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="appointmentId" value="@item.Id" />
+                                                        <select name="status" class="form-control form-control-sm mb-1" onchange="this.form.submit()">
+                                                            <option value="">Status</option>
+                                                            <option value="Confirmed">Confirm</option>
+                                                            <option value="Completed">Complete</option>
+                                                        </select>
+                                                    </form>
+                                                    <a asp-action="RescheduleAppointment" asp-route-id="@item.Id" class="btn btn-sm btn-warning mb-1">
+                                                        <i class="fas fa-calendar-alt"></i> Reschedule
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#cancelModal@(item.Id)">
+                                                        <i class="fas fa-times"></i> Cancel
+                                                    </button>
+                                                </div>
+
+                                                <div class="modal fade" id="cancelModal@(item.Id)" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Cancel Appointment</h5>
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span>&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form asp-action="CancelAppointment" method="post">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="appointmentId" value="@item.Id" />
+                                                                <div class="modal-body">
+                                                                    <p>Patient: <strong>@item.PatientName</strong></p>
+                                                                    <p>Time: <strong>@item.StartTime.ToString(@"hh\:mm")</strong></p>
+                                                                    <div class="form-group">
+                                                                        <label>Reason for Cancellation *</label>
+                                                                        <textarea name="reason" class="form-control" rows="3" required placeholder="e.g., Emergency, illness"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             }
                                         </td>
                                     </tr>
@@ -96,7 +133,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.UpcomingAppointments)
+                                @foreach (HospitalManagement.Application.Dtos.Appointment.AppointmentItemDto item in Model.UpcomingAppointments)
                                 {
                                     <tr>
                                         <td>@item.PatientName</td>
@@ -115,14 +152,52 @@
                                         <td>
                                             @if (item.Status != "Cancelled" && item.Status != "Completed")
                                             {
-                                                <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
-                                                    <input type="hidden" name="appointmentId" value="@item.Id" />
-                                                    <select name="status" class="form-control form-control-sm" style="width:auto; display:inline;" onchange="this.form.submit()">
-                                                        <option value="">Change</option>
-                                                        <option value="Confirmed">Confirm</option>
-                                                        <option value="Cancelled">Cancel</option>
-                                                    </select>
-                                                </form>
+                                                <div class="btn-group-vertical">
+                                                    <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="appointmentId" value="@item.Id" />
+                                                        <select name="status" class="form-control form-control-sm mb-1" onchange="this.form.submit()">
+                                                            <option value="">Status</option>
+                                                            <option value="Confirmed">Confirm</option>
+                                                        </select>
+                                                    </form>
+                                                    <a asp-action="RescheduleAppointment" asp-route-id="@item.Id" class="btn btn-sm btn-warning mb-1">
+                                                        <i class="fas fa-calendar-alt"></i> Reschedule
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#cancelUpcomingModal@(item.Id)">
+                                                        <i class="fas fa-times"></i> Cancel
+                                                    </button>
+                                                </div>
+
+                                                <div class="modal fade" id="cancelUpcomingModal@(item.Id)" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Cancel Appointment</h5>
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span>&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <form asp-action="CancelAppointment" method="post">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="appointmentId" value="@item.Id" />
+                                                                <div class="modal-body">
+                                                                    <p>Patient: <strong>@item.PatientName</strong></p>
+                                                                    <p>Date: <strong>@item.AppointmentDate.ToString("dd.MM.yyyy")</strong></p>
+                                                                    <p>Time: <strong>@item.StartTime.ToString(@"hh\:mm")</strong></p>
+                                                                    <div class="form-group">
+                                                                        <label>Reason for Cancellation *</label>
+                                                                        <textarea name="reason" class="form-control" rows="3" required placeholder="e.g., Emergency, illness, vacation"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             }
                                         </td>
                                     </tr>

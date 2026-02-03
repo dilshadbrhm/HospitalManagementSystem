@@ -13,9 +13,9 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
-
         private IGenericRepository<Appointment> _appointments;
         private IGenericRepository<Doctor> _doctors;
+        private IDoctorRepository _doctorRepository;
         private IGenericRepository<Department> _departments;
         private IGenericRepository<Patient> _patients;
         private IGenericRepository<TimeSlot> _timeSlots;
@@ -46,6 +46,18 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
                     _doctors = new GenericRepository<Doctor>(_context);
                 }
                 return _doctors;
+            }
+        }
+
+        public IDoctorRepository DoctorRepository
+        {
+            get
+            {
+                if (_doctorRepository == null)
+                {
+                    _doctorRepository = new DoctorRepository(_context);
+                }
+                return _doctorRepository;
             }
         }
 

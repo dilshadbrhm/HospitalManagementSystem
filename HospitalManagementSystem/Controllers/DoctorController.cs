@@ -1,10 +1,13 @@
-﻿using HospitalManagement.Application.Dtos.Doctor;
+﻿using HospitalManagement.Application.Dtos.Appointment;
+using HospitalManagement.Application.Dtos.Doctor;
 using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
+using HospitalManagement.Application.Services;
 using HospitalManagement.Domain;
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Domain.Enums;
 using HospitalManagement.Infrastructure.Persistence;
+using HospitalManagement.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +20,22 @@ namespace HospitalManagementSystem.Controllers
     {
         private readonly IDoctorCabinetService _cabinetService;
         private readonly IDoctorService _doctorService;
+        private readonly IAppointmentService _appointmentService;
+        private readonly IDoctorRepository _doctorRepository;
+        private readonly IEmailService _emailService;
 
-        public DoctorController(IDoctorCabinetService cabinetService, IDoctorService doctorService)
+        public DoctorController(
+            IDoctorCabinetService cabinetService,
+            IDoctorService doctorService,
+            IAppointmentService appointmentService,
+            IDoctorRepository doctorRepository,
+            IEmailService emailService)
         {
             _cabinetService = cabinetService;
             _doctorService = doctorService;
+            _appointmentService = appointmentService;
+            _doctorRepository = doctorRepository;
+            _emailService = emailService;
         }
 
         private string GetUserId()
@@ -222,6 +236,132 @@ namespace HospitalManagementSystem.Controllers
             }
 
             return RedirectToAction("MyProfile");
+        }
+
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        public async Task<IActionResult> CancelAppointment(int appointmentId, string reason)
+        {
+            string userId = GetUserId();
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
+
+            if (doctor == null)
+            {
+                TempData["Error"] = "Doctor not found";
+                return RedirectToAction("Cabinet");
+            }
+
+            CancelResultDto result = await _appointmentService.CancelByDoctorAsync(appointmentId, doctor.Id, reason);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Cabinet");
+            }
+
+            if (!string.IsNullOrEmpty(result.PatientEmail))
+            {
+                string subject = "Your Appointment Has Been Cancelled";
+                string body = "Dear " + result.PatientName + ",<br><br>" +
+                              "We regret to inform you that your appointment scheduled for " +
+                              result.AppointmentDate.ToString("dd MMM yyyy") + " at " +
+                              result.StartTime.ToString(@"hh\:mm") + " with Dr. " + result.DoctorName +
+                              " has been cancelled.<br><br>" +
+                              "Reason: " + reason + "<br><br>" +
+                              "Please book a new appointment at your convenience.<br><br>" +
+                              "Best regards,<br>Hospital Management System";
+
+                try
+                {
+                    await _emailService.SendEmailAsync(result.PatientEmail, subject, body);
+                }
+                catch
+                {
+                }
+            }
+
+            TempData["Success"] = "Appointment cancelled successfully";
+            return RedirectToAction("Cabinet");
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
+        public async Task<IActionResult> RescheduleAppointment(int id)
+        {
+            DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(id);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            RescheduleAppointmentDto dto = new RescheduleAppointmentDto();
+            dto.AppointmentId = id;
+            dto.NewDate = appointment.AppointmentDate.AddDays(1);
+
+            ViewBag.Appointment = appointment;
+            ViewBag.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(appointment.DoctorId, dto.NewDate);
+
+            return View(dto);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RescheduleAppointment(RescheduleAppointmentDto dto)
+        {
+            string userId = GetUserId();
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
+
+            if (doctor == null)
+            {
+                TempData["Error"] = "Doctor not found";
+                return RedirectToAction("Cabinet");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+                ViewBag.Appointment = appointment;
+                ViewBag.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(appointment.DoctorId, dto.NewDate);
+                return View(dto);
+            }
+
+            AppointmentResultDto result = await _appointmentService.RescheduleByDoctorAsync(dto, doctor.Id);
+
+            if (!result.Success)
+            {
+                TempData["Error"] = result.Message;
+                DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+                ViewBag.Appointment = appointment;
+                ViewBag.AvailableSlots = await _appointmentService.GetAvailableSlotsAsync(appointment.DoctorId, dto.NewDate);
+                return View(dto);
+            }
+
+            DetailsAppointmentDto updatedAppointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+
+            if (!string.IsNullOrEmpty(updatedAppointment.PatientEmail))
+            {
+                string subject = "Your Appointment Has Been Rescheduled";
+                string body = "Dear " + updatedAppointment.PatientName + ",<br><br>" +
+                              "Your appointment with Dr. " + updatedAppointment.DoctorName +
+                              " has been rescheduled to " + dto.NewDate.ToString("dd MMM yyyy") +
+                              " at " + dto.NewStartTime.ToString(@"hh\:mm") + ".<br><br>" +
+                              "Reason: " + dto.Reason + "<br><br>" +
+                              "Best regards,<br>Hospital Management System";
+
+                try
+                {
+                    await _emailService.SendEmailAsync(updatedAppointment.PatientEmail, subject, body);
+                }
+                catch
+                {
+                }
+            }
+
+            TempData["Success"] = "Appointment rescheduled successfully";
+            return RedirectToAction("Cabinet");
         }
     }
 }

@@ -1,0 +1,114 @@
+﻿@model HospitalManagement.Application.Dtos.Appointment.RescheduleAppointmentDto
+@{
+    ViewData["Title"] = "Reschedule Appointment";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+    HospitalManagement.Application.Dtos.Appointment.DetailsAppointmentDto appointment = ViewBag.Appointment;
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-calendar-alt"></i> Reschedule Appointment
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Current Appointment:</strong><br>
+                    Doctor: @appointment.DoctorName<br>
+                    Date: @appointment.AppointmentDate.ToString("dd MMM yyyy")<br>
+                    Time: @appointment.StartTime.ToString(@"hh\:mm")
+                </div>
+
+                <form asp-action="Reschedule" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="AppointmentId" />
+
+                    <div class="form-group">
+                        <label>New Date *</label>
+                        <input asp-for="NewDate" type="date" class="form-control" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" id="newDateInput" />
+                        <span asp-validation-for="NewDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>New Time *</label>
+                        <select asp-for="NewStartTime" class="form-control" id="newTimeSelect">
+                            <option value="">Select a time</option>
+                        </select>
+                        <span asp-validation-for="NewStartTime" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Reason for Rescheduling</label>
+                        <textarea asp-for="Reason" class="form-control" rows="3" placeholder="Optional"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Confirm Reschedule
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('newDateInput').addEventListener('change', function() {
+            var date = this.value;
+            var doctorId = @ViewBag.Appointment.DoctorId;
+
+            if (date) {
+                fetch('/Appointment/GetAvailableSlotsForReschedule?doctorId=' + doctorId + '&date=' + date)
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        var select = document.getElementById('newTimeSelect');
+                        select.innerHTML = '<option value="">Select a time</option>';
+
+                        for (var i = 0; i < data.length; i++) {
+                            var slot = data[i];
+                            var option = document.createElement('option');
+
+                            var timeValue = slot.startTime;
+                            var hours = 0;
+                            var minutes = 0;
+
+                            if (typeof timeValue === 'string') {
+                                var parts = timeValue.split(':');
+                                hours = parseInt(parts[0]);
+                                minutes = parseInt(parts[1]);
+                            } else if (timeValue && timeValue.hours !== undefined) {
+                        
+                                hours = timeValue.hours;
+                                minutes = timeValue.minutes;
+                            } else if (timeValue && timeValue.ticks !== undefined) {
+                         
+                                var totalMinutes = timeValue.ticks / 600000000;
+                                hours = Math.floor(totalMinutes / 60);
+                                minutes = Math.floor(totalMinutes % 60);
+                            }
+
+                            var hoursStr = hours.toString().padStart(2, '0');
+                            var minutesStr = minutes.toString().padStart(2, '0');
+
+                            option.value = hoursStr + ':' + minutesStr + ':00';
+                            option.text = hoursStr + ':' + minutesStr;
+                            select.appendChild(option);
+                        }
+
+                        if (data.length === 0) {
+                            var noOption = document.createElement('option');
+                            noOption.value = '';
+                            noOption.text = 'No available slots';
+                            select.appendChild(noOption);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('Error:', error);
+                    });
+            }
+        });
+    </script>
+}

@@ -262,26 +262,53 @@ namespace HospitalManagement.Application.Services
         {
             List<TimeSlotSelectDto> slots = new List<TimeSlotSelectDto>();
 
-            TimeSpan time = new TimeSpan(9, 0, 0);
-            TimeSpan endTime = new TimeSpan(18, 0, 0);
+            DayOfWeek dayOfWeek = date.DayOfWeek;
+            Doctor doctor = await _unitOfWork.DoctorRepository.GetByIdWithTimeSlotsAsync(doctorId);
 
-            while (time < endTime)
+            if (doctor == null || doctor.TimeSlots == null || doctor.TimeSlots.Count == 0)
             {
-                bool available = await IsSlotAvailableAsync(doctorId, date, time);
-
-                if (available)
-                {
-                    TimeSlotSelectDto slot = new TimeSlotSelectDto();
-                    slot.StartTime = time;
-                    slot.EndTime = time.Add(TimeSpan.FromMinutes(30));
-                    slots.Add(slot);
-                }
-
-                time = time.Add(TimeSpan.FromMinutes(30));
+                return slots;
             }
 
-            return slots;
+            List<TimeSlot> doctorTimeSlots = doctor.TimeSlots
+                .Where(t => t.DayOfWeek == dayOfWeek && t.IsAvailable)
+                .ToList();
+
+            if (doctorTimeSlots.Count == 0)
+            {
+                return slots;
+            }
+
+            foreach (TimeSlot timeSlot in doctorTimeSlots)
+            {
+                TimeSpan currentTime = timeSlot.StartTime;
+
+                while (currentTime < timeSlot.EndTime)
+                {
+                    bool isBooked = await _unitOfWork.Appointments.AnyAsync(a =>
+                        a.DoctorId == doctorId &&
+                        a.AppointmentDate.Date == date.Date &&
+                        a.StartTime == currentTime &&
+                        a.Status != AppointmentStatus.Cancelled &&
+                        !a.IsDeleted);
+
+                    if (!isBooked)
+                    {
+                        TimeSlotSelectDto slotDto = new TimeSlotSelectDto();
+                        slotDto.StartTime = currentTime;
+                        slotDto.EndTime = currentTime.Add(TimeSpan.FromMinutes(30));
+                        slotDto.IsAvailable = true;
+                        slotDto.Location = timeSlot.Location;
+                        slots.Add(slotDto);
+                    }
+
+                    currentTime = currentTime.Add(TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return slots.OrderBy(s => s.StartTime).ToList();
         }
+
 
         public async Task<List<DepartmentSelectDto>> GetDepartmentsAsync()
         {
@@ -358,23 +385,48 @@ namespace HospitalManagement.Application.Services
         {
             List<TimeSlotSelectDto> slots = new List<TimeSlotSelectDto>();
 
-            TimeSpan time = new TimeSpan(9, 0, 0);
-            TimeSpan endTime = new TimeSpan(18, 0, 0);
+            DayOfWeek dayOfWeek = date.DayOfWeek;
+            Doctor doctor = await _unitOfWork.DoctorRepository.GetByIdWithTimeSlotsAsync(doctorId);
 
-            while (time < endTime)
+            if (doctor == null || doctor.TimeSlots == null || doctor.TimeSlots.Count == 0)
             {
-                bool available = await IsSlotAvailableAsync(doctorId, date, time);
-
-                TimeSlotSelectDto slot = new TimeSlotSelectDto();
-                slot.StartTime = time;
-                slot.EndTime = time.Add(TimeSpan.FromMinutes(30));
-                slot.IsAvailable = available;
-                slots.Add(slot);
-
-                time = time.Add(TimeSpan.FromMinutes(30));
+                return slots;
             }
 
-            return slots;
+            List<TimeSlot> doctorTimeSlots = doctor.TimeSlots
+                .Where(t => t.DayOfWeek == dayOfWeek && t.IsAvailable)
+                .ToList();
+
+            if (doctorTimeSlots.Count == 0)
+            {
+                return slots;
+            }
+
+            foreach (TimeSlot timeSlot in doctorTimeSlots)
+            {
+                TimeSpan currentTime = timeSlot.StartTime;
+
+                while (currentTime < timeSlot.EndTime)
+                {
+                    bool isBooked = await _unitOfWork.Appointments.AnyAsync(a =>
+                        a.DoctorId == doctorId &&
+                        a.AppointmentDate.Date == date.Date &&
+                        a.StartTime == currentTime &&
+                        a.Status != AppointmentStatus.Cancelled &&
+                        !a.IsDeleted);
+
+                    TimeSlotSelectDto slotDto = new TimeSlotSelectDto();
+                    slotDto.StartTime = currentTime;
+                    slotDto.EndTime = currentTime.Add(TimeSpan.FromMinutes(30));
+                    slotDto.IsAvailable = !isBooked;
+                    slotDto.Location = timeSlot.Location;
+                    slots.Add(slotDto);
+
+                    currentTime = currentTime.Add(TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return slots.OrderBy(s => s.StartTime).ToList();
         }
         public async Task<Dictionary<DateTime, int>> GetAvailableSlotsCountByDatesAsync(int doctorId, List<DateTime> dates)
         {

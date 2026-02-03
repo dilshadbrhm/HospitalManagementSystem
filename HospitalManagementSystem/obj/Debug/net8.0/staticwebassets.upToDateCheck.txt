@@ -142,6 +142,8 @@ wwwroot\assets\fonts\fontawesome-webfontd41d.eot
 wwwroot\assets\fonts\license\license.html
 wwwroot\assets\fonts\license\license.pdf
 wwwroot\assets\fonts\play-button.svg
+wwwroot\assets\image\0362e648-5524-44d7-8111-f56b1120342a.avif
+wwwroot\assets\image\131fdef6-ebf9-4e8f-9509-927c687cf21b.avif
 wwwroot\assets\image\about-us\about-type-one.png
 wwwroot\assets\image\about-us\home-5-about.jpg
 wwwroot\assets\image\about-us\sign.png
@@ -260,6 +262,7 @@ wwwroot\assets\image\fav\android-icon-36x36.png
 wwwroot\assets\image\fav\favicon-16x16.png
 wwwroot\assets\image\fav\favicon-32x32.png
 wwwroot\assets\image\fbimg-210x210.jpg
+wwwroot\assets\image\ffd36170-1bf3-4516-b59d-72ac8d8d14f2.avif
 wwwroot\assets\image\footer-logo.png
 wwwroot\assets\image\gallery\hm-2-gallery-1.jpg
 wwwroot\assets\image\gallery\hm-2-gallery-2.jpg
