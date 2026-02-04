@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HospitalManagement.Domain 
-{ 
-    public class Appointment: BaseEntity
+{
+    public class Appointment : BaseEntity
     {
         public int DoctorId { get; set; }
         public int PatientId { get; set; }
@@ -16,12 +16,14 @@ namespace HospitalManagement.Domain
         public TimeSpan EndTime { get; set; }
         public AppointmentStatus Status { get; set; }
         public string Symptoms { get; set; }
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
         public decimal Fee { get; set; }
         public bool IsPaid { get; set; }
         public string? CancellationReason { get; set; }
-        public DateTime? CancelledAt { get; set; }        
+        public DateTime? CancelledAt { get; set; }
+
         public Doctor Doctor { get; set; }
         public Patient Patient { get; set; }
+        public Prescription Prescription { get; set; }
     }
 }

@@ -51,7 +51,13 @@
                                             }
                                         </td>
                                         <td>
-                                            @if (item.Status != "Cancelled" && item.Status != "Completed")
+                                            @if (item.Status == "Completed")
+                                            {
+                                                <a asp-action="WritePrescription" asp-route-appointmentId="@item.Id" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-prescription-bottle-alt"></i> Write Rx
+                                                </a>
+                                            }
+                                            else if (item.Status != "Cancelled")
                                             {
                                                 <div class="btn-group-vertical">
                                                     <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
@@ -216,5 +222,6 @@
 
     <div style="margin-top:20px;">
         <a asp-action="TimeTable" class="btn btn-primary">My Schedule</a>
+        <a asp-action="MyPrescriptions" class="btn btn-info">My Prescriptions</a>
     </div>
 </div>

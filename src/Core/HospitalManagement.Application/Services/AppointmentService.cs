@@ -24,7 +24,7 @@ namespace HospitalManagement.Application.Services
 
         public async Task<DetailsAppointmentDto> GetByIdAsync(int id)
         {
-            Appointment appointment = await _unitOfWork.Appointments.GetByIdAsync(id);
+            Appointment appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id);
 
             if (appointment == null)
             {
@@ -47,7 +47,6 @@ namespace HospitalManagement.Application.Services
                 CancellationReason = appointment.CancellationReason,
                 CancelledAt = appointment.CancelledAt
             };
-
 
             if (appointment.Doctor != null)
             {
@@ -72,7 +71,7 @@ namespace HospitalManagement.Application.Services
 
         public async Task<List<AppointmentItemDto>> GetAllAsync()
         {
-            IEnumerable<Appointment> appointments = await _unitOfWork.Appointments.GetAllAsync();
+            IEnumerable<Appointment> appointments = await _unitOfWork.AppointmentRepository.GetAllAsync();
 
             List<AppointmentItemDto> result = new List<AppointmentItemDto>();
 
@@ -87,8 +86,7 @@ namespace HospitalManagement.Application.Services
 
         public async Task<List<AppointmentItemDto>> GetByPatientIdAsync(int patientId)
         {
-            IEnumerable<Appointment> appointments = await _unitOfWork.Appointments
-                .FindAsync(a => a.PatientId == patientId && !a.IsDeleted);
+            IEnumerable<Appointment> appointments = await _unitOfWork.AppointmentRepository.GetByPatientIdAsync(patientId);
 
             List<AppointmentItemDto> result = new List<AppointmentItemDto>();
 
@@ -103,8 +101,7 @@ namespace HospitalManagement.Application.Services
 
         public async Task<List<AppointmentItemDto>> GetByDoctorIdAsync(int doctorId)
         {
-            IEnumerable<Appointment> appointments = await _unitOfWork.Appointments
-                .FindAsync(a => a.DoctorId == doctorId && !a.IsDeleted);
+            IEnumerable<Appointment> appointments = await _unitOfWork.AppointmentRepository.GetByDoctorIdAsync(doctorId);
 
             List<AppointmentItemDto> result = new List<AppointmentItemDto>();
 

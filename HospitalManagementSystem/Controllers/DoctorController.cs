@@ -1,5 +1,6 @@
 ﻿using HospitalManagement.Application.Dtos.Appointment;
 using HospitalManagement.Application.Dtos.Doctor;
+using HospitalManagement.Application.Dtos.Prescription;
 using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
 using HospitalManagement.Application.Services;
@@ -23,19 +24,22 @@ namespace HospitalManagementSystem.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IDoctorRepository _doctorRepository;
         private readonly IEmailService _emailService;
+        private readonly IPrescriptionService _prescriptionService;
 
         public DoctorController(
             IDoctorCabinetService cabinetService,
             IDoctorService doctorService,
             IAppointmentService appointmentService,
             IDoctorRepository doctorRepository,
-            IEmailService emailService)
+            IEmailService emailService,
+            IPrescriptionService prescriptionService)
         {
             _cabinetService = cabinetService;
             _doctorService = doctorService;
             _appointmentService = appointmentService;
             _doctorRepository = doctorRepository;
             _emailService = emailService;
+            _prescriptionService = prescriptionService;
         }
 
         private string GetUserId()
@@ -362,6 +366,106 @@ namespace HospitalManagementSystem.Controllers
 
             TempData["Success"] = "Appointment rescheduled successfully";
             return RedirectToAction("Cabinet");
+
+        }
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
+        public async Task<IActionResult> WritePrescription(int appointmentId)
+        {
+            DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(appointmentId);
+
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            PrescriptionDto existingPrescription = await _prescriptionService.GetByAppointmentIdAsync(appointmentId);
+
+            if (existingPrescription != null)
+            {
+                TempData["Error"] = "Prescription already exists for this appointment";
+                return RedirectToAction("ViewPrescription", new { id = existingPrescription.Id });
+            }
+
+            CreatePrescriptionDto dto = new CreatePrescriptionDto
+            {
+                AppointmentId = appointmentId
+            };
+
+            ViewBag.Appointment = appointment;
+
+            return View(dto);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> WritePrescription(CreatePrescriptionDto dto)
+        {
+            if (dto.Items == null || dto.Items.Count == 0)
+            {
+                ModelState.AddModelError("", "Please add at least one medicine");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+                ViewBag.Appointment = appointment;
+                return View(dto);
+            }
+
+            string userId = GetUserId();
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
+
+            if (doctor == null)
+            {
+                TempData["Error"] = "Doctor not found";
+                return RedirectToAction("Cabinet");
+            }
+
+            bool result = await _prescriptionService.CreateAsync(dto, doctor.Id);
+
+            if (result)
+            {
+                TempData["Success"] = "Prescription created successfully";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to create prescription";
+            }
+
+            return RedirectToAction("Cabinet");
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
+        public async Task<IActionResult> ViewPrescription(int id)
+        {
+            PrescriptionDto prescription = await _prescriptionService.GetByIdAsync(id);
+
+            if (prescription == null)
+            {
+                return NotFound();
+            }
+
+            return View(prescription);
+        }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
+        public async Task<IActionResult> MyPrescriptions()
+        {
+            string userId = GetUserId();
+            Doctor doctor = await _doctorRepository.GetByUserIdAsync(userId);
+
+            if (doctor == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            List<PrescriptionDto> prescriptions = await _prescriptionService.GetByDoctorIdAsync(doctor.Id);
+
+            return View(prescriptions);
         }
     }
 }

@@ -1,0 +1,147 @@
+﻿@model HospitalManagement.Application.Dtos.Prescription.CreatePrescriptionDto
+@{
+    ViewData["Title"] = "Write Prescription";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+    HospitalManagement.Application.Dtos.Appointment.DetailsAppointmentDto appointment = ViewBag.Appointment;
+}
+
+<div class="container" style="padding: 30px 0;">
+    <h2>Write Prescription</h2>
+
+    <div class="card mb-3">
+        <div class="card-header">Patient Information</div>
+        <div class="card-body">
+            <p><strong>Patient:</strong> @appointment.PatientName</p>
+            <p><strong>Date:</strong> @appointment.AppointmentDate.ToString("dd.MM.yyyy")</p>
+            <p><strong>Symptoms:</strong> @appointment.Symptoms</p>
+        </div>
+    </div>
+
+    <form asp-action="WritePrescription" method="post" id="prescriptionForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="AppointmentId" />
+
+        <div class="card mb-3">
+            <div class="card-header">Diagnosis</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Diagnosis *</label>
+                    <textarea asp-for="Diagnosis" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Valid Days</label>
+                    <input asp-for="ValidDays" type="number" class="form-control" value="30" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                Medicines
+                <button type="button" class="btn btn-sm btn-success float-right" onclick="addMedicine()">
+                    <i class="fas fa-plus"></i> Add Medicine
+                </button>
+            </div>
+            <div class="card-body" id="medicinesContainer">
+                <div class="medicine-item border p-3 mb-2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Medicine Name *</label>
+                                <input type="text" name="Items[0].MedicineName" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Dosage *</label>
+                                <input type="text" name="Items[0].Dosage" class="form-control" placeholder="e.g., 500mg" required />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Frequency *</label>
+                                <select name="Items[0].Frequency" class="form-control" required>
+                                    <option value="Once daily">Once daily</option>
+                                    <option value="Twice daily">Twice daily</option>
+                                    <option value="Three times daily">Three times daily</option>
+                                    <option value="Four times daily">Four times daily</option>
+                                    <option value="As needed">As needed</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Duration (days)</label>
+                                <input type="number" name="Items[0].Duration" class="form-control" value="7" />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Instructions</label>
+                                <input type="text" name="Items[0].Instructions" class="form-control" placeholder="After meal" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Prescription
+        </button>
+        <a asp-action="Cabinet" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        var medicineIndex = 1;
+
+        function addMedicine() {
+            var html = '<div class="medicine-item border p-3 mb-2">' +
+                '<div class="row">' +
+                '<div class="col-md-4">' +
+                '<div class="form-group">' +
+                '<label>Medicine Name *</label>' +
+                '<input type="text" name="Items[' + medicineIndex + '].MedicineName" class="form-control" required />' +
+                '</div></div>' +
+                '<div class="col-md-2">' +
+                '<div class="form-group">' +
+                '<label>Dosage *</label>' +
+                '<input type="text" name="Items[' + medicineIndex + '].Dosage" class="form-control" placeholder="e.g., 500mg" required />' +
+                '</div></div>' +
+                '<div class="col-md-2">' +
+                '<div class="form-group">' +
+                '<label>Frequency *</label>' +
+                '<select name="Items[' + medicineIndex + '].Frequency" class="form-control" required>' +
+                '<option value="Once daily">Once daily</option>' +
+                '<option value="Twice daily">Twice daily</option>' +
+                '<option value="Three times daily">Three times daily</option>' +
+                '<option value="Four times daily">Four times daily</option>' +
+                '<option value="As needed">As needed</option>' +
+                '</select></div></div>' +
+                '<div class="col-md-2">' +
+                '<div class="form-group">' +
+                '<label>Duration (days)</label>' +
+                '<input type="number" name="Items[' + medicineIndex + '].Duration" class="form-control" value="7" />' +
+                '</div></div>' +
+                '<div class="col-md-2">' +
+                '<div class="form-group">' +
+                '<label>&nbsp;</label>' +
+                '<button type="button" class="btn btn-danger btn-block" onclick="removeMedicine(this)"><i class="fas fa-trash"></i></button>' +
+                '</div></div>' +
+                '</div></div>';
+
+            document.getElementById('medicinesContainer').insertAdjacentHTML('beforeend', html);
+            medicineIndex++;
+        }
+
+        function removeMedicine(btn) {
+            btn.closest('.medicine-item').remove();
+        }
+    </script>
+}

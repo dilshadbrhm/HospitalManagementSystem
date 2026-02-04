@@ -11,6 +11,7 @@ namespace HospitalManagement.Application.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IGenericRepository<Appointment> Appointments { get; }
+        IAppointmentRepository AppointmentRepository { get; }
         IGenericRepository<Doctor> Doctors { get; }
         IDoctorRepository DoctorRepository { get; }
         IGenericRepository<Department> Departments { get; }

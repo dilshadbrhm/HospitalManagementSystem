@@ -14,6 +14,7 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
     {
         private readonly AppDbContext _context;
         private IGenericRepository<Appointment> _appointments;
+        private IAppointmentRepository _appointmentRepository;
         private IGenericRepository<Doctor> _doctors;
         private IDoctorRepository _doctorRepository;
         private IGenericRepository<Department> _departments;
@@ -34,6 +35,18 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
                     _appointments = new GenericRepository<Appointment>(_context);
                 }
                 return _appointments;
+            }
+        }
+
+        public IAppointmentRepository AppointmentRepository
+        {
+            get
+            {
+                if (_appointmentRepository == null)
+                {
+                    _appointmentRepository = new AppointmentRepository(_context);
+                }
+                return _appointmentRepository;
             }
         }
 
@@ -108,3 +121,4 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
         }
     }
 }
+

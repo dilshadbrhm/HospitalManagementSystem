@@ -1,5 +1,6 @@
 ﻿using HospitalManagement.Application.Interfaces;
 using HospitalManagement.Domain;
+using HospitalManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,24 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<Appointment>> GetAllAsync()
+        {
+            return await _context.Appointments
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Department)
+                .Include(a => a.Patient)
+                .OrderByDescending(a => a.AppointmentDate)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Appointment>> GetByDoctorIdAsync(int doctorId)
         {
             return await _context.Appointments
-                .Where(a => a.DoctorId == doctorId)
+                .Where(a => a.DoctorId == doctorId && !a.IsDeleted)
                 .Include(a => a.Patient)
-                .OrderBy(a => a.AppointmentDate)
+                .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Department)
+                .OrderByDescending(a => a.AppointmentDate)
                 .ThenBy(a => a.StartTime)
                 .ToListAsync();
         }
@@ -31,17 +44,20 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<Appointment>> GetByPatientIdAsync(int patientId)
         {
             return await _context.Appointments
-                .Where(a => a.PatientId == patientId)
+                .Where(a => a.PatientId == patientId && !a.IsDeleted)
                 .Include(a => a.Doctor)
-                .OrderBy(a => a.AppointmentDate)
+                    .ThenInclude(d => d.Department)
+                .Include(a => a.Patient)
+                .OrderByDescending(a => a.AppointmentDate)
                 .ThenBy(a => a.StartTime)
                 .ToListAsync();
         }
 
-        public async Task<Appointment?> GetByIdAsync(int id)
+        public async Task<Appointment> GetByIdAsync(int id)
         {
             return await _context.Appointments
                 .Include(a => a.Doctor)
+                    .ThenInclude(d => d.Department)
                 .Include(a => a.Patient)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
@@ -57,14 +73,6 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }
-        public async Task<IEnumerable<Appointment>> GetAllAsync()
-        {
-            return await _context.Appointments
-                .Include(a => a.Doctor)
-                    .ThenInclude(d => d.Department)
-                .Include(a => a.Patient)
-                .ToListAsync();
-        }
 
         public async Task DeleteAsync(int id)
         {
@@ -75,15 +83,14 @@ namespace HospitalManagement.Infrastructure.Persistence.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task<List<Appointment>> GetAppointmentsByDoctorAndDateAsync(int doctorId, DateTime date)
         {
-            List<Appointment> appointments = await _context.Appointments
+            return await _context.Appointments
                 .Where(a => a.DoctorId == doctorId &&
                             a.AppointmentDate.Date == date.Date &&
-                            a.Status != Domain.Enums.AppointmentStatus.Cancelled)
+                            a.Status != AppointmentStatus.Cancelled)
                 .ToListAsync();
-
-            return appointments;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HospitalManagement.Application.Interfaces;
-using HospitalManagement.Infrastructure.Persistence.Repositories;
+using HospitalManagement.Application.Services;
 using HospitalManagement.Infrastructure.Persistence;
+using HospitalManagement.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,9 @@ namespace HospitalManagement.Infrastructure
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPatientRepository, PatientRepository>();
-           services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
+            services.AddScoped<IPrescriptionService, PrescriptionService>();
             return services;
         }
     }
