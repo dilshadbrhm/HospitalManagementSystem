@@ -1,21 +1,31 @@
 ﻿using HospitalManagement.Application.Dtos.Appointment;
 using HospitalManagement.Application.Dtos.Patient;
+using HospitalManagement.Application.Dtos.Prescription;
 using HospitalManagement.Application.Interfaces;
+using HospitalManagement.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using System.IO;
+using System.Security.Claims;
 
 namespace HospitalManagementSystem.Controllers
 {
     [Authorize(Roles = "Patient")]
+    [Authorize(Roles = "Patient")]
     public class PatientController : Controller
     {
         private readonly IPatientService _patientService;
+        private readonly IPrescriptionService _prescriptionService;
+        private readonly IPatientRepository _patientRepository;
 
-        public PatientController(IPatientService patientService)
+        public PatientController(
+            IPatientService patientService,
+            IPrescriptionService prescriptionService,
+            IPatientRepository patientRepository)
         {
             _patientService = patientService;
+            _prescriptionService = prescriptionService;
+            _patientRepository = patientRepository;
         }
 
         private string GetUserId()
@@ -103,6 +113,64 @@ namespace HospitalManagementSystem.Controllers
             }
 
             return RedirectToAction("Profile");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyPrescriptions()
+        {
+            string userId = GetUserId();
+            Patient patient = await _patientRepository.GetByUserIdAsync(userId);
+
+            if (patient == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            List<PrescriptionDto> prescriptions = await _prescriptionService.GetByPatientIdAsync(patient.Id);
+
+            return View(prescriptions);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewPrescription(int id)
+        {
+            string userId = GetUserId();
+            Patient patient = await _patientRepository.GetByUserIdAsync(userId);
+
+            if (patient == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            PrescriptionDto prescription = await _prescriptionService.GetByIdAsync(id);
+
+            if (prescription == null)
+            {
+                return NotFound();
+            }
+
+            return View(prescription);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PrintPrescription(int id)
+        {
+            string userId = GetUserId();
+            Patient patient = await _patientRepository.GetByUserIdAsync(userId);
+
+            if (patient == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            string html = await _prescriptionService.GenerateHtmlAsync(id);
+
+            if (html == null)
+            {
+                return NotFound();
+            }
+
+            return Content(html, "text/html");
         }
     }
 }

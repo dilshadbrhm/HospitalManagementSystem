@@ -1,0 +1,79 @@
+﻿@model List<HospitalManagement.Application.Dtos.Prescription.PrescriptionDto>
+@{
+    ViewData["Title"] = "My Prescriptions";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-prescription"></i> My Prescriptions
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Patient</th>
+                        <th>Diagnosis</th>
+                        <th>Medicines</th>
+                        <th>Valid Until</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                    }
+                    @foreach (HospitalManagement.Application.Dtos.Prescription.PrescriptionDto prescription in Model)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@prescription.PrescriptionDate.ToString("dd.MM.yyyy")</td>
+                            <td>@prescription.PatientName</td>
+                            <td>@prescription.Diagnosis</td>
+                            <td><span class="badge badge-primary">@prescription.Items.Count medicine(s)</span></td>
+                            <td>
+                                @if (prescription.ValidUntil.HasValue)
+                                {
+                                    if (prescription.ValidUntil.Value < DateTime.Now)
+                                    {
+                                        <span class="badge badge-danger">Expired</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">@prescription.ValidUntil.Value.ToString("dd.MM.yyyy")</span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="ViewPrescription" asp-route-id="@prescription.Id" class="btn btn-sm btn-info" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="PrintPrescription" asp-route-id="@prescription.Id" class="btn btn-sm btn-success" target="_blank" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-prescription fa-3x text-muted mb-3"></i>
+                <p class="text-muted">You haven't written any prescriptions yet.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Cabinet" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Cabinet
+    </a>
+</div>

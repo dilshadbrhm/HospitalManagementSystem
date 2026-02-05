@@ -154,9 +154,19 @@
                                             {
                                                 <span class="badge badge-success">Confirmed</span>
                                             }
+                                            else if (item.Status == "Completed")
+                                            {
+                                                <span class="badge badge-info">Completed</span>
+                                            }
                                         </td>
                                         <td>
-                                            @if (item.Status != "Cancelled" && item.Status != "Completed")
+                                            @if (item.Status == "Completed")
+                                            {
+                                                <a asp-action="WritePrescription" asp-route-appointmentId="@item.Id" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-prescription-bottle-alt"></i> Write Rx
+                                                </a>
+                                            }
+                                            else if (item.Status != "Cancelled")
                                             {
                                                 <div class="btn-group-vertical">
                                                     <form asp-action="UpdateAppointmentStatus" method="post" style="display:inline;">
@@ -165,6 +175,7 @@
                                                         <select name="status" class="form-control form-control-sm mb-1" onchange="this.form.submit()">
                                                             <option value="">Status</option>
                                                             <option value="Confirmed">Confirm</option>
+                                                            <option value="Completed">Complete</option>
                                                         </select>
                                                     </form>
                                                     <a asp-action="RescheduleAppointment" asp-route-id="@item.Id" class="btn btn-sm btn-warning mb-1">

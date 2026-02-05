@@ -467,6 +467,20 @@ namespace HospitalManagementSystem.Controllers
 
             return View(prescriptions);
         }
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet]
+        public async Task<IActionResult> PrintPrescription(int id)
+        {
+            string html = await _prescriptionService.GenerateHtmlAsync(id);
+
+            if (html == null)
+            {
+                return NotFound();
+            }
+
+            return Content(html, "text/html");
+        }
     }
 }
 

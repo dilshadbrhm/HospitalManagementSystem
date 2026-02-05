@@ -15,5 +15,6 @@ namespace HospitalManagement.Application.Interfaces
         Task<List<PrescriptionDto>> GetByDoctorIdAsync(int doctorId);
         Task<bool> CreateAsync(CreatePrescriptionDto dto, int doctorId);
         Task<byte[]> GeneratePdfAsync(int prescriptionId);
+        Task<string> GenerateHtmlAsync(int prescriptionId);
     }
 }
