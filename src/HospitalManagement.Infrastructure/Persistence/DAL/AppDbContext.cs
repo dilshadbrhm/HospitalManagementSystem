@@ -23,6 +23,8 @@ namespace HospitalManagement.Infrastructure.Persistence
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<PrescriptionItem> PrescriptionItems { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogCategory> BlogCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,6 +93,12 @@ namespace HospitalManagement.Infrastructure.Persistence
                 .WithMany(p => p.Items)
                 .HasForeignKey(pi => pi.PrescriptionId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Blog>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.Blogs)
+                .HasForeignKey(b => b.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -29,6 +29,8 @@ namespace HospitalManagement.Infrastructure
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
             services.AddScoped<IPrescriptionService, PrescriptionService>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
             return services;
         }
     }

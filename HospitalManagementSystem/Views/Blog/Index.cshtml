@@ -1,0 +1,146 @@
+﻿@model IEnumerable<HospitalManagement.Domain.Entities.Blog>
+@{
+    ViewData["Title"] = "Blog";
+    IEnumerable<HospitalManagement.Domain.Entities.BlogCategory> categories = ViewBag.Categories;
+    IEnumerable<HospitalManagement.Domain.Entities.Blog> recentPosts = ViewBag.RecentPosts;
+    int? selectedCategoryId = ViewBag.SelectedCategoryId;
+    string searchTerm = ViewBag.SearchTerm;
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="blog-sidebar-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="heading clearfix">
+                    <h1>Medical <span>News Today</span></h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="sidebar_md_one">
+                    <!-- Search Box -->
+                    <div class="search_bar">
+                        <h2 class="sub_head">Search</h2>
+                        <form asp-action="Index" method="get">
+                            <div class="srch_input">
+                                <input type="text" name="search" value="@searchTerm" placeholder="Enter Keyword..." autocomplete="off" />
+                                <button type="submit" class="search"><span class="flaticon-search"></span></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="categories">
+                        <h2 class="sub_head">Categories</h2>
+                        <ul>
+                            <li>
+                                <a asp-action="Index" class="@(selectedCategoryId == null && string.IsNullOrEmpty(searchTerm) ? "active" : "")">
+                                    All Categories<span>(@Model.Count())</span>
+                                </a>
+                            </li>
+                            @if (categories != null)
+                            {
+                                @foreach (HospitalManagement.Domain.Entities.BlogCategory category in categories)
+                                {
+                                    int blogCount = category.Blogs != null ? category.Blogs.Count() : 0;
+                                    <li>
+                                        <a asp-action="Index" asp-route-categoryId="@category.Id" class="@(selectedCategoryId == category.Id ? "active" : "")">
+                                            @category.Name<span>(@blogCount)</span>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Popular Posts -->
+                    <div class="popular_posts">
+                        <h2 class="sub_head">Popular Posts</h2>
+                        @if (recentPosts != null)
+                        {
+                            @foreach (HospitalManagement.Domain.Entities.Blog post in recentPosts)
+                            {
+                                <div class="posts_">
+                                    <a asp-action="Details" asp-route-slug="@post.Slug">
+                                        @if (!string.IsNullOrEmpty(post.ImageUrl))
+                                        {
+                                            <img src="@post.ImageUrl" class="img-fluid" alt="@post.Title" style="width: 80px; height: 60px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/assets/image/blog/blog-default.jpg" class="img-fluid" alt="@post.Title" style="width: 80px; height: 60px; object-fit: cover;" />
+                                        }
+                                    </a>
+                                    <div class="post_content">
+                                        <p>@(post.Category?.Name ?? "General") . @post.PublishedDate.ToString("MMMM dd, yyyy")</p>
+                                        <h2><a asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h2>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog List -->
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="blog_right_single">
+                    @if (Model.Any())
+                    {
+                        @foreach (HospitalManagement.Domain.Entities.Blog blog in Model)
+                        {
+                            <div class="blog-single-inner">
+                                <div class="image">
+                                    @if (!string.IsNullOrEmpty(blog.ImageUrl))
+                                    {
+                                        <img src="@blog.ImageUrl" class="img-fluid" alt="@blog.Title" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/assets/image/blog/blog-default.jpg" class="img-fluid" alt="@blog.Title" />
+                                    }
+                                    <a asp-action="Details" asp-route-slug="@blog.Slug" class="link"></a>
+                                </div>
+                                <div class="blog-content">
+                                    <p>@(blog.Category?.Name ?? "General") . <span>@blog.PublishedDate.ToString("MMMM dd, yyyy")</span></p>
+                                    <h2><a asp-action="Details" asp-route-slug="@blog.Slug">@blog.Title</a></h2>
+                                    <p>@blog.ShortDescription</p>
+                                    <a asp-action="Details" asp-route-slug="@blog.Slug" class="rd-more">READ MORE</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <h4>No blog posts found</h4>
+                            @if (!string.IsNullOrEmpty(searchTerm))
+                            {
+                                <p>No results for "@searchTerm"</p>
+                                <a asp-action="Index" class="theme-btn">View All Posts</a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

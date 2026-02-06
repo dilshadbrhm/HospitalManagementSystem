@@ -75,6 +75,25 @@
                             <span class="menu-title">Appointments</span>
                         </a>
                     </li>
+                    <div class="collapse" id="blogMenu">
+                        <ul class="nav flex-column ml-3">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Blog" asp-action="Index">
+                                    <i class="fas fa-list"></i> All Posts
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Blog" asp-action="Create">
+                                    <i class="fas fa-plus"></i> Add Post
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="BlogCategory" asp-action="Index">
+                                    <i class="fas fa-folder"></i> Categories
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </ul>
             </nav>
 

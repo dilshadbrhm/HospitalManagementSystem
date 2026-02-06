@@ -1,0 +1,126 @@
+﻿@model HospitalManagement.Domain.Entities.Blog
+@{
+    ViewData["Title"] = Model.Title;
+    IEnumerable<HospitalManagement.Domain.Entities.BlogCategory> categories = ViewBag.Categories;
+    IEnumerable<HospitalManagement.Domain.Entities.Blog> recentPosts = ViewBag.RecentPosts;
+}
+
+<section class="ban-bread-crumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Blog" asp-action="Index">Blog</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="blog-sidebar-section">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="sidebar_md_one">
+                    <!-- Search Box -->
+                    <div class="search_bar">
+                        <h2 class="sub_head">Search</h2>
+                        <form asp-action="Index" method="get">
+                            <div class="srch_input">
+                                <input type="text" name="search" placeholder="Enter Keyword..." autocomplete="off" />
+                                <button type="submit" class="search"><span class="flaticon-search"></span></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="categories">
+                        <h2 class="sub_head">Categories</h2>
+                        <ul>
+                            <li><a asp-action="Index">All Categories</a></li>
+                            @if (categories != null)
+                            {
+                                @foreach (HospitalManagement.Domain.Entities.BlogCategory category in categories)
+                                {
+                                    int blogCount = category.Blogs != null ? category.Blogs.Count() : 0;
+                                    <li>
+                                        <a asp-action="Index" asp-route-categoryId="@category.Id">
+                                            @category.Name<span>(@blogCount)</span>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Popular Posts -->
+                    <div class="popular_posts">
+                        <h2 class="sub_head">Popular Posts</h2>
+                        @if (recentPosts != null)
+                        {
+                            @foreach (HospitalManagement.Domain.Entities.Blog post in recentPosts)
+                            {
+                                <div class="posts_">
+                                    <a asp-action="Details" asp-route-slug="@post.Slug">
+                                        @if (!string.IsNullOrEmpty(post.ImageUrl))
+                                        {
+                                            <img src="@post.ImageUrl" class="img-fluid" alt="@post.Title" style="width: 80px; height: 60px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/assets/image/blog/blog-default.jpg" class="img-fluid" alt="@post.Title" style="width: 80px; height: 60px; object-fit: cover;" />
+                                        }
+                                    </a>
+                                    <div class="post_content">
+                                        <p>@(post.Category?.Name ?? "General") . @post.PublishedDate.ToString("MMMM dd, yyyy")</p>
+                                        <h2><a asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h2>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Content -->
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <div class="blog-single-post">
+                    <div class="post-header">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Title" style="width: 100%; max-height: 400px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/image/blog/blog-default.jpg" class="img-fluid" alt="@Model.Title" style="width: 100%; max-height: 400px; object-fit: cover;" />
+                        }
+                    </div>
+
+                    <div class="post-meta" style="margin: 20px 0; color: #888;">
+                        <span><i class="fa fa-folder"></i> @(Model.Category?.Name ?? "General")</span>
+                        <span style="margin-left: 15px;"><i class="fa fa-calendar"></i> @Model.PublishedDate.ToString("MMMM dd, yyyy")</span>
+                        <span style="margin-left: 15px;"><i class="fa fa-user"></i> @Model.AuthorName</span>
+                        <span style="margin-left: 15px;"><i class="fa fa-eye"></i> @Model.ViewCount views</span>
+                    </div>
+
+                    <h1 style="font-size: 28px; margin-bottom: 20px;">@Model.Title</h1>
+
+                    <div class="post-content" style="line-height: 1.8;">
+                        @Html.Raw(Model.Content)
+                    </div>
+
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <a asp-action="Index" class="theme-btn">
+                            <i class="fa fa-arrow-left"></i> Back to Blog
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

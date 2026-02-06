@@ -1,0 +1,74 @@
+﻿@model IEnumerable<HospitalManagement.Domain.Entities.Blog>
+@{
+    ViewData["Title"] = "Manage Blogs";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Blog Posts</h4>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add New Post
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Date</th>
+                    <th>Views</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (HospitalManagement.Domain.Entities.Blog blog in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(blog.ImageUrl))
+                            {
+                                <img src="@blog.ImageUrl" alt="@blog.Title" style="width: 60px; height: 40px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">No image</span>
+                            }
+                        </td>
+                        <td>@blog.Title</td>
+                        <td>@(blog.Category?.Name ?? "-")</td>
+                        <td>@blog.AuthorName</td>
+                        <td>@blog.PublishedDate.ToString("dd.MM.yyyy")</td>
+                        <td>@blog.ViewCount</td>
+                        <td>
+                            @if (blog.IsPublished)
+                            {
+                                <span class="badge badge-success">Published</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">Draft</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@blog.Id" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@blog.Id" method="post" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

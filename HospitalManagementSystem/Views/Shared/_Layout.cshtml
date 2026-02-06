@@ -11,25 +11,18 @@
     <meta property="og:description" content="Meditex is html 5 Template">
     <meta name="full-screen" content="yes">
     <meta name="theme-color" content="#568701">
-    <!-- Responsive -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
-    <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
-    <title>Homepage | Meditex | Responsive  HTML 5 Template</title>
+    <title>@ViewData["Title"] | Meditex</title>
     <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/css/responsive.css">
-    <link rel="stylesheet" type="text/css" href="assets/fonts/font/flaticon.css">
-    <!-- Favicon -->
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/font/flaticon.css">
     <link rel="icon" type="image/png" href="~/assets/image/fav/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="~/assets/image/fav/favicon-16x16.png" sizes="16x16">
-
 </head>
 <body class="sbar_color_one">
 
-    <!--Start Preloader -->
     <div class="preloader"></div>
-    <!--End Preloader -->
 
     <div class="page-wapper home-page-one">
         <header class="site-header" id="header-one">
@@ -54,7 +47,6 @@
                                             <img src="~/assets/image/language-1.jpg" alt="lan"> Eng
                                         </button>
                                         <div class="dropdown-menu">
-
                                             <a class="dropdown-item" href="#"><img src="~/assets/image/language-2.jpg" alt="lan"> FRA</a>
                                             <a class="dropdown-item" href="#"><img src="~/assets/image/language-1.jpg" alt="lan">GRE</a>
                                         </div>
@@ -71,16 +63,16 @@
                     <button class="navbar-toggler toggler-spring"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav navbar-mobile ml-auto mr-auto">
-                            <li class="nav-item activee no-dropdown">
+                            <li class="nav-item no-dropdown">
                                 <a class="nav-link link_hd" asp-controller="Home" asp-action="Index">Home</a>
-
                             </li>
 
                             <li class="nav-item no-dropdown">
                                 <a class="nav-link link_hd" asp-controller="Department" asp-action="Index">Departments</a>
                             </li>
+
                             <li class="nav-item dropdown">
-                                <a class="nav-link link_hd" href="#">  Pages  </a>
+                                <a class="nav-link link_hd" href="#">Pages</a>
                                 <ul class="navbar-nav submenu">
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Home" asp-action="About">About us</a>
@@ -94,29 +86,27 @@
                                     <li class="nav-item">
                                         <a class="nav-link" asp-controller="Appointment" asp-action="Create">Book an appointment</a>
                                     </li>
-
-                                    <li class="nav-item no-dropdown">
-                                        <a class="nav-link link_hd" asp-controller="Appointment" asp-action="Index">My Appointments</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Appointment" asp-action="Index">My Appointments</a>
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link link_hd" href="#">  Blog  </a>
-                                <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="blog-with-sidebar.html">Blog with sidebar</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link link_hd" href="#">  Shop  </a>
-                                <ul class="navbar-nav submenu">
-                                    <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="product-details.html">Product detail</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="shop-cart.html">Cart</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="checkout.html">Checkout</a></li>
-                                </ul>
+
+                            <li class="nav-item no-dropdown">
+                                <a class="nav-link link_hd" asp-controller="Blog" asp-action="Index">Blog</a>
                             </li>
 
+                            <li class="nav-item dropdown">
+                                <a class="nav-link link_hd" href="#">Shop</a>
+                                <ul class="navbar-nav submenu">
+                                    <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#">Product detail</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#">Checkout</a></li>
+                                </ul>
+                            </li>
                         </ul>
+
                         <ul class="navbar-nav navbar-mobile right-nav ml-auto ">
                             @if (User.Identity.IsAuthenticated)
                             {
@@ -191,17 +181,16 @@
                                 </li>
                             }
 
-
                             <li class="nav-item dropdown">
                                 <a class="nav-link" href="#"> <span class="flaticon-search head-icon"></span> </a>
+                            </li>
 
-                            <li class="nav-item  dropdown cart_dropdown">
-                                <a class="nav-link" href="#"> <span class="flaticon-supermarket head-icon"></span>   </a>
+                            <li class="nav-item dropdown cart_dropdown">
+                                <a class="nav-link" href="#"> <span class="flaticon-supermarket head-icon"></span> </a>
                                 <ul class="navbar-nav submenu">
                                     <li>
                                         <div class="cart" id="cart_items">
                                             <div class="product_inside_cart">
-
                                                 <div class="cart_in">
                                                     <img src="~/assets/image/shop/view-product-1.jpg" class="img-fluid" width="50" alt="proimg" />
                                                     <div class="content">
@@ -209,28 +198,14 @@
                                                         <p>$25.00</p>
                                                     </div>
                                                     <div class="close">
-                                                        <span class="flaticon-close  sme"></span>
+                                                        <span class="flaticon-close sme"></span>
                                                     </div>
                                                 </div>
-                                                <div class="cart_in">
-                                                    <img src="~/assets/image/shop/view-product-1.jpg" class="img-fluid" width="50" alt="proimg" />
-                                                    <div class="content">
-                                                        <h2>Lucien Rectangle</h2>
-                                                        <p>$25.00</p>
-                                                    </div>
-                                                    <div class="close">
-                                                        <span class="flaticon-close  sme"></span>
-                                                    </div>
-                                                </div>
-
                                             </div>
-
-
                                             <div class="cart_btns_ clearfix">
                                                 <button class="theme-btn float-left">Checkout</button>
                                                 <button class="theme-btn float-right">Add to cart</button>
                                             </div>
-
                                         </div>
                                     </li>
                                 </ul>
@@ -239,24 +214,23 @@
                     </div>
                 </div>
             </div>
-            <!--End Main Header -->
         </header>
+
         @RenderBody()
+
         <div class="footer home-one">
             <div class="container">
                 <div class="row">
-
                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                         <div class="footer-widget first">
                             <h2>ABOUT US</h2>
                             <div class="footer-text">
                                 <p>As the only hospital in our growing county, things are buzzing as we expand our facilities and services. We are an intimate, 200 licensed bed hospital and the caregivers of neighbors we love.</p>
-
                                 <ul class="social-media">
-                                    <li><a href="#" target="_blank"><i class="fa fa-facebook-f"></i></a>  </li>
-                                    <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a>  </li>
-                                    <li><a href="#" target="_blank"><i class="fa fa-vimeo"></i></a>  </li>
-                                    <li><a href="#" target="_blank"><i class="fa fa-wifi"></i></a>  </li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-facebook-f"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-vimeo"></i></a></li>
+                                    <li><a href="#" target="_blank"><i class="fa fa-wifi"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -267,19 +241,19 @@
                             <h2>DEPARTMENTS</h2>
                             <div class="footer-text">
                                 <ul>
-                                    <li><a href="#"> Psychiatry</a></li>
+                                    <li><a href="#">Psychiatry</a></li>
                                     <li><a href="#">Ophthalmology</a></li>
-                                    <li><a href="#">Cardiology </a></li>
-                                    <li><a href="#">Immunology </a></li>
-                                    <li><a href="#">Hematology </a></li>
-                                    <li><a href="#">Gastroenterology </a></li>
-                                    <li><a href="#">Orthopedics </a></li>
+                                    <li><a href="#">Cardiology</a></li>
+                                    <li><a href="#">Immunology</a></li>
+                                    <li><a href="#">Hematology</a></li>
+                                    <li><a href="#">Gastroenterology</a></li>
+                                    <li><a href="#">Orthopedics</a></li>
                                     <li><a href="#">Pulmonary</a></li>
                                 </ul>
-
                             </div>
                         </div>
                     </div>
+
                     <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
                         <div class="footer-widget two">
                             <h2>LINKS</h2>
@@ -288,13 +262,11 @@
                                     <li><a asp-controller="Home" asp-action="About">About Us</a></li>
                                     <li><a asp-controller="Appointment" asp-action="Create">Appointment</a></li>
                                     <li><a asp-controller="Home" asp-action="Contact">Contact Us</a></li>
+                                    <li><a asp-controller="Blog" asp-action="Index">Blog</a></li>
                                     <li><a asp-controller="Doctor" asp-action="Index">Doctors</a></li>
-                                    <li><a href="#">Gallery </a></li>
-                                    <li><a href="#">Timetable </a></li>
+                                    <li><a href="#">Gallery</a></li>
                                     <li><a href="#">FAQs</a></li>
                                 </ul>
-
-
                             </div>
                         </div>
                     </div>
@@ -313,8 +285,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -328,9 +298,9 @@
                         </div>
                         <div class="right">
                             <ul>
-                                <li><a href="#">Privacy Policy    </a></li>
-                                <li><a href="#"> Terms & Conditions   </a></li>
-                                <li><a href="#">  Help Center</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Terms & Conditions</a></li>
+                                <li><a href="#">Help Center</a></li>
                             </ul>
                         </div>
                     </div>
@@ -338,43 +308,30 @@
             </div>
         </div>
 
-        <!--------footer-------->
-        <!-------backtotop-------->
         <a href="#" id="scroll" class="default-bg" style="display: none;"><span></span></a>
-        <!-------backtotop-------->
-        <!------main-content------>
-        </main>
-        <!------main-slider------>
     </div>
 
-
-
-    <!---------mbile-navbar----->
     <div class="bsnav-mobile">
         <div class="bsnav-mobile-overlay"></div>
         <div class="navbar">
             <button class="navbar-toggler toggler-spring mobile-toggler"><span class="fa fa-close"></span></button>
         </div>
     </div>
-    <!---------mbile-navbar----->
-    <!-----------------------------------script-------------------------------------->
+
     <script src="~/assets/js/jquery-3.3.1.min.js"></script>
     <script src="~/assets/js/popper.min.js"></script>
     <script src="~/assets/js/bootstrap.min.js"></script>
     <script src="~/assets/js/owl.js"></script>
     <script src="~/assets/js/bsnav.min.js"></script>
     <script src="~/assets/js/jquery-ui.js"></script>
-    <!---smooth-scrool-->
     <script src="~/assets/js/SmoothScroll.min.js"></script>
     <script src="~/assets/js/validator.min.js"></script>
     <script src="~/assets/js/contact.js"></script>
     <script src="~/assets/js/appear.js"></script>
     <script src="~/assets/js/script.js"></script>
-    <!--Google Map APi Key-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHzPSV2jshbjI8fqnC_C4L08ffnj5EN3A"></script>
     <script src="~/assets/js/gmaps.js"></script>
     <script src="~/assets/js/map-script.js"></script>
-    <!--End Google Map APi-->
     @RenderSection("Scripts", required: false)
 </body>
 </html>
