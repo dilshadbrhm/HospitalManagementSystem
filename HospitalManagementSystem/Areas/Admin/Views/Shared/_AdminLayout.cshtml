@@ -7,16 +7,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewData["Title"] - Admin Panel</title>
-    <link rel="stylesheet" href="/admin/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="/admin/vendors/base/vendor.bundle.base.css">
-    <link rel="stylesheet" href="/admin/css/style.css">
+    <link rel="stylesheet" href="~/admin/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="~/admin/vendors/base/vendor.bundle.base.css">
+    <link rel="stylesheet" href="~/admin/css/style.css">
 </head>
 <body>
     <div class="container-scroller">
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="navbar-brand-wrapper d-flex justify-content-center">
                 <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-                    <a class="navbar-brand brand-logo" href="/Admin">
+                    <a class="navbar-brand brand-logo" asp-area="Admin" asp-controller="Home" asp-action="Index">
                         <span style="font-size: 18px; font-weight: bold; color: #fff;">Hospital Admin</span>
                     </a>
                     <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -31,7 +31,10 @@
                             <span class="nav-profile-name">Admin</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <form action="/Account/Logout" method="post" style="margin: 0;">
+                            <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="mdi mdi-web text-primary"></i> View Site
+                            </a>
+                            <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" style="margin: 0;">
                                 <button type="submit" class="dropdown-item" style="border: none; background: none; width: 100%; text-align: left; cursor: pointer;">
                                     <i class="mdi mdi-logout text-primary"></i> Logout
                                 </button>
@@ -46,59 +49,70 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/Admin">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Home/Doctors">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Doctors">
                             <i class="mdi mdi-doctor menu-icon"></i>
                             <span class="menu-title">Doctors</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Home/Patients">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Patients">
                             <i class="mdi mdi-account-multiple menu-icon"></i>
                             <span class="menu-title">Patients</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Home/Departments">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Departments">
                             <i class="mdi mdi-hospital-building menu-icon"></i>
                             <span class="menu-title">Departments</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Home/Appointments">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Appointments">
                             <i class="mdi mdi-calendar-check menu-icon"></i>
                             <span class="menu-title">Appointments</span>
                         </a>
                     </li>
-                    <div class="collapse" id="blogMenu">
-                        <ul class="nav flex-column ml-3">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Blog" asp-action="Index">
-                                    <i class="fas fa-list"></i> All Posts
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Blog" asp-action="Create">
-                                    <i class="fas fa-plus"></i> Add Post
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="BlogCategory" asp-action="Index">
-                                    <i class="fas fa-folder"></i> Categories
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Blog" asp-action="Index">
+                            <i class="mdi mdi-post menu-icon"></i>
+                            <span class="menu-title">Blog Posts</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="BlogCategory" asp-action="Index">
+                            <i class="mdi mdi-folder menu-icon"></i>
+                            <span class="menu-title">Blog Categories</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
 
             <div class="main-panel">
                 <div class="content-wrapper">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["Success"]
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Error"]
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    }
                     @RenderBody()
                 </div>
 
@@ -111,10 +125,10 @@
         </div>
     </div>
 
-    <script src="/admin/vendors/base/vendor.bundle.base.js"></script>
-    <script src="/admin/js/off-canvas.js"></script>
-    <script src="/admin/js/hoverable-collapse.js"></script>
-    <script src="/admin/js/template.js"></script>
+    <script src="~/admin/vendors/base/vendor.bundle.base.js"></script>
+    <script src="~/admin/js/off-canvas.js"></script>
+    <script src="~/admin/js/hoverable-collapse.js"></script>
+    <script src="~/admin/js/template.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
