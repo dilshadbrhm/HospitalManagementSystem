@@ -25,6 +25,7 @@ namespace HospitalManagement.Infrastructure.Persistence
         public DbSet<PrescriptionItem> PrescriptionItems { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogCategory> BlogCategories { get; set; }
+        public DbSet<LabResult> LabResults { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -98,6 +99,18 @@ namespace HospitalManagement.Infrastructure.Persistence
                 .HasOne(b => b.Category)
                 .WithMany(c => c.Blogs)
                 .HasForeignKey(b => b.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<LabResult>()
+                .HasOne(l => l.Patient)
+                .WithMany()
+                .HasForeignKey(l => l.PatientId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<LabResult>()
+                .HasOne(l => l.Doctor)
+                .WithMany()
+                .HasForeignKey(l => l.DoctorId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

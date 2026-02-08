@@ -262,6 +262,7 @@ wwwroot\assets\image\fav\android-icon-36x36.png
 wwwroot\assets\image\fav\favicon-16x16.png
 wwwroot\assets\image\fav\favicon-32x32.png
 wwwroot\assets\image\fbimg-210x210.jpg
+wwwroot\assets\image\female-portrait-medical-doctor-profile-flat-design-free-vector.jpg
 wwwroot\assets\image\ffd36170-1bf3-4516-b59d-72ac8d8d14f2.avif
 wwwroot\assets\image\footer-logo.png
 wwwroot\assets\image\gallery\hm-2-gallery-1.jpg
@@ -280,6 +281,7 @@ wwwroot\assets\image\home-5-foot-logo.png
 wwwroot\assets\image\home-5-logo.png
 wwwroot\assets\image\icons\fdfdf.png
 wwwroot\assets\image\icons\map-marker.png
+wwwroot\assets\image\images.png
 wwwroot\assets\image\language-1.jpg
 wwwroot\assets\image\language-2.jpg
 wwwroot\assets\image\language-3.jpg
@@ -366,6 +368,7 @@ wwwroot\assets\js\preload.js
 wwwroot\assets\js\script.js
 wwwroot\assets\js\SmoothScroll.min.js
 wwwroot\assets\js\validator.min.js
+wwwroot\assets\uploads\lab-results\pdf-sample_0.pdf
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
 wwwroot\lib\bootstrap\dist\css\bootstrap.min.css
@@ -423,3 +426,4 @@ wwwroot\lib\jquery-validation\LICENSE.md
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
 wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
+wwwroot\uploads\lab-results\5b5c5db9-fdb0-4b02-bc87-7a026e970b39.pdf

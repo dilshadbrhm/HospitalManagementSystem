@@ -1,0 +1,68 @@
+﻿@model HospitalManagement.Domain.LabResult
+@{
+    ViewData["Title"] = "Lab Result Details";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<h4>Lab Result Details</h4>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Patient:</th>
+                        <td>@Model.Patient?.FirstName @Model.Patient?.LastName</td>
+                    </tr>
+                    <tr>
+                        <th>Test Name:</th>
+                        <td>@Model.TestName</td>
+                    </tr>
+                    <tr>
+                        <th>Test Type:</th>
+                        <td>@Model.TestType</td>
+                    </tr>
+                    <tr>
+                        <th>Test Date:</th>
+                        <td>@Model.TestDate.ToString("dd.MM.yyyy")</td>
+                    </tr>
+                    <tr>
+                        <th>Uploaded By:</th>
+                        <td>@Model.UploadedBy</td>
+                    </tr>
+                    <tr>
+                        <th>Uploaded At:</th>
+                        <td>@Model.UploadedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h5>Description:</h5>
+                <p>@(Model.Description ?? "No description")</p>
+
+                @if (!string.IsNullOrEmpty(Model.PdfFilePath))
+                {
+                    <h5>PDF Result:</h5>
+                    <a href="@Model.PdfFilePath" target="_blank" class="btn btn-success">
+                        <i class="fas fa-file-pdf"></i> View PDF
+                    </a>
+                    <a href="@Model.PdfFilePath" download class="btn btn-info">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <i class="fas fa-clock"></i> PDF result pending
+                    </div>
+                }
+            </div>
+        </div>
+
+        <hr />
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>

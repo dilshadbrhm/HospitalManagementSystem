@@ -151,6 +151,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" asp-controller="Patient" asp-action="MyLabResults">
+                    <i class="fas fa-flask"></i> My Lab Results
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" asp-controller="Patient" asp-action="Profile">
                     <i class="fas fa-user"></i> My Profile
                 </a>
@@ -178,11 +183,17 @@
 
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success">@TempData["Success"]</div>
+            <div class="alert alert-success alert-dismissible fade show">
+                @TempData["Success"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger">@TempData["Error"]</div>
+            <div class="alert alert-danger alert-dismissible fade show">
+                @TempData["Error"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
         }
 
         @RenderBody()

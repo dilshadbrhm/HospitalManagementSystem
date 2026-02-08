@@ -3,7 +3,9 @@ using HospitalManagement.Application.Dtos.Patient;
 using HospitalManagement.Application.Dtos.Prescription;
 using HospitalManagement.Application.Interfaces;
 using HospitalManagement.Domain;
+using HospitalManagement.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Security.Claims;
@@ -11,21 +13,26 @@ using System.Security.Claims;
 namespace HospitalManagementSystem.Controllers
 {
     [Authorize(Roles = "Patient")]
-    [Authorize(Roles = "Patient")]
     public class PatientController : Controller
     {
         private readonly IPatientService _patientService;
         private readonly IPrescriptionService _prescriptionService;
         private readonly IPatientRepository _patientRepository;
+        private readonly ILabResultRepository _labResultRepository;
+        private readonly UserManager<AppUser> _userManager;
 
         public PatientController(
             IPatientService patientService,
             IPrescriptionService prescriptionService,
-            IPatientRepository patientRepository)
+            IPatientRepository patientRepository,
+            ILabResultRepository labResultRepository,
+             UserManager<AppUser> userManager)
         {
             _patientService = patientService;
             _prescriptionService = prescriptionService;
             _patientRepository = patientRepository;
+            _labResultRepository = labResultRepository;
+            _userManager = userManager;
         }
 
         private string GetUserId()
@@ -171,6 +178,33 @@ namespace HospitalManagementSystem.Controllers
             }
 
             return Content(html, "text/html");
+        }
+        [HttpGet]
+        public async Task<IActionResult> MyLabResults()
+        {
+            AppUser user = await _userManager.GetUserAsync(User);
+            Patient patient = await _patientRepository.GetByUserIdAsync(user.Id);
+
+            if (patient == null)
+                return RedirectToAction("Index", "Home");
+
+            IEnumerable<LabResult> labResults = await _labResultRepository.GetByPatientIdAsync(patient.Id);
+            return View(labResults);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadLabResult(int id)
+        {
+            AppUser user = await _userManager.GetUserAsync(User);
+            Patient patient = await _patientRepository.GetByUserIdAsync(user.Id);
+            LabResult labResult = await _labResultRepository.GetByIdAsync(id);
+
+            if (labResult == null || labResult.PatientId != patient.Id || string.IsNullOrEmpty(labResult.PdfFilePath))
+                return NotFound();
+
+            string fullPath = "wwwroot" + labResult.PdfFilePath;
+
+            return PhysicalFile(Path.GetFullPath(fullPath), "application/pdf", labResult.TestName + ".pdf");
         }
     }
 }

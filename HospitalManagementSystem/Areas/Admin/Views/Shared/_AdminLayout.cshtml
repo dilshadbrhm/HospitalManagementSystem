@@ -131,4 +131,10 @@
     <script src="~/admin/js/template.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
+<script>
+    
+    if (typeof $.cookie === 'undefined') {
+        $.cookie = function () { return null; };
+    }
+</script>
 </html>

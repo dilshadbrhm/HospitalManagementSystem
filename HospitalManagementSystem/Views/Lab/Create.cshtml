@@ -1,0 +1,71 @@
+﻿@model HospitalManagement.Domain.LabResult
+@{
+    ViewData["Title"] = "Order Lab Test";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<h4>Order Lab Test</h4>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Patient *</label>
+                        <select name="PatientId" class="form-control" required>
+                            <option value="">-- Select Patient --</option>
+                            @if (ViewBag.Patients != null)
+                            {
+                                foreach (var item in ViewBag.Patients as Microsoft.AspNetCore.Mvc.Rendering.SelectList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Test Name *</label>
+                        <input name="TestName" class="form-control" required placeholder="e.g., Complete Blood Count" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Test Type *</label>
+                        <select name="TestType" class="form-control" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="Blood Test">Blood Test</option>
+                            <option value="Urine Test">Urine Test</option>
+                            <option value="X-Ray">X-Ray</option>
+                            <option value="MRI">MRI</option>
+                            <option value="CT Scan">CT Scan</option>
+                            <option value="Ultrasound">Ultrasound</option>
+                            <option value="ECG">ECG</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="Description" class="form-control" rows="4" placeholder="Additional notes or instructions..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload PDF Result (Optional)</label>
+                        <input type="file" name="pdfFile" class="form-control" accept=".pdf" />
+                        <small class="text-muted">Lab can upload the result later</small>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Create Lab Order
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

@@ -1,67 +1,121 @@
-﻿@model HospitalManagement.Domain.Entities.Blog
-@{
-    ViewData["Title"] = "Create Blog Post";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+﻿@{
+    Layout = null;
 }
 
-<h4>Create Blog Post</h4>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Blog - Test</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
 
-<div class="card">
-    <div class="card-body">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
-            @Html.AntiForgeryToken()
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label>Title *</label>
-                        <input asp-for="Title" class="form-control" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
-                    </div>
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
 
-                    <div class="form-group">
-                        <label>Short Description</label>
-                        <textarea asp-for="ShortDescription" class="form-control" rows="3"></textarea>
-                    </div>
+        input, select, textarea {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
 
-                    <div class="form-group">
-                        <label>Content *</label>
-                        <textarea asp-for="Content" class="form-control" rows="10"></textarea>
-                    </div>
-                </div>
+        button {
+            padding: 10px 20px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Category *</label>
-                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
-                            <option value="">Select Category</option>
-                        </select>
-                        <span asp-validation-for="CategoryId" class="text-danger"></span>
-                    </div>
+        .error {
+            color: white;
+            background: red;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
 
-                    <div class="form-group">
-                        <label>Author Name</label>
-                        <input asp-for="AuthorName" class="form-control" />
-                    </div>
+        .success {
+            color: white;
+            background: green;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Create Blog Post</h2>
 
-                    <div class="form-group">
-                        <label>Image</label>
-                        <input type="file" name="image" class="form-control" accept="image/*" />
-                    </div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="error"><strong>ERROR:</strong> @TempData["Error"]</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="success"><strong>SUCCESS:</strong> @TempData["Success"]</div>
+    }
 
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input asp-for="IsPublished" class="custom-control-input" id="isPublished" />
-                            <label class="custom-control-label" for="isPublished">Publish immediately</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <form action="/Admin/Blog/Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
 
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Save
-            </button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </form>
-    </div>
-</div>
+        <div class="form-group">
+            <label>Title *</label>
+            <input type="text" name="Title" value="@Model?.Title" required />
+        </div>
+
+        <div class="form-group">
+            <label>Category *</label>
+            <select name="CategoryId" required>
+                <option value="">-- Select Category --</option>
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (var item in ViewBag.Categories as Microsoft.AspNetCore.Mvc.Rendering.SelectList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Short Description</label>
+            <textarea name="ShortDescription" rows="3">@Model?.ShortDescription</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Content *</label>
+            <textarea name="Content" rows="5" required>@Model?.Content</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Author Name</label>
+            <input type="text" name="AuthorName" value="@Model?.AuthorName" />
+        </div>
+
+        <div class="form-group">
+            <label>Image</label>
+            <input type="file" name="image" accept="image/*" />
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="IsPublished" value="true" checked />
+                Publish immediately
+            </label>
+        </div>
+
+        <button type="submit">SAVE BLOG</button>
+        <a href="/Admin/Blog" style="margin-left: 10px;">Cancel</a>
+    </form>
+</body>
+</html>

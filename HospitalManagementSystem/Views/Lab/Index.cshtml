@@ -1,0 +1,72 @@
+﻿@model IEnumerable<HospitalManagement.Domain.LabResult>
+@{
+    ViewData["Title"] = "Lab Results";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Lab Results</h4>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Order Lab Test
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Test Name</th>
+                    <th>Test Type</th>
+                    <th>Test Date</th>
+                    <th>PDF</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Patient?.FirstName @item.Patient?.LastName</td>
+                            <td>@item.TestName</td>
+                            <td>@item.TestType</td>
+                            <td>@item.TestDate.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.PdfFilePath))
+                                {
+                                    <a href="@item.PdfFilePath" target="_blank" class="btn btn-sm btn-info">
+                                        <i class="fas fa-file-pdf"></i> View
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">Pending</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No lab results found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

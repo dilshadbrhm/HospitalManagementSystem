@@ -41,4 +41,8 @@
     <None Include="wwwroot\admin\vendors\.DS_Store" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\uploads\lab-results\" />
+  </ItemGroup>
+
 </Project>
