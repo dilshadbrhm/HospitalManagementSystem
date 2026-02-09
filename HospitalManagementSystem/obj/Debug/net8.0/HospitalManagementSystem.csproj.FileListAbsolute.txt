@@ -200,7 +200,6 @@ C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSy
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\Hospital.D08A6E9A.Up2Date
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\HospitalManagementSystem.dll
 C:\Users\user\Desktop\FinalProject\HospitalManagementSystem\HospitalManagementSystem\obj\Debug\net8.0\refint\HospitalManagementSystem.dll
