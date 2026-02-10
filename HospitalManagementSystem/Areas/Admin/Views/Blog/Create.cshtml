@@ -1,121 +1,100 @@
-﻿@{
-    Layout = null;
+﻿@model HospitalManagement.Domain.Entities.Blog
+@{
+    ViewData["Title"] = "Create Blog Post";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Blog - Test</title>
-    <style>
-        body {
-            font-family: Arial;
-            padding: 20px;
-        }
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4><i class="fas fa-plus-circle"></i> Create Blog Post</h4>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+}
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
 
-        input, select, textarea {
-            width: 100%;
-            max-width: 400px;
-            padding: 8px;
-            box-sizing: border-box;
-        }
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label><i class="fas fa-heading"></i> Title <span class="text-danger">*</span></label>
+                        <input type="text" name="Title" class="form-control form-control-lg" placeholder="Enter blog title" value="@Model?.Title" required />
+                    </div>
 
-        button {
-            padding: 10px 20px;
-            background: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+                    <div class="form-group">
+                        <label><i class="fas fa-align-left"></i> Short Description</label>
+                        <textarea name="ShortDescription" class="form-control" rows="3" placeholder="Brief summary of the post...">@Model?.ShortDescription</textarea>
+                        <small class="text-muted">This will appear in blog listings</small>
+                    </div>
 
-        .error {
-            color: white;
-            background: red;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
+                    <div class="form-group">
+                        <label><i class="fas fa-file-alt"></i> Content <span class="text-danger">*</span></label>
+                        <textarea name="Content" class="form-control" rows="10" placeholder="Write your blog content here..." required>@Model?.Content</textarea>
+                    </div>
+                </div>
 
-        .success {
-            color: white;
-            background: green;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
-    </style>
-</head>
-<body>
-    <h2>Create Blog Post</h2>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-header">
+                            <strong><i class="fas fa-cog"></i> Post Settings</strong>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
+                                <select name="CategoryId" class="form-control" required>
+                                    <option value="">-- Select Category --</option>
+                                    @if (ViewBag.Categories != null)
+                                    {
+                                        foreach (var item in ViewBag.Categories as Microsoft.AspNetCore.Mvc.Rendering.SelectList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="error"><strong>ERROR:</strong> @TempData["Error"]</div>
-    }
-    @if (TempData["Success"] != null)
-    {
-        <div class="success"><strong>SUCCESS:</strong> @TempData["Success"]</div>
-    }
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Author Name</label>
+                                <input type="text" name="AuthorName" class="form-control" placeholder="Author name" value="@Model?.AuthorName" />
+                            </div>
 
-    <form action="/Admin/Blog/Create" method="post" enctype="multipart/form-data">
-        @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <label><i class="fas fa-image"></i> Featured Image</label>
+                                <input type="file" name="image" class="form-control-file" accept="image/*" />
+                                <small class="text-muted">Recommended: 800x400 pixels</small>
+                            </div>
 
-        <div class="form-group">
-            <label>Title *</label>
-            <input type="text" name="Title" value="@Model?.Title" required />
-        </div>
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="IsPublished" value="true" class="custom-control-input" id="isPublished" checked />
+                                    <label class="custom-control-label" for="isPublished">
+                                        <i class="fas fa-globe"></i> Publish immediately
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-            <label>Category *</label>
-            <select name="CategoryId" required>
-                <option value="">-- Select Category --</option>
-                @if (ViewBag.Categories != null)
-                {
-                    foreach (var item in ViewBag.Categories as Microsoft.AspNetCore.Mvc.Rendering.SelectList)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                }
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Short Description</label>
-            <textarea name="ShortDescription" rows="3">@Model?.ShortDescription</textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Content *</label>
-            <textarea name="Content" rows="5" required>@Model?.Content</textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Author Name</label>
-            <input type="text" name="AuthorName" value="@Model?.AuthorName" />
-        </div>
-
-        <div class="form-group">
-            <label>Image</label>
-            <input type="file" name="image" accept="image/*" />
-        </div>
-
-        <div class="form-group">
-            <label>
-                <input type="checkbox" name="IsPublished" value="true" checked />
-                Publish immediately
-            </label>
-        </div>
-
-        <button type="submit">SAVE BLOG</button>
-        <a href="/Admin/Blog" style="margin-left: 10px;">Cancel</a>
-    </form>
-</body>
-</html>
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-save"></i> Save Blog Post
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-block">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

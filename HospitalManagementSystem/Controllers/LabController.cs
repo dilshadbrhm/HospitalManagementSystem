@@ -15,17 +15,20 @@ namespace HospitalManagementSystem.Controllers
         private readonly IPatientRepository _patientRepository;
         private readonly IDoctorRepository _doctorRepository;
         private readonly UserManager<AppUser> _userManager;
+        private readonly INotificationService _notificationService;
 
         public LabController(
             ILabResultRepository labResultRepository,
             IPatientRepository patientRepository,
             IDoctorRepository doctorRepository,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager,
+            INotificationService notificationService)
         {
             _labResultRepository = labResultRepository;
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
             _userManager = userManager;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -99,7 +102,18 @@ namespace HospitalManagementSystem.Controllers
 
                 await _labResultRepository.AddAsync(labResult);
 
-                TempData["Success"] = "Lab result created successfully";
+                Patient patient = await _patientRepository.GetByIdAsync(labResult.PatientId);
+                if (patient != null)
+                {
+                    await _notificationService.SendLabResultReadyAsync(
+                        patient.Email,
+                        patient.UserId,
+                        patient.FirstName,
+                        labResult.TestName
+                    );
+                }
+
+                TempData["Success"] = "Lab result created and patient notified";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

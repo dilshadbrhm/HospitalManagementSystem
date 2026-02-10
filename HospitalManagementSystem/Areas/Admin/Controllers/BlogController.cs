@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text.RegularExpressions;
-using HospitalManagement.Domain;
 
 namespace HospitalManagementSystem.Areas.Admin.Controllers
 {
@@ -42,51 +41,75 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Blog blog, IFormFile image)
         {
-            if (string.IsNullOrEmpty(blog.Title))
+            try
             {
-                ModelState.AddModelError("Title", "Title is required");
-            }
+                if (string.IsNullOrEmpty(blog.Title))
+                {
+                    TempData["Error"] = "Title is required";
+                    IEnumerable<BlogCategory> categories = await _categoryRepository.GetAllAsync();
+                    ViewBag.Categories = new SelectList(categories, "Id", "Name");
+                    return View(blog);
+                }
 
-            if (blog.CategoryId == 0)
-            {
-                ModelState.AddModelError("CategoryId", "Category is required");
-            }
+                if (blog.CategoryId == 0)
+                {
+                    TempData["Error"] = "Category is required";
+                    IEnumerable<BlogCategory> categories = await _categoryRepository.GetAllAsync();
+                    ViewBag.Categories = new SelectList(categories, "Id", "Name");
+                    return View(blog);
+                }
 
-            if (!ModelState.IsValid)
+                if (image != null && image.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image", "blog");
+
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    blog.ImageUrl = "/assets/image/blog/" + uniqueFileName;
+                }
+                else
+                {
+                    blog.ImageUrl = "/assets/image/blog/default.jpg";
+                }
+
+                blog.Slug = GenerateSlug(blog.Title);
+                blog.ShortDescription = blog.ShortDescription ?? "";
+                blog.Content = blog.Content ?? "";
+                blog.AuthorName = blog.AuthorName ?? "Admin";
+                blog.PublishedDate = DateTime.Now;
+                blog.ViewCount = 0;
+                blog.CreatedAt = DateTime.Now;
+                blog.IsDeleted = false;
+
+                await _blogRepository.AddAsync(blog);
+
+                TempData["Success"] = "Blog created successfully!";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
             {
+                string errorMsg = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    errorMsg += " | Inner: " + ex.InnerException.Message;
+                }
+                TempData["Error"] = "Error: " + errorMsg;
+
                 IEnumerable<BlogCategory> categories = await _categoryRepository.GetAllAsync();
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
                 return View(blog);
             }
-
-            if (image != null && image.Length > 0)
-            {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image", "blog");
-
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (FileStream stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(stream);
-                }
-
-                blog.ImageUrl = "/assets/image/blog/" + uniqueFileName;
-            }
-
-            blog.Slug = GenerateSlug(blog.Title);
-            blog.PublishedDate = DateTime.Now;
-            blog.ViewCount = 0;
-
-            await _blogRepository.AddAsync(blog);
-
-            TempData["Success"] = "Blog created successfully";
-            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -109,57 +132,70 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Blog blog, IFormFile image)
         {
-            if (string.IsNullOrEmpty(blog.Title))
+            try
             {
-                ModelState.AddModelError("Title", "Title is required");
-            }
+                if (string.IsNullOrEmpty(blog.Title))
+                {
+                    TempData["Error"] = "Title is required";
+                    IEnumerable<BlogCategory> categories = await _categoryRepository.GetAllAsync();
+                    ViewBag.Categories = new SelectList(categories, "Id", "Name", blog.CategoryId);
+                    return View(blog);
+                }
 
-            if (!ModelState.IsValid)
+                Blog existingBlog = await _blogRepository.GetByIdAsync(blog.Id);
+
+                if (existingBlog == null)
+                {
+                    return NotFound();
+                }
+
+                if (image != null && image.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image", "blog");
+
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    existingBlog.ImageUrl = "/assets/image/blog/" + uniqueFileName;
+                }
+
+                existingBlog.Title = blog.Title;
+                existingBlog.Slug = GenerateSlug(blog.Title);
+                existingBlog.ShortDescription = blog.ShortDescription ?? "";
+                existingBlog.Content = blog.Content ?? "";
+                existingBlog.CategoryId = blog.CategoryId;
+                existingBlog.AuthorName = blog.AuthorName ?? "Admin";
+                existingBlog.IsPublished = blog.IsPublished;
+                existingBlog.UpdatedAt = DateTime.Now;
+
+                await _blogRepository.UpdateAsync(existingBlog);
+
+                TempData["Success"] = "Blog updated successfully";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
             {
+                string errorMsg = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    errorMsg += " | Inner: " + ex.InnerException.Message;
+                }
+                TempData["Error"] = "Error: " + errorMsg;
+
                 IEnumerable<BlogCategory> categories = await _categoryRepository.GetAllAsync();
                 ViewBag.Categories = new SelectList(categories, "Id", "Name", blog.CategoryId);
                 return View(blog);
             }
-
-            Blog existingBlog = await _blogRepository.GetByIdAsync(blog.Id);
-
-            if (existingBlog == null)
-            {
-                return NotFound();
-            }
-
-            if (image != null && image.Length > 0)
-            {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image", "blog");
-
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (FileStream stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(stream);
-                }
-
-                existingBlog.ImageUrl = "/assets/image/blog/" + uniqueFileName;
-            }
-
-            existingBlog.Title = blog.Title;
-            existingBlog.Slug = GenerateSlug(blog.Title);
-            existingBlog.ShortDescription = blog.ShortDescription;
-            existingBlog.Content = blog.Content;
-            existingBlog.CategoryId = blog.CategoryId;
-            existingBlog.AuthorName = blog.AuthorName;
-            existingBlog.IsPublished = blog.IsPublished;
-
-            await _blogRepository.UpdateAsync(existingBlog);
-
-            TempData["Success"] = "Blog updated successfully";
-            return RedirectToAction("Index");
         }
 
         [HttpPost]

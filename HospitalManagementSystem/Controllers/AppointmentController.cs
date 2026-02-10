@@ -2,15 +2,10 @@
 using HospitalManagement.Application.Dtos.Doctor;
 using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
-using HospitalManagement.Application.Services;
 using HospitalManagement.Domain;
 using HospitalManagement.Domain.Entities;
-using HospitalManagement.Domain.Enums;
-using HospitalManagement.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace HospitalManagementSystem.Controllers
@@ -22,17 +17,23 @@ namespace HospitalManagementSystem.Controllers
         private readonly IPatientRepository _patientService;
         private readonly IDoctorService _doctorService;
         private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
+        private readonly IDoctorRepository _doctorRepository;
 
         public AppointmentController(
             IAppointmentService appointmentService,
             IPatientRepository patientRepository,
             IDoctorService doctorService,
-            IEmailService emailService)
+            IEmailService emailService,
+            INotificationService notificationService,
+            IDoctorRepository doctorRepository)
         {
             _appointmentService = appointmentService;
             _patientService = patientRepository;
             _doctorService = doctorService;
             _emailService = emailService;
+            _notificationService = notificationService;
+            _doctorRepository = doctorRepository;
         }
 
         [HttpGet]
@@ -62,7 +63,7 @@ namespace HospitalManagementSystem.Controllers
             {
                 int patientId = await GetCurrentPatientIdAsync();
                 List<AppointmentItemDto> appointments = await _appointmentService.GetByPatientIdAsync(patientId);
-                return View("Index", appointments); 
+                return View("Index", appointments);
             }
 
             DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(id.Value);
@@ -132,7 +133,6 @@ namespace HospitalManagementSystem.Controllers
             try
             {
                 int patientId = await GetCurrentPatientIdAsync();
-
                 AppointmentResultDto result = await _appointmentService.CreateAsync(dto, patientId);
 
                 if (!result.Success)
@@ -150,6 +150,22 @@ namespace HospitalManagementSystem.Controllers
 
                     return View(dto);
                 }
+
+                Patient patient = await _patientService.GetByIdAsync(patientId);
+                Doctor doctor = await _doctorRepository.GetByIdAsync(dto.DoctorId);
+
+                if (patient != null && doctor != null)
+                {
+                    await _notificationService.SendAppointmentConfirmedAsync(
+                        patient.Email,
+                        patient.UserId,
+                        patient.FirstName,
+                        doctor.FirstName + " " + doctor.LastName,
+                        dto.AppointmentDate,
+                        dto.StartTime
+                    );
+                }
+
                 TempData["Success"] = "Appointment created successfully";
                 return RedirectToAction("Index");
             }
@@ -247,6 +263,7 @@ namespace HospitalManagementSystem.Controllers
 
             return patient.Id;
         }
+
         [HttpGet]
         public async Task<IActionResult> DoctorSchedule(int doctorId, string date)
         {
@@ -256,7 +273,6 @@ namespace HospitalManagementSystem.Controllers
             {
                 selectedDate = DateTime.Today;
             }
-
 
             DoctorProfileDto schedule = await _doctorService.GetDoctorScheduleAsync(doctorId, selectedDate);
 
@@ -274,6 +290,7 @@ namespace HospitalManagementSystem.Controllers
 
             return View(schedule);
         }
+
         private List<DateTime> GetNext14Days()
         {
             List<DateTime> dates = new List<DateTime>();
@@ -290,6 +307,7 @@ namespace HospitalManagementSystem.Controllers
 
             return dates;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllSlotsWithStatus(int doctorId, DateTime date)
         {
@@ -378,9 +396,7 @@ namespace HospitalManagementSystem.Controllers
                 {
                     await _emailService.SendEmailAsync(result.DoctorEmail, subject, body);
                 }
-                catch
-                {
-                }
+                catch { }
             }
 
             TempData["Success"] = "Appointment cancelled successfully";

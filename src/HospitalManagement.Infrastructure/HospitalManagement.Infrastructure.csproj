@@ -10,7 +10,6 @@
     <Folder Include="Identity\" />
     <Folder Include="Services\" />
     <Folder Include="Persistence\Configurations\" />
-    <Folder Include="Persistence\Seeds\" />
   </ItemGroup>
 
   <ItemGroup>

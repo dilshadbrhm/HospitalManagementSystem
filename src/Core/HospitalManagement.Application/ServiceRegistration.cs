@@ -29,6 +29,7 @@ namespace HospitalManagement.Application
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IPatientService, PatientService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IPrescriptionService, PrescriptionService>();
             return services;
         }
     }

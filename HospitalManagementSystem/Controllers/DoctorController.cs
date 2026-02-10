@@ -3,16 +3,10 @@ using HospitalManagement.Application.Dtos.Doctor;
 using HospitalManagement.Application.Dtos.Prescription;
 using HospitalManagement.Application.Dtos.Timeslot;
 using HospitalManagement.Application.Interfaces;
-using HospitalManagement.Application.Services;
 using HospitalManagement.Domain;
 using HospitalManagement.Domain.Entities;
-using HospitalManagement.Domain.Enums;
-using HospitalManagement.Infrastructure.Persistence;
-using HospitalManagement.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace HospitalManagementSystem.Controllers
@@ -25,6 +19,8 @@ namespace HospitalManagementSystem.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IEmailService _emailService;
         private readonly IPrescriptionService _prescriptionService;
+        private readonly INotificationService _notificationService;
+        private readonly IPatientRepository _patientRepository;
 
         public DoctorController(
             IDoctorCabinetService cabinetService,
@@ -32,7 +28,9 @@ namespace HospitalManagementSystem.Controllers
             IAppointmentService appointmentService,
             IDoctorRepository doctorRepository,
             IEmailService emailService,
-            IPrescriptionService prescriptionService)
+            IPrescriptionService prescriptionService,
+            INotificationService notificationService,
+            IPatientRepository patientRepository)
         {
             _cabinetService = cabinetService;
             _doctorService = doctorService;
@@ -40,6 +38,8 @@ namespace HospitalManagementSystem.Controllers
             _doctorRepository = doctorRepository;
             _emailService = emailService;
             _prescriptionService = prescriptionService;
+            _notificationService = notificationService;
+            _patientRepository = patientRepository;
         }
 
         private string GetUserId()
@@ -61,6 +61,7 @@ namespace HospitalManagementSystem.Controllers
             {
                 return RedirectToAction("Index");
             }
+
             DoctorProfileDto doctor = await _doctorService.GetDoctorProfileAsync(id);
 
             if (doctor == null)
@@ -242,7 +243,6 @@ namespace HospitalManagementSystem.Controllers
             return RedirectToAction("MyProfile");
         }
 
-
         [Authorize(Roles = "Doctor")]
         [HttpPost]
         public async Task<IActionResult> CancelAppointment(int appointmentId, string reason)
@@ -266,6 +266,19 @@ namespace HospitalManagementSystem.Controllers
 
             if (!string.IsNullOrEmpty(result.PatientEmail))
             {
+                try
+                {
+                    await _notificationService.SendAppointmentCancelledAsync(
+                        result.PatientEmail,
+                        "",
+                        result.PatientName,
+                        result.DoctorName,
+                        result.AppointmentDate,
+                        reason
+                    );
+                }
+                catch { }
+
                 string subject = "Your Appointment Has Been Cancelled";
                 string body = "Dear " + result.PatientName + ",<br><br>" +
                               "We regret to inform you that your appointment scheduled for " +
@@ -280,9 +293,7 @@ namespace HospitalManagementSystem.Controllers
                 {
                     await _emailService.SendEmailAsync(result.PatientEmail, subject, body);
                 }
-                catch
-                {
-                }
+                catch { }
             }
 
             TempData["Success"] = "Appointment cancelled successfully";
@@ -359,15 +370,13 @@ namespace HospitalManagementSystem.Controllers
                 {
                     await _emailService.SendEmailAsync(updatedAppointment.PatientEmail, subject, body);
                 }
-                catch
-                {
-                }
+                catch { }
             }
 
             TempData["Success"] = "Appointment rescheduled successfully";
             return RedirectToAction("Cabinet");
-
         }
+
         [Authorize(Roles = "Doctor")]
         [HttpGet]
         public async Task<IActionResult> WritePrescription(int appointmentId)
@@ -427,6 +436,21 @@ namespace HospitalManagementSystem.Controllers
 
             if (result)
             {
+                DetailsAppointmentDto appointment = await _appointmentService.GetByIdAsync(dto.AppointmentId);
+                if (appointment != null)
+                {
+                    Patient patient = await _patientRepository.GetByIdAsync(appointment.PatientId);
+                    if (patient != null)
+                    {
+                        await _notificationService.SendPrescriptionReadyAsync(
+                            patient.Email,
+                            patient.UserId,
+                            patient.FirstName,
+                            doctor.FirstName + " " + doctor.LastName
+                        );
+                    }
+                }
+
                 TempData["Success"] = "Prescription created successfully";
             }
             else
@@ -483,4 +507,3 @@ namespace HospitalManagementSystem.Controllers
         }
     }
 }
-

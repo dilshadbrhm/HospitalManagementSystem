@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/admin/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="~/admin/vendors/base/vendor.bundle.base.css">
     <link rel="stylesheet" href="~/admin/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div class="container-scroller">
@@ -78,6 +79,11 @@
                             <span class="menu-title">Appointments</span>
                         </a>
                     </li>
+
+                    <li class="nav-item" style="padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <span style="padding-left: 20px; color: #6c7293; font-size: 11px; text-transform: uppercase;">Blog</span>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="Blog" asp-action="Index">
                             <i class="mdi mdi-post menu-icon"></i>
@@ -132,7 +138,6 @@
     @RenderSection("Scripts", required: false)
 </body>
 <script>
-    
     if (typeof $.cookie === 'undefined') {
         $.cookie = function () { return null; };
     }
