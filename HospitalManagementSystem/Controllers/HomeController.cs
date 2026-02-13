@@ -25,9 +25,10 @@ namespace HospitalManagementSystem.Controllers
             var viewModel = await _homeService.GetHomeDataAsync();
             return View(viewModel);
         }
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            return View();
+            var viewModel = await _homeService.GetHomeDataAsync();
+            return View(viewModel);
         }
 
         public IActionResult Contact()

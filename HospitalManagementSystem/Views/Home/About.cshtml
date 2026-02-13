@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HospitalManagement.Application.Dtos.HomeDto
+@{
     ViewData["Title"] = "About Us";
 }
 
@@ -106,6 +107,7 @@
     </section>
     <!-----------------statistics------------------------>
     <!-----------------departments------------------------>
+    <!-----------------departments------------------------>
     <section class="department_section hm-one">
         <div class="container">
             <div class="row">
@@ -119,51 +121,44 @@
             <div class="department_inner">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-brain dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Psychiatry</h2></a>
-                            <p>Expert mental health care and treatment services...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-eye-drops dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Ophthalmology</h2></a>
-                            <p>Complete eye care and vision services...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-heart-2 dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Cardiology</h2></a>
-                            <p>Advanced heart care and cardiac services...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-bacteria dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Immunology</h2></a>
-                            <p>Immune system diagnosis and treatment...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-blood dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Hematology</h2></a>
-                            <p>Blood disorders diagnosis and treatment...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-stomach dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Gastroenterology</h2></a>
-                            <p>Digestive system care and treatment...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-joint dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Orthopedics</h2></a>
-                            <p>Bone and joint care specialists...</p>
-                        </div>
-                        <div class="department_icon_content">
-                            <a asp-controller="Department" asp-action="Index"><span class="flaticon-lung dep_icon"></span></a>
-                            <a asp-controller="Department" asp-action="Index"><h2>Pulmonary</h2></a>
-                            <p>Respiratory care and lung treatment...</p>
-                        </div>
+                        @if (Model.Departments != null && Model.Departments.Any())
+                        {
+                            @foreach (var department in Model.Departments)
+                            {
+                                <div class="department_icon_content">
+                                    <a asp-controller="Department" asp-action="Details" asp-route-id="@department.Id">
+                                        <span class="flaticon-heart-2 dep_icon"></span>
+                                    </a>
+                                    <a asp-controller="Department" asp-action="Details" asp-route-id="@department.Id">
+                                        <h2>@department.Name</h2>
+                                    </a>
+                                    <p>
+                                        @if (string.IsNullOrEmpty(department.ShortDescription))
+                                        {
+                                            @:Expert medical care and treatment...
+                                        }
+                                        else if (department.ShortDescription.Length > 60)
+                                        {
+                                            @(department.ShortDescription.Substring(0, 60))
+                                                                            }
+                                        else
+                                        {
+                                            @department.ShortDescription
+                                        }
+                                    </p>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-center">No departments available</p>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <!-----------------departments------------------------>
     <!-----------------departments------------------------>
     <!-----------------doc_community------------------------>
     <section class="doc_community">
