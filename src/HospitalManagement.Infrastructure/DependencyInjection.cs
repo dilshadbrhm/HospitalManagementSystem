@@ -33,6 +33,9 @@ namespace HospitalManagement.Infrastructure
             services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
             services.AddScoped<ILabResultRepository, LabResultRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             return services;
         }
     }
