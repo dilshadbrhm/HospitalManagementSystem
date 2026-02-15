@@ -1,0 +1,100 @@
+﻿@model HospitalManagement.Domain.Entities.Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<main class="main-content">
+    <section class="ban-bread-crumb">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index">Shop</a></li>
+                            <li class="breadcrumb-item active">@Model.Name</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product_details" style="padding: 50px 0;">
+        <div class="container">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="product_image">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Name" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/image/shop/product-1.jpg" class="img-fluid" alt="@Model.Name" />
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="product_info">
+                        <h1>@Model.Name</h1>
+
+                        <div class="price" style="margin: 20px 0;">
+                            @if (Model.DiscountPrice.HasValue)
+                            {
+                                <del style="font-size: 18px; color: #999;">$@Model.Price</del>
+                                <span style="font-size: 28px; color: #8bc34b; font-weight: bold; margin-left: 10px;">$@Model.DiscountPrice</span>
+                            }
+                            else
+                            {
+                                <span style="font-size: 28px; color: #8bc34b; font-weight: bold;">$@Model.Price</span>
+                            }
+                        </div>
+
+                        <p style="color: #666;">@Model.ShortDescription</p>
+
+                        <div style="margin: 20px 0;">
+                            <span class="badge" style="background: @(Model.StockQuantity > 0 ? "#8bc34b" : "#dc3545"); color: white; padding: 5px 15px;">
+                                @(Model.StockQuantity > 0 ? "In Stock (" + Model.StockQuantity + ")" : "Out of Stock")
+                            </span>
+                        </div>
+
+                        @if (Model.StockQuantity > 0)
+                        {
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <div class="row" style="margin: 20px 0;">
+                                    <div class="col-md-3">
+                                        <input type="number" name="quantity" value="1" min="1" max="@Model.StockQuantity" class="form-control" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="theme-btn">
+                                            <i class="fa fa-shopping-cart"></i> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <p><strong>Category:</strong> @Model.Category?.Name</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 50px;">
+                <div class="col-lg-12">
+                    <h3>Description</h3>
+                    <hr />
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

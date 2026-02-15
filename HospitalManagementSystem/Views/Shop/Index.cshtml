@@ -1,0 +1,148 @@
+﻿@model IEnumerable<HospitalManagement.Domain.Entities.Product>
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<main class="main-content">
+    <section class="ban-bread-crumb">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item active">Shop</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="shop_">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="heading">
+                        <h1>Shop</h1>
+                    </div>
+                </div>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="shop_left_bar">
+                       
+
+                        <div class="categories">
+                            <h2 class="sub_head">Categories</h2>
+                            <ul>
+                                <li>
+                                    <a asp-controller="Shop" asp-action="Index">
+                                        All Products
+                                    </a>
+                                </li>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    foreach (HospitalManagement.Domain.Entities.ProductCategory category in ViewBag.Categories)
+                                    {
+                                        <li>
+                                            <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@category.Id">
+                                                @category.Name
+                                                <span>(@(category.Products != null ? category.Products.Count() : 0))</span>
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="shop_right_bar">
+                        <div class="top_shop_bar">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="products_showing">
+                                        <p>Showing @Model.Count() products</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (HospitalManagement.Domain.Entities.Product product in Model)
+                                {
+                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <div class="shop_products_outer">
+                                            <div class="image">
+                                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                                {
+                                                    <img src="@product.ImageUrl" class="img-fluid" alt="@product.Name" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/assets/image/shop/product-1.jpg" class="img-fluid" alt="@product.Name" />
+                                                }
+
+                                                @if (product.DiscountPrice.HasValue)
+                                                {
+                                                    <div class="stocks">Sale</div>
+                                                }
+
+                                                <a asp-controller="Shop" asp-action="Details" asp-route-id="@product.Id" class="overlay_cart">
+                                                    <span class="flaticon-eye"></span>
+                                                </a>
+                                            </div>
+                                            <div class="porduct_des">
+                                                <h2>
+                                                    <a asp-controller="Shop" asp-action="Details" asp-route-id="@product.Id">
+                                                        @product.Name
+                                                    </a>
+                                                </h2>
+                                                @if (product.DiscountPrice.HasValue)
+                                                {
+                                                    <p>
+                                                        <del style="color: #999;">$@product.Price</del>
+                                                        <span style="color: #8bc34b; font-weight: bold;">$@product.DiscountPrice</span>
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p>$@product.Price</p>
+                                                }
+
+                                                <form asp-controller="Cart" asp-action="AddToCart" method="post" style="margin-top: 10px;">
+                                                    <input type="hidden" name="productId" value="@product.Id" />
+                                                    <input type="hidden" name="quantity" value="1" />
+                                                    <button type="submit" class="btn btn-sm" style="background: #8bc34b; color: white;">
+                                                        <i class="fa fa-shopping-cart"></i> Add to Cart
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="col-12 text-center" style="padding: 50px;">
+                                    <i class="fa fa-shopping-bag" style="font-size: 50px; color: #ccc;"></i>
+                                    <p style="margin-top: 20px;">No products found</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

@@ -1,12 +1,10 @@
 using HospitalManagement.Application;
-using HospitalManagement.Application.Interfaces.Admin;
-using HospitalManagement.Application.Services.Admin;
 using HospitalManagement.Domain.Entities;
 using HospitalManagement.Infrastructure;
 using HospitalManagement.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication(builder.Configuration);
@@ -30,6 +28,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -39,13 +44,14 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+
 app.UseStaticFiles();
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -68,24 +74,6 @@ using (IServiceScope scope = app.Services.CreateScope())
         {
             await roleManager.CreateAsync(new IdentityRole(role));
         }
-    }
-
-    string adminEmail = "admin@test.com";
-    AppUser adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-    if (adminUser == null)
-    {
-        adminUser = new AppUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            FirstName = "Admin",
-            LastName = "User",
-            EmailConfirmed = true
-        };
-
-        await userManager.CreateAsync(adminUser, "Admin123");
-        await userManager.AddToRoleAsync(adminUser, "Admin");
     }
 }
 

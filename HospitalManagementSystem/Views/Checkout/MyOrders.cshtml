@@ -1,0 +1,120 @@
+﻿@model IEnumerable<HospitalManagement.Domain.Entities.Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<main class="main-content">
+    <section class="ban-bread-crumb">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index">Shop</a></li>
+                            <li class="breadcrumb-item active">My Orders</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 50px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="heading">
+                        <h1>My Orders</h1>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead style="background: #f8f9fa;">
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Payment</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (HospitalManagement.Domain.Entities.Order order in Model)
+                                    {
+                                        <tr>
+                                            <td><strong>#@order.Id</strong></td>
+                                            <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                                            <td style="color: #8bc34b; font-weight: bold;">$@order.TotalAmount</td>
+                                            <td>
+                                                @if (order.Status == "Pending")
+                                                {
+                                                    <span class="badge" style="background: #ffc107; color: #000; padding: 5px 10px;">Pending</span>
+                                                }
+                                                else if (order.Status == "Processing")
+                                                {
+                                                    <span class="badge" style="background: #17a2b8; color: #fff; padding: 5px 10px;">Processing</span>
+                                                }
+                                                else if (order.Status == "Shipped")
+                                                {
+                                                    <span class="badge" style="background: #007bff; color: #fff; padding: 5px 10px;">Shipped</span>
+                                                }
+                                                else if (order.Status == "Delivered")
+                                                {
+                                                    <span class="badge" style="background: #28a745; color: #fff; padding: 5px 10px;">Delivered</span>
+                                                }
+                                                else if (order.Status == "Cancelled")
+                                                {
+                                                    <span class="badge" style="background: #dc3545; color: #fff; padding: 5px 10px;">Cancelled</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge" style="background: #6c757d; color: #fff; padding: 5px 10px;">@order.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (order.PaymentStatus == "Paid")
+                                                {
+                                                    <span style="color: #28a745;"><i class="fa fa-check-circle"></i> Paid</span>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: #ffc107;"><i class="fa fa-clock-o"></i> Pending</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a asp-controller="Checkout" asp-action="OrderSuccess" asp-route-orderId="@order.Id" class="btn btn-sm" style="background: #8bc34b; color: #fff;">
+                                                    <i class="fa fa-eye"></i> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-lg-12 text-center" style="padding: 80px;">
+                        <i class="fa fa-shopping-bag" style="font-size: 80px; color: #ccc;"></i>
+                        <h3 style="margin-top: 20px;">No orders yet</h3>
+                        <p style="color: #666;">You haven't placed any orders yet.</p>
+                        <a asp-controller="Shop" asp-action="Index" class="theme-btn" style="margin-top: 20px;">
+                            <i class="fa fa-shopping-cart"></i> Start Shopping
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</main>

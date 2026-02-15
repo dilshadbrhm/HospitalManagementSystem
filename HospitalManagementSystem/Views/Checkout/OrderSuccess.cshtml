@@ -1,0 +1,61 @@
+﻿@model HospitalManagement.Domain.Entities.Order
+@{
+    ViewData["Title"] = "Order Success";
+}
+
+<main class="main-content">
+    <section style="padding: 80px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 text-center">
+                    <i class="fa fa-check-circle" style="font-size: 100px; color: #8bc34b;"></i>
+                    <h1 style="margin-top: 30px;">Thank You!</h1>
+                    <p style="font-size: 18px; color: #666;">Your order has been placed successfully.</p>
+
+                    <div style="background: #f8f9fa; padding: 30px; border-radius: 5px; margin-top: 30px; text-align: left;">
+                        <h4>Order Details</h4>
+                        <hr />
+                        <p><strong>Order Number:</strong> #@Model.Id</p>
+                        <p><strong>Name:</strong> @Model.CustomerName</p>
+                        <p><strong>Email:</strong> @Model.CustomerEmail</p>
+                        <p><strong>Phone:</strong> @Model.CustomerPhone</p>
+                        <p><strong>Address:</strong> @Model.ShippingAddress</p>
+                        <p><strong>Payment Method:</strong> @Model.PaymentMethod</p>
+                        <hr />
+
+                        <h5>Items:</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (HospitalManagement.Domain.Entities.OrderItem item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>$@item.Price</td>
+                                        <td>$@item.Total</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <div style="text-align: right; font-size: 20px;">
+                            <strong>Total: <span style="color: #8bc34b;">$@Model.TotalAmount</span></strong>
+                        </div>
+                    </div>
+
+                    <a asp-controller="Shop" asp-action="Index" class="theme-btn" style="margin-top: 30px;">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

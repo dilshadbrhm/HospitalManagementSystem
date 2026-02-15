@@ -10,7 +10,6 @@
     <Folder Include="Dtos\LabResult\" />
     <Folder Include="Dtos\Payment\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>

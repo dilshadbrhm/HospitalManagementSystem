@@ -1,0 +1,146 @@
+﻿@model List<HospitalManagement.Domain.Entities.CartItem>
+@{
+    ViewData["Title"] = "Shopping Cart";
+
+    decimal subtotal = 0;
+    foreach (HospitalManagement.Domain.Entities.CartItem item in Model)
+    {
+        subtotal = subtotal + item.Total;
+    }
+}
+
+<main class="main-content">
+    <section class="ban-bread-crumb">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index">Shop</a></li>
+                            <li class="breadcrumb-item active">Cart</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="shop_cart_" style="padding: 50px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="heading">
+                        <h1>Shopping Cart</h1>
+                    </div>
+                </div>
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (HospitalManagement.Domain.Entities.CartItem item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Image))
+                                                {
+                                                    <img src="@item.Image" class="img-fluid" alt="@item.ProductName" style="width: 80px;" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/assets/image/shop/view-product-1.jpg" class="img-fluid" alt="@item.ProductName" style="width: 80px;" />
+                                                }
+                                            </td>
+                                            <td>@item.ProductName</td>
+                                            <td>$@item.Price</td>
+                                            <td>
+                                                <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" style="display: flex; align-items: center;">
+                                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    <input type="number" name="quantity" value="@item.Quantity" min="1" style="width: 60px;" class="form-control" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary" style="margin-left: 5px;">
+                                                        <i class="fa fa-refresh"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>$@item.Total</td>
+                                            <td>
+                                                <form asp-controller="Cart" asp-action="RemoveFromCart" method="post">
+                                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-lg-6">
+                        <a asp-controller="Shop" asp-action="Index" class="theme-btn">
+                            <i class="fa fa-arrow-left"></i> Continue Shopping
+                        </a>
+                        <form asp-controller="Cart" asp-action="ClearCart" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-outline-danger" style="margin-left: 10px;">
+                                Clear Cart
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="sub_total" style="background: #f8f9fa; padding: 20px; border-radius: 5px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                <span><strong>Subtotal:</strong></span>
+                                <span><strong>$@subtotal</strong></span>
+                            </div>
+                            <hr />
+                            <div style="display: flex; justify-content: space-between; font-size: 20px;">
+                                <span><strong>Total:</strong></span>
+                                <span style="color: #8bc34b;"><strong>$@subtotal</strong></span>
+                            </div>
+                            <a asp-controller="Checkout" asp-action="Index" class="theme-btn" style="width: 100%; text-align: center; margin-top: 20px; display: block;">
+                                Proceed to Checkout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-lg-12 text-center" style="padding: 80px;">
+                        <i class="fa fa-shopping-cart" style="font-size: 80px; color: #ccc;"></i>
+                        <h3 style="margin-top: 20px;">Your cart is empty</h3>
+                        <p style="color: #666;">Add some products to your cart</p>
+                        <a asp-controller="Shop" asp-action="Index" class="theme-btn" style="margin-top: 20px;">
+                            <i class="fa fa-shopping-bag"></i> Start Shopping
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</main>

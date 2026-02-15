@@ -1,0 +1,169 @@
+﻿@model List<HospitalManagement.Domain.Entities.CartItem>
+@{
+    ViewData["Title"] = "Checkout";
+
+    decimal subtotal = 0;
+    foreach (HospitalManagement.Domain.Entities.CartItem item in Model)
+    {
+        subtotal = subtotal + item.Total;
+    }
+}
+
+<main class="main-content">
+    <section class="ban-bread-crumb">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item"><a asp-controller="Shop" asp-action="Index">Shop</a></li>
+                            <li class="breadcrumb-item active">Checkout</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="Checkout_" style="padding: 50px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="heading">
+                        <h1>Checkout</h1>
+                    </div>
+                </div>
+            </div>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="billing_address">
+                            <h3>Billing Details</h3>
+                            <hr />
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>First Name *</label>
+                                        <input type="text" name="firstName" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Last Name *</label>
+                                        <input type="text" name="lastName" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email *</label>
+                                        <input type="email" name="email" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Phone *</label>
+                                        <input type="text" name="phone" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Address *</label>
+                                        <input type="text" name="address" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>City *</label>
+                                        <input type="text" name="city" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Zip Code</label>
+                                        <input type="text" name="zipCode" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Notes</label>
+                                        <textarea name="notes" class="form-control" rows="3" placeholder="Notes about your order"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="your_order_details" style="background: #f8f9fa; padding: 25px; border-radius: 5px;">
+                            <h3>Your Order</h3>
+                            <hr />
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th class="text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (HospitalManagement.Domain.Entities.CartItem item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.ProductName x @item.Quantity</td>
+                                            <td class="text-right">$@item.Total</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><strong>Subtotal</strong></td>
+                                        <td class="text-right"><strong>$@subtotal</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-right" style="color: #8bc34b; font-size: 20px;"><strong>$@subtotal</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <h4 style="margin-top: 20px;">Payment Method</h4>
+                            <p style="color: #666; font-size: 14px;">Payment at delivery</p>
+                            <hr />
+
+                            <div class="form-check" style="margin-bottom: 15px; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                                <input class="form-check-input" type="radio" name="paymentMethod" value="Cash" id="cash" checked style="margin-top: 3px;" />
+                                <label class="form-check-label" for="cash" style="margin-left: 10px;">
+                                    <i class="fa fa-money" style="color: #8bc34b;"></i> <strong>Cash on Delivery</strong>
+                                    <br />
+                                    <small style="color: #666;">Pay with cash when your order arrives</small>
+                                </label>
+                            </div>
+
+                            <div class="form-check" style="padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                                <input class="form-check-input" type="radio" name="paymentMethod" value="Card" id="card" style="margin-top: 3px;" />
+                                <label class="form-check-label" for="card" style="margin-left: 10px;">
+                                    <i class="fa fa-credit-card" style="color: #8bc34b;"></i> <strong>Card on Delivery</strong>
+                                    <br />
+                                    <small style="color: #666;">Pay with card when your order arrives (POS terminal)</small>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="theme-btn" style="width: 100%; margin-top: 25px;">
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
