@@ -1,0 +1,90 @@
+﻿@model IEnumerable<HospitalManagement.Domain.Entities.Order>
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Orders</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (HospitalManagement.Domain.Entities.Order order in Model)
+                                {
+                                    <tr>
+                                        <td><strong>#@order.Id</strong></td>
+                                        <td>@order.CustomerName</td>
+                                        <td>@order.CustomerEmail</td>
+                                        <td style="color: #28a745; font-weight: bold;">$@order.TotalAmount</td>
+                                        <td>
+                                            @if (order.Status == "Pending")
+                                            {
+                                                <span class="badge badge-warning">Pending</span>
+                                            }
+                                            else if (order.Status == "Processing")
+                                            {
+                                                <span class="badge badge-info">Processing</span>
+                                            }
+                                            else if (order.Status == "Shipped")
+                                            {
+                                                <span class="badge badge-primary">Shipped</span>
+                                            }
+                                            else if (order.Status == "Delivered")
+                                            {
+                                                <span class="badge badge-success">Delivered</span>
+                                            }
+                                            else if (order.Status == "Cancelled")
+                                            {
+                                                <span class="badge badge-danger">Cancelled</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (order.PaymentStatus == "Paid")
+                                            {
+                                                <span class="badge badge-success">Paid</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary">Pending</span>
+                                            }
+                                        </td>
+                                        <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-info">
+                                                <i class="mdi mdi-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">No orders found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

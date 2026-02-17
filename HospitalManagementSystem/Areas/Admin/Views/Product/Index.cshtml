@@ -1,0 +1,109 @@
+﻿@model IEnumerable<HospitalManagement.Domain.Entities.Product>
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title">Products</h4>
+                    <a asp-action="Create" class="btn btn-primary btn-sm">
+                        <i class="mdi mdi-plus"></i> Add Product
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (HospitalManagement.Domain.Entities.Product product in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                            {
+                                                <img src="@product.ImageUrl" alt="@product.Name" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />
+                                            }
+                                            else
+                                            {
+                                                <i class="mdi mdi-image" style="font-size: 30px; color: #ccc;"></i>
+                                            }
+                                        </td>
+                                        <td>@product.Name</td>
+                                        <td>@product.Category?.Name</td>
+                                        <td>
+                                            @if (product.DiscountPrice.HasValue)
+                                            {
+                                                <del style="color: #999;">$@product.Price</del>
+                                                <span style="color: #28a745;">$@product.DiscountPrice</span>
+                                            }
+                                            else
+                                            {
+                                                <span>$@product.Price</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (product.StockQuantity > 10)
+                                            {
+                                                <span class="badge badge-success">@product.StockQuantity</span>
+                                            }
+                                            else if (product.StockQuantity > 0)
+                                            {
+                                                <span class="badge badge-warning">@product.StockQuantity</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">Out of Stock</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (product.IsActive)
+                                            {
+                                                <span class="badge badge-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-outline-primary">
+                                                <i class="mdi mdi-pencil"></i>
+                                            </a>
+                                            <form asp-action="Delete" asp-route-id="@product.Id" method="post" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="mdi mdi-delete"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">No products found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

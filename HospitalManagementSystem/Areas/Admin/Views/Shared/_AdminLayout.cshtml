@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="~/admin/vendors/base/vendor.bundle.base.css">
     <link rel="stylesheet" href="~/admin/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .sidebar {
+            height: calc(100vh - 70px) !important;
+            overflow-y: auto !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container-scroller">
@@ -79,11 +85,6 @@
                             <span class="menu-title">Appointments</span>
                         </a>
                     </li>
-
-                    <li class="nav-item" style="padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.1);">
-                        <span style="padding-left: 20px; color: #6c7293; font-size: 11px; text-transform: uppercase;">Blog</span>
-                    </li>
-
                     <li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="Blog" asp-action="Index">
                             <i class="mdi mdi-post menu-icon"></i>
@@ -94,6 +95,24 @@
                         <a class="nav-link" asp-area="Admin" asp-controller="BlogCategory" asp-action="Index">
                             <i class="mdi mdi-folder menu-icon"></i>
                             <span class="menu-title">Blog Categories</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                            <i class="mdi mdi-package-variant menu-icon"></i>
+                            <span class="menu-title">Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="ProductCategory" asp-action="Index">
+                            <i class="mdi mdi-folder-multiple menu-icon"></i>
+                            <span class="menu-title">Categories</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                            <i class="mdi mdi-cart menu-icon"></i>
+                            <span class="menu-title">Orders</span>
                         </a>
                     </li>
                 </ul>
@@ -132,14 +151,19 @@
     </div>
 
     <script src="~/admin/vendors/base/vendor.bundle.base.js"></script>
+    <script>
+        if (typeof $.cookie === 'undefined') {
+            $.cookie = function (name, value, options) {
+                if (value !== undefined) {
+                    document.cookie = name + '=' + value;
+                }
+                return null;
+            };
+        }
+    </script>
     <script src="~/admin/js/off-canvas.js"></script>
     <script src="~/admin/js/hoverable-collapse.js"></script>
     <script src="~/admin/js/template.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
-<script>
-    if (typeof $.cookie === 'undefined') {
-        $.cookie = function () { return null; };
-    }
-</script>
 </html>

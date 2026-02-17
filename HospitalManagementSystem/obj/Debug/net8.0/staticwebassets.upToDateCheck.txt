@@ -146,7 +146,9 @@ wwwroot\assets\image\0362e648-5524-44d7-8111-f56b1120342a.avif
 wwwroot\assets\image\131fdef6-ebf9-4e8f-9509-927c687cf21b.avif
 wwwroot\assets\image\2b0c9fc7-a1f3-4758-8062-285568b175c0.avif
 wwwroot\assets\image\416a32a9-8667-4e1e-a972-4526e3b2bf67.png
+wwwroot\assets\image\45.avif
 wwwroot\assets\image\47a5f782-e885-4da9-9f32-1ccf4e6e63c9.jpg
+wwwroot\assets\image\54.avif
 wwwroot\assets\image\55f6cde8-c3a2-4698-bb77-290bc0a74363.png
 wwwroot\assets\image\697e6751-508e-425a-80a9-6c9487da3a65.jpg
 wwwroot\assets\image\7f0376fc-f7b3-4f3a-8bba-ca1b3a7eef72.jpg
@@ -282,6 +284,7 @@ wwwroot\assets\image\gallery\hm-2-gallery-6.jpg
 wwwroot\assets\image\gallery\hm-2-gallery-7.jpg
 wwwroot\assets\image\gallery\hm-2-gallery-8.jpg
 wwwroot\assets\image\gallery\search.png
+wwwroot\assets\image\heros-medical-malpractice-500x188.jpg
 wwwroot\assets\image\hm-5-request.jpg
 wwwroot\assets\image\home-2-logo.png
 wwwroot\assets\image\home-4-logo.png
@@ -294,6 +297,10 @@ wwwroot\assets\image\language-1.jpg
 wwwroot\assets\image\language-2.jpg
 wwwroot\assets\image\language-3.jpg
 wwwroot\assets\image\logo.png
+wwwroot\assets\image\main-photo.jpg
+wwwroot\assets\image\mask.png
+wwwroot\assets\image\medical_shop_5.jpg
+wwwroot\assets\image\Now-Foods-Vitamin-A-1.webp
 wwwroot\assets\image\patient-profile-photo.png
 wwwroot\assets\image\post\blog-post-1.jpg
 wwwroot\assets\image\post\blog-post-2.jpg
@@ -314,6 +321,14 @@ wwwroot\assets\image\service\service1.jpg
 wwwroot\assets\image\service\service2.jpg
 wwwroot\assets\image\service\service3.jpg
 wwwroot\assets\image\service\service4.jpg
+wwwroot\assets\image\shop\02623002-ee45-4400-b43d-b88b4b7ef0bf.avif
+wwwroot\assets\image\shop\65367bea-5fd4-44d0-9b68-531b755607a8.webp
+wwwroot\assets\image\shop\9883d03c-b8b4-432f-af0f-149582e504c1.avif
+wwwroot\assets\image\shop\a4cb2a38-4916-4cdc-b1e6-697fefa2ed30.png
+wwwroot\assets\image\shop\aa3ec2cb-db1a-4693-a9c5-e30d4297c3ea.jpg
+wwwroot\assets\image\shop\b41f5c51-5a7b-4c04-ba68-f0c07e147e0c.avif
+wwwroot\assets\image\shop\b6ceba1a-f06a-490a-8c20-b8acf8b3a9e9.avif
+wwwroot\assets\image\shop\d19027d4-5a6b-47f8-9cc7-9df7db4d6b78.jpg
 wwwroot\assets\image\shop\product-1.jpg
 wwwroot\assets\image\shop\product-2.jpg
 wwwroot\assets\image\shop\product-3.jpg
