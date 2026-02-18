@@ -154,7 +154,6 @@ wwwroot\assets\image\47a5f782-e885-4da9-9f32-1ccf4e6e63c9.jpg
 wwwroot\assets\image\4b98f8a6-fae5-4469-8019-b1074234af49.avif
 wwwroot\assets\image\504c0f68-a3c1-4beb-80ec-02690345da0d.avif
 wwwroot\assets\image\54.avif
-wwwroot\assets\image\55f6cde8-c3a2-4698-bb77-290bc0a74363.png
 wwwroot\assets\image\65696cc6-1ecf-4214-ab16-fcf6481ee91b.jpg
 wwwroot\assets\image\697e6751-508e-425a-80a9-6c9487da3a65.jpg
 wwwroot\assets\image\7f0376fc-f7b3-4f3a-8bba-ca1b3a7eef72.jpg
@@ -179,6 +178,7 @@ wwwroot\assets\image\awards-1.png
 wwwroot\assets\image\awards-2.png
 wwwroot\assets\image\awards-3.png
 wwwroot\assets\image\awards-4.png
+wwwroot\assets\image\b9df5cf7-5749-49e4-ac50-b53f80486178.jpg
 wwwroot\assets\image\banner\home-1-banner-1.jpg
 wwwroot\assets\image\banner\home-1-banner-2.jpg
 wwwroot\assets\image\banner\home-1-banner-3.jpg
@@ -321,6 +321,7 @@ wwwroot\assets\image\patient-profile-photo.png
 wwwroot\assets\image\post\blog-post-1.jpg
 wwwroot\assets\image\post\blog-post-2.jpg
 wwwroot\assets\image\post\blog-post-3.jpg
+wwwroot\assets\image\pp.png
 wwwroot\assets\image\preloader.gif
 wwwroot\assets\image\preloader-2.gif
 wwwroot\assets\image\preloader-4.gif
