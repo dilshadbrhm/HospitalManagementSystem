@@ -16,5 +16,6 @@ namespace HospitalManagement.Application.Dtos.Doctor
         public string ProfilePicture { get; set; }
         public string Specialization { get; set; }
         public string Bio { get; set; }
+        public string Image { get; set; }
     }
 }

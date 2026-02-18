@@ -143,15 +143,23 @@ wwwroot\assets\fonts\license\license.html
 wwwroot\assets\fonts\license\license.pdf
 wwwroot\assets\fonts\play-button.svg
 wwwroot\assets\image\0362e648-5524-44d7-8111-f56b1120342a.avif
+wwwroot\assets\image\0c1c96b5-7a2a-4924-ba1a-160df4d2009e.jpg
 wwwroot\assets\image\131fdef6-ebf9-4e8f-9509-927c687cf21b.avif
 wwwroot\assets\image\2b0c9fc7-a1f3-4758-8062-285568b175c0.avif
+wwwroot\assets\image\2c230b52-549b-4694-a695-3e673b1a295f.jpg
+wwwroot\assets\image\2e464b4a-451a-4357-a023-9f89ce905623.jpg
 wwwroot\assets\image\416a32a9-8667-4e1e-a972-4526e3b2bf67.png
 wwwroot\assets\image\45.avif
 wwwroot\assets\image\47a5f782-e885-4da9-9f32-1ccf4e6e63c9.jpg
+wwwroot\assets\image\4b98f8a6-fae5-4469-8019-b1074234af49.avif
+wwwroot\assets\image\504c0f68-a3c1-4beb-80ec-02690345da0d.avif
 wwwroot\assets\image\54.avif
 wwwroot\assets\image\55f6cde8-c3a2-4698-bb77-290bc0a74363.png
+wwwroot\assets\image\65696cc6-1ecf-4214-ab16-fcf6481ee91b.jpg
 wwwroot\assets\image\697e6751-508e-425a-80a9-6c9487da3a65.jpg
 wwwroot\assets\image\7f0376fc-f7b3-4f3a-8bba-ca1b3a7eef72.jpg
+wwwroot\assets\image\98b45f03-b6bd-492a-995c-ad2d6513e2fd.jpg
+wwwroot\assets\image\ab89913a-905f-469e-b505-47ac8c40547f.jpg
 wwwroot\assets\image\about-us\about-type-one.png
 wwwroot\assets\image\about-us\home-5-about.jpg
 wwwroot\assets\image\about-us\sign.png
@@ -184,6 +192,7 @@ wwwroot\assets\image\banner\home-5-banner-2.jpg
 wwwroot\assets\image\banner\slide-1.jpg
 wwwroot\assets\image\banner\slide-2.jpg
 wwwroot\assets\image\banner\slide-3.jpg
+wwwroot\assets\image\beautiful-young-female-doctor-looking-camera-office_1301-7807.avif
 wwwroot\assets\image\best-doctors\best-doctors1.jpg
 wwwroot\assets\image\best-doctors\best-doctors2.jpg
 wwwroot\assets\image\best-doctors\best-doctors3.jpg
@@ -231,6 +240,7 @@ wwwroot\assets\image\case-study\hme_4-our-case-3.jpg
 wwwroot\assets\image\case-study\hme_4-our-case-4.jpg
 wwwroot\assets\image\case-study\hme_4-our-case-5.jpg
 wwwroot\assets\image\case-study\hme_4-our-case-6.jpg
+wwwroot\assets\image\cfbf3b06-70f8-4419-9af4-30a3dc7dc783.avif
 wwwroot\assets\image\client\client-hm-1.jpg
 wwwroot\assets\image\client\client-hm-2.jpg
 wwwroot\assets\image\client\client-hm-3.jpg
@@ -267,7 +277,10 @@ wwwroot\assets\image\departments\dp_case_-1.jpg
 wwwroot\assets\image\departments\dp_case_-2.jpg
 wwwroot\assets\image\departments\dp_no_banner.jpg
 wwwroot\assets\image\departments\head-doctor.jpg
+wwwroot\assets\image\Doctor-blogging.jpg
 wwwroot\assets\image\doctor-profile-photo.jpg
+wwwroot\assets\image\f408e4b4-5d6c-45a2-85a3-8c20ebee90e5.avif
+wwwroot\assets\image\f906ccda-2e94-45e3-99b2-a0aa1a40e4c7.jpg
 wwwroot\assets\image\fav\android-icon-36x36.png
 wwwroot\assets\image\fav\favicon-16x16.png
 wwwroot\assets\image\fav\favicon-32x32.png
@@ -292,6 +305,7 @@ wwwroot\assets\image\home-5-foot-logo.png
 wwwroot\assets\image\home-5-logo.png
 wwwroot\assets\image\icons\fdfdf.png
 wwwroot\assets\image\icons\map-marker.png
+wwwroot\assets\image\images.jpg
 wwwroot\assets\image\images.png
 wwwroot\assets\image\language-1.jpg
 wwwroot\assets\image\language-2.jpg
@@ -300,6 +314,8 @@ wwwroot\assets\image\logo.png
 wwwroot\assets\image\main-photo.jpg
 wwwroot\assets\image\mask.png
 wwwroot\assets\image\medical_shop_5.jpg
+wwwroot\assets\image\medifycover.jpg
+wwwroot\assets\image\Newborn-Doctor.jpg
 wwwroot\assets\image\Now-Foods-Vitamin-A-1.webp
 wwwroot\assets\image\patient-profile-photo.png
 wwwroot\assets\image\post\blog-post-1.jpg
@@ -342,6 +358,7 @@ wwwroot\assets\image\shop\product-d-1.jpg
 wwwroot\assets\image\shop\product-dt-1.jpg
 wwwroot\assets\image\shop\view-product-1.jpg
 wwwroot\assets\image\shop\view-product-2.jpg
+wwwroot\assets\image\te9-800x500.jpg
 wwwroot\assets\image\test-1.png
 wwwroot\assets\image\test-2.png
 wwwroot\assets\image\testi\hm-client-1.png

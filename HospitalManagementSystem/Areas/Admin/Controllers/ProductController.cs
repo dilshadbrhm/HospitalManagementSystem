@@ -46,7 +46,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             {
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(_env.WebRootPath, "assets", "image", "shop");
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "assets", "image");
 
                     if (!Directory.Exists(uploadsFolder))
                     {
@@ -61,11 +61,11 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
                         await imageFile.CopyToAsync(stream);
                     }
 
-                    product.ImageUrl = "/assets/image/shop/" + uniqueFileName;
+                    product.ImageUrl = "/assets/image/" + uniqueFileName;
                 }
                 else
                 {
-                    product.ImageUrl = "/assets/image/shop/product-default.jpg";
+                    product.ImageUrl = "/assets/image/";
                 }
 
                 product.IsActive = true;
@@ -113,7 +113,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(_env.WebRootPath, "assets", "image", "shop");
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "assets", "image");
 
                     if (!Directory.Exists(uploadsFolder))
                     {
@@ -128,7 +128,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
                         await imageFile.CopyToAsync(stream);
                     }
 
-                    existingProduct.ImageUrl = "/assets/image/shop/" + uniqueFileName;
+                    existingProduct.ImageUrl = "/assets/image/" + uniqueFileName;
                 }
 
                 existingProduct.Name = product.Name;

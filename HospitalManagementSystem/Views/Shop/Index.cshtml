@@ -111,13 +111,13 @@
                                                 @if (product.DiscountPrice.HasValue)
                                                 {
                                                     <p>
-                                                        <del style="color: #999;">$@product.Price</del>
-                                                        <span style="color: #8bc34b; font-weight: bold;">$@product.DiscountPrice</span>
+                                                        <del style="color: #999;">@product.Price</del>
+                                                        <span style="color: #8bc34b; font-weight: bold;">@product.DiscountPrice</span>
                                                     </p>
                                                 }
                                                 else
                                                 {
-                                                    <p>$@product.Price</p>
+                                                    <p>@product.Price</p>
                                                 }
 
                                                 <form asp-controller="Cart" asp-action="AddToCart" method="post" style="margin-top: 10px;">

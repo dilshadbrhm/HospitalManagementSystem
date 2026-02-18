@@ -66,14 +66,17 @@ namespace HospitalManagement.Application.Services.Admin
 
             foreach (Doctor doctor in doctors)
             {
-                AdminDoctorListDto dto = new AdminDoctorListDto();
-                dto.Id = doctor.Id;
-                dto.FirstName = doctor.FirstName;
-                dto.LastName = doctor.LastName;
-                dto.Email = doctor.Email;
-                dto.Phone = doctor.Phone;
-                dto.Specialization = doctor.Specialization;
-                dto.ConsultationFee = doctor.ConsultationFee;
+                AdminDoctorListDto dto = new AdminDoctorListDto
+                {
+                   Id = doctor.Id,
+                   FirstName = doctor.FirstName,
+                   LastName = doctor.LastName,
+                   Email = doctor.Email,
+                   Phone = doctor.Phone,
+                   Specialization = doctor.Specialization,
+                   ConsultationFee = doctor.ConsultationFee
+                };
+               
 
                 if (doctor.Department != null)
                 {
@@ -95,31 +98,38 @@ namespace HospitalManagement.Application.Services.Admin
                 return null;
             }
 
-            AdminDoctorEditDto dto = new AdminDoctorEditDto();
-            dto.Id = doctor.Id;
-            dto.FirstName = doctor.FirstName;
-            dto.LastName = doctor.LastName;
-            dto.Email = doctor.Email;
-            dto.Phone = doctor.Phone;
-            dto.Specialization = doctor.Specialization;
-            dto.LicenseNumber = doctor.LicenseNumber;
-            dto.DepartmentId = doctor.DepartmentId;
-            dto.ConsultationFee = doctor.ConsultationFee;
-            dto.Bio = doctor.Bio;
+            AdminDoctorEditDto dto = new AdminDoctorEditDto
+            {
+              Id = doctor.Id,
+              FirstName = doctor.FirstName,
+              LastName = doctor.LastName,
+              Email = doctor.Email,
+              Phone = doctor.Phone,
+              Specialization = doctor.Specialization,
+              LicenseNumber = doctor.LicenseNumber,
+              DepartmentId = doctor.DepartmentId,
+              ConsultationFee = doctor.ConsultationFee,
+              Bio = doctor.Bio,
+              ProfilePicture = doctor.ProfilePicture
+            };
+            
 
             return dto;
         }
 
         public async Task<bool> CreateDoctorAsync(AdminDoctorCreateDto dto)
         {
-            AppUser user = new AppUser();
-            user.UserName = dto.Email;
-            user.Email = dto.Email;
-            user.FirstName = dto.FirstName;
-            user.LastName = dto.LastName;
-            user.PhoneNumber = dto.Phone;
-            user.EmailConfirmed = true;
-            user.CreatedAt = DateTime.Now;
+            AppUser user = new AppUser
+            {
+               UserName = dto.Email,
+               Email = dto.Email,
+               FirstName = dto.FirstName,
+               LastName = dto.LastName,
+               PhoneNumber = dto.Phone,
+               EmailConfirmed = true,
+               CreatedAt = DateTime.Now
+            };
+            
 
             IdentityResult result = await _userManager.CreateAsync(user, dto.Password);
 
@@ -135,17 +145,20 @@ namespace HospitalManagement.Application.Services.Admin
 
             await _userManager.AddToRoleAsync(user, "Doctor");
 
-            Doctor doctor = new Doctor();
-            doctor.UserId = user.Id;
-            doctor.FirstName = dto.FirstName;
-            doctor.LastName = dto.LastName;
-            doctor.Email = dto.Email;
-            doctor.Phone = dto.Phone;
-            doctor.Specialization = dto.Specialization;
-            doctor.LicenseNumber = dto.LicenseNumber;
-            doctor.DepartmentId = dto.DepartmentId;
-            doctor.ConsultationFee = dto.ConsultationFee;
-            doctor.Bio = dto.Bio;
+            Doctor doctor = new Doctor
+            {
+              UserId = user.Id,
+              FirstName = dto.FirstName,
+              LastName = dto.LastName,
+              Email = dto.Email,
+              Phone = dto.Phone,
+              Specialization = dto.Specialization,
+              LicenseNumber = dto.LicenseNumber,
+              DepartmentId = dto.DepartmentId,
+              ConsultationFee = dto.ConsultationFee,
+              Bio = dto.Bio
+            };
+           
 
             await _doctorRepository.AddAsync(doctor);
 
@@ -170,6 +183,11 @@ namespace HospitalManagement.Application.Services.Admin
             doctor.DepartmentId = dto.DepartmentId;
             doctor.ConsultationFee = dto.ConsultationFee;
             doctor.Bio = dto.Bio;
+
+            if (dto.ProfilePicture != null)
+            {
+                doctor.ProfilePicture = dto.ProfilePicture;
+            }
 
             await _doctorRepository.UpdateAsync(doctor);
 
@@ -232,10 +250,13 @@ namespace HospitalManagement.Application.Services.Admin
 
             foreach (Department department in departments)
             {
-                DepartmentDto dto = new DepartmentDto();
-                dto.Id = department.Id;
-                dto.Name = department.Name;
-                dto.ShortDescription = department.Description;
+                DepartmentDto dto = new DepartmentDto
+                {
+                  Id = department.Id,
+                  Name = department.Name,
+                  ShortDescription = department.Description
+                };
+               
 
                 result.Add(dto);
             }
@@ -293,15 +314,18 @@ namespace HospitalManagement.Application.Services.Admin
 
             foreach (Appointment appointment in appointments)
             {
-                AppointmentItemDto dto = new AppointmentItemDto();
-                dto.Id = appointment.Id;
-                dto.AppointmentDate = appointment.AppointmentDate;
-                dto.StartTime = appointment.StartTime;
-                dto.EndTime = appointment.EndTime;
-                dto.Status = appointment.Status.ToString();
-                dto.Fee = appointment.Fee;
-                dto.IsPaid = appointment.IsPaid;
-                dto.Symptoms = appointment.Symptoms;
+                AppointmentItemDto dto = new AppointmentItemDto
+                {
+                  Id = appointment.Id,
+                  AppointmentDate = appointment.AppointmentDate,
+                  StartTime = appointment.StartTime,
+                  EndTime = appointment.EndTime,
+                  Status = appointment.Status.ToString(),
+                  Fee = appointment.Fee,
+                  IsPaid = appointment.IsPaid,
+                  Symptoms = appointment.Symptoms
+                };
+             
 
                 if (appointment.Doctor != null)
                 {

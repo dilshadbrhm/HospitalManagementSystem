@@ -47,12 +47,12 @@
                         <div class="price" style="margin: 20px 0;">
                             @if (Model.DiscountPrice.HasValue)
                             {
-                                <del style="font-size: 18px; color: #999;">$@Model.Price</del>
-                                <span style="font-size: 28px; color: #8bc34b; font-weight: bold; margin-left: 10px;">$@Model.DiscountPrice</span>
+                                <del style="font-size: 18px; color: #999;">@Model.Price</del>
+                                <span style="font-size: 28px; color: #8bc34b; font-weight: bold; margin-left: 10px;">@Model.DiscountPrice</span>
                             }
                             else
                             {
-                                <span style="font-size: 28px; color: #8bc34b; font-weight: bold;">$@Model.Price</span>
+                                <span style="font-size: 28px; color: #8bc34b; font-weight: bold;">@Model.Price</span>
                             }
                         </div>
 

@@ -61,7 +61,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
                 if (image != null && image.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image", "blog");
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image");
 
                     if (!Directory.Exists(uploadsFolder))
                     {
@@ -76,21 +76,35 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
                         await image.CopyToAsync(stream);
                     }
 
-                    blog.ImageUrl = "/assets/image/blog/" + uniqueFileName;
+                    blog.ImageUrl = "/assets/image/" + uniqueFileName;
                 }
                 else
                 {
-                    blog.ImageUrl = "/assets/image/blog/default.jpg";
+                    blog.ImageUrl = "/assets/image/";
                 }
 
                 blog.Slug = GenerateSlug(blog.Title);
-                blog.ShortDescription = blog.ShortDescription ?? "";
-                blog.Content = blog.Content ?? "";
-                blog.AuthorName = blog.AuthorName ?? "Admin";
+
+                if (blog.ShortDescription == null)
+                {
+                    blog.ShortDescription = "";
+                }
+
+                if (blog.Content == null)
+                {
+                    blog.Content = "";
+                }
+
+                if (blog.AuthorName == null)
+                {
+                    blog.AuthorName = "Admin";
+                }
+
                 blog.PublishedDate = DateTime.Now;
                 blog.ViewCount = 0;
                 blog.CreatedAt = DateTime.Now;
                 blog.IsDeleted = false;
+
 
                 await _blogRepository.AddAsync(blog);
 
@@ -151,7 +165,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
                 if (image != null && image.Length > 0)
                 {
-                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image", "blog");
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image");
 
                     if (!Directory.Exists(uploadsFolder))
                     {
@@ -166,17 +180,44 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
                         await image.CopyToAsync(stream);
                     }
 
-                    existingBlog.ImageUrl = "/assets/image/blog/" + uniqueFileName;
+                    existingBlog.ImageUrl = "/assets/image/" + uniqueFileName;
                 }
 
                 existingBlog.Title = blog.Title;
                 existingBlog.Slug = GenerateSlug(blog.Title);
-                existingBlog.ShortDescription = blog.ShortDescription ?? "";
-                existingBlog.Content = blog.Content ?? "";
+
+                if (blog.ShortDescription == null)
+                {
+                    existingBlog.ShortDescription = "";
+                }
+                else
+                {
+                    existingBlog.ShortDescription = blog.ShortDescription;
+                }
+
+                if (blog.Content == null)
+                {
+                    existingBlog.Content = "";
+                }
+                else
+                {
+                    existingBlog.Content = blog.Content;
+                }
+
                 existingBlog.CategoryId = blog.CategoryId;
-                existingBlog.AuthorName = blog.AuthorName ?? "Admin";
+
+                if (blog.AuthorName == null)
+                {
+                    existingBlog.AuthorName = "Admin";
+                }
+                else
+                {
+                    existingBlog.AuthorName = blog.AuthorName;
+                }
+
                 existingBlog.IsPublished = blog.IsPublished;
                 existingBlog.UpdatedAt = DateTime.Now;
+
 
                 await _blogRepository.UpdateAsync(existingBlog);
 

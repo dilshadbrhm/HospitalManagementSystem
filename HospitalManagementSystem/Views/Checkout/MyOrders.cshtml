@@ -52,7 +52,7 @@
                                         <tr>
                                             <td><strong>#@order.Id</strong></td>
                                             <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
-                                            <td style="color: #8bc34b; font-weight: bold;">$@order.TotalAmount</td>
+                                            <td style="color: #8bc34b; font-weight: bold;">@order.TotalAmount</td>
                                             <td>
                                                 @if (order.Status == "Pending")
                                                 {

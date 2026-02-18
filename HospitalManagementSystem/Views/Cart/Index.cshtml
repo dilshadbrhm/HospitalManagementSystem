@@ -72,7 +72,7 @@
                                                 }
                                             </td>
                                             <td>@item.ProductName</td>
-                                            <td>$@item.Price</td>
+                                            <td>@item.Price</td>
                                             <td>
                                                 <form asp-controller="Cart" asp-action="UpdateQuantity" method="post" style="display: flex; align-items: center;">
                                                     <input type="hidden" name="productId" value="@item.ProductId" />
@@ -82,7 +82,7 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                            <td>$@item.Total</td>
+                                            <td>@item.Total</td>
                                             <td>
                                                 <form asp-controller="Cart" asp-action="RemoveFromCart" method="post">
                                                     <input type="hidden" name="productId" value="@item.ProductId" />
@@ -114,12 +114,12 @@
                         <div class="sub_total" style="background: #f8f9fa; padding: 20px; border-radius: 5px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
                                 <span><strong>Subtotal:</strong></span>
-                                <span><strong>$@subtotal</strong></span>
+                                <span><strong>@subtotal</strong></span>
                             </div>
                             <hr />
                             <div style="display: flex; justify-content: space-between; font-size: 20px;">
                                 <span><strong>Total:</strong></span>
-                                <span style="color: #8bc34b;"><strong>$@subtotal</strong></span>
+                                <span style="color: #8bc34b;"><strong>@subtotal</strong></span>
                             </div>
                             <a asp-controller="Checkout" asp-action="Index" class="theme-btn" style="width: 100%; text-align: center; margin-top: 20px; display: block;">
                                 Proceed to Checkout

@@ -6,6 +6,8 @@ using HospitalManagement.Application.Interfaces.Admin;
 using HospitalManagement.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.Net.Mime.MediaTypeNames;
+using System.IO;
 
 namespace HospitalManagementSystem.Areas.Admin.Controllers
 {
@@ -26,14 +28,14 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             AdminDto data = await _adminService.GetAdminHomeAsync();
-            return View("~/Areas/Admin/Views/Home/Index.cshtml", data);
+            return View(data);
         }
 
         [HttpGet]
         public async Task<IActionResult> Doctors()
         {
             List<AdminDoctorListDto> doctors = await _adminService.GetAllDoctorsAsync();
-            return View(doctors);
+            return View("~/Areas/Admin/Views/Doctor/Doctors.cshtml", doctors);
         }
 
         [HttpGet]
@@ -41,7 +43,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         {
             IEnumerable<Department> departments = await _departmentRepository.GetAllAsync();
             ViewBag.Departments = departments;
-            return View();
+            return View("~/Areas/Admin/Views/Doctor/CreateDoctor.cshtml");
         }
 
         [HttpPost]
@@ -50,7 +52,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Departments = await _departmentRepository.GetAllAsync();
-                return View(dto);
+                return View("~/Areas/Admin/Views/Doctor/CreateDoctor.cshtml", dto);
             }
 
             bool result = await _adminService.CreateDoctorAsync(dto);
@@ -63,7 +65,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             TempData["Error"] = "Failed to create doctor";
             ViewBag.Departments = await _departmentRepository.GetAllAsync();
-            return View(dto);
+            return View("~/Areas/Admin/Views/Doctor/CreateDoctor.cshtml", dto);
         }
 
         [HttpGet]
@@ -77,16 +79,36 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             }
 
             ViewBag.Departments = await _departmentRepository.GetAllAsync();
-            return View(doctor);
+            return View("~/Areas/Admin/Views/Doctor/EditDoctor.cshtml", doctor);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditDoctor(AdminDoctorEditDto dto)
+        public async Task<IActionResult> EditDoctor(AdminDoctorEditDto dto, IFormFile ImageFile)
         {
             if (!ModelState.IsValid)
             {
                 ViewBag.Departments = await _departmentRepository.GetAllAsync();
-                return View(dto);
+                return View("~/Areas/Admin/Views/Doctor/EditDoctor.cshtml", dto);
+            }
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "image");
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                dto.ProfilePicture = "/assets/image/" + uniqueFileName;
             }
 
             bool result = await _adminService.UpdateDoctorAsync(dto);
@@ -99,7 +121,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             TempData["Error"] = "Failed to update doctor";
             ViewBag.Departments = await _departmentRepository.GetAllAsync();
-            return View(dto);
+            return View("~/Areas/Admin/Views/Doctor/EditDoctor.cshtml", dto);
         }
 
         [HttpPost]
@@ -123,7 +145,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
         public async Task<IActionResult> Patients()
         {
             List<Patient> patients = await _adminService.GetAllPatientsAsync();
-            return View(patients);
+            return View("~/Areas/Admin/Views/Patient/Patients.cshtml", patients);
         }
 
         [HttpGet]
@@ -136,7 +158,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(patient);
+            return View("~/Areas/Admin/Views/Patient/PatientDetails.cshtml", patient);
         }
 
         [HttpPost]
@@ -155,17 +177,18 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Patients");
         }
+
         [HttpGet]
         public async Task<IActionResult> Departments()
         {
             List<DepartmentDto> departments = await _adminService.GetAllDepartmentsAsync();
-            return View(departments);
+            return View("~/Areas/Admin/Views/Department/Departments.cshtml", departments);
         }
 
         [HttpGet]
         public IActionResult CreateDepartment()
         {
-            return View();
+            return View("~/Areas/Admin/Views/Department/CreateDepartment.cshtml");
         }
 
         [HttpPost]
@@ -178,7 +201,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View("~/Areas/Admin/Views/Department/CreateDepartment.cshtml", department);
             }
 
             department.CreatedAt = DateTime.Now;
@@ -192,7 +215,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             }
 
             TempData["Error"] = "Failed to create department";
-            return View(department);
+            return View("~/Areas/Admin/Views/Department/CreateDepartment.cshtml", department);
         }
 
         [HttpGet]
@@ -205,7 +228,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(department);
+            return View("~/Areas/Admin/Views/Department/EditDepartment.cshtml", department);
         }
 
         [HttpPost]
@@ -218,7 +241,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View("~/Areas/Admin/Views/Department/EditDepartment.cshtml", department);
             }
 
             bool result = await _adminService.UpdateDepartmentAsync(department);
@@ -230,8 +253,9 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
             }
 
             TempData["Error"] = "Failed to update department";
-            return View(department);
+            return View("~/Areas/Admin/Views/Department/EditDepartment.cshtml", department);
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
@@ -248,11 +272,12 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Departments");
         }
+
         [HttpGet]
         public async Task<IActionResult> Appointments()
         {
             List<AppointmentItemDto> appointments = await _adminService.GetAllAppointmentsAsync();
-            return View(appointments);
+            return View("~/Areas/Admin/Views/Appointment/Appointments.cshtml", appointments);
         }
 
         [HttpPost]
@@ -288,6 +313,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Appointments");
         }
+
         [HttpPost]
         public async Task<IActionResult> ApproveAppointment(int id)
         {
@@ -304,6 +330,7 @@ namespace HospitalManagementSystem.Areas.Admin.Controllers
 
             return RedirectToAction("Appointments");
         }
+
         [HttpPost]
         public async Task<IActionResult> CancelAppointment(int id)
         {
