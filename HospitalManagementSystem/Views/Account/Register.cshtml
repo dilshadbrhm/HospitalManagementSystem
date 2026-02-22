@@ -1,122 +1,193 @@
 ﻿@model HospitalManagement.Application.Dtos.Account.RegisterDto
 
+@{
+    ViewData["Title"] = "Register";
+}
+
 <main class="main-content">
-    <div class="breadcrumb-area breadcrumb-height" data-bg-image="assets/image/banner/home-1-banner-1.jpg">
-        <div class="container h-100">
-            <div class="row h-100">
+    <section class="ban-bread-crumb">
+        <div class="container">
+            <div class="row">
                 <div class="col-lg-12">
-                    <div class="breadcrumb-item">
-                        <h2 class="breadcrumb-heading">Register Page</h2>
-                        <ul>
-                            <li>
-                                <a asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li>Register</li>
-                        </ul>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                            <li class="breadcrumb-item active">Register</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 60px 0;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div style="background: #fff; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); padding: 40px;">
+
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <h2 style="color: #333; margin-bottom: 10px;">Create Account</h2>
+                            <p style="color: #666;">Join us to book appointments with our expert doctors</p>
+                        </div>
+
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger" style="border-radius: 10px;">
+                                <i class="fa fa-exclamation-circle"></i> @TempData["Error"]
+                            </div>
+                        }
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="border-radius: 10px;"></div>
+
+                        <form method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                            <i class="fa fa-user" style="color: #8bc34b; margin-right: 5px;"></i> First Name *
+                                        </label>
+                                        <input asp-for="FirstName" class="form-control" placeholder="Enter first name"
+                                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;" />
+                                        <span asp-validation-for="FirstName" class="text-danger" style="font-size: 13px;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                            <i class="fa fa-user" style="color: #8bc34b; margin-right: 5px;"></i> Last Name *
+                                        </label>
+                                        <input asp-for="LastName" class="form-control" placeholder="Enter last name"
+                                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;" />
+                                        <span asp-validation-for="LastName" class="text-danger" style="font-size: 13px;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                            <i class="fa fa-envelope" style="color: #8bc34b; margin-right: 5px;"></i> Email *
+                                        </label>
+                                        <input asp-for="Email" type="email" class="form-control" placeholder="Enter email address"
+                                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;" />
+                                        <span asp-validation-for="Email" class="text-danger" style="font-size: 13px;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                            <i class="fa fa-phone" style="color: #8bc34b; margin-right: 5px;"></i> Phone *
+                                        </label>
+                                        <input asp-for="Phone" class="form-control" placeholder="Enter phone number"
+                                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;" />
+                                        <span asp-validation-for="Phone" class="text-danger" style="font-size: 13px;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                    <i class="fa fa-users" style="color: #8bc34b; margin-right: 5px;"></i> Register As *
+                                </label>
+                                <select asp-for="UserType" id="userTypeSelect" class="form-control"
+                                        style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;">
+                                    <option value="" disabled>-- Select User Type --</option>
+                                    <option value="Patient">Patient</option>
+                                    <option value="Doctor">Doctor</option>
+                                </select>
+                                <span asp-validation-for="UserType" class="text-danger" style="font-size: 13px;"></span>
+                            </div>
+
+                            <div id="doctorFields" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                                <h5 style="color: #333; margin-bottom: 15px;">
+                                    <i class="fa fa-stethoscope" style="color: #8bc34b;"></i> Doctor Information
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div style="margin-bottom: 15px;">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Department *</label>
+                                            <select asp-for="DepartmentId" class="form-control"
+                                                    style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;">
+                                                <option value="" disabled>-- Select Department --</option>
+                                                @if (ViewBag.Departments != null)
+                                                {
+                                                    foreach (HospitalManagement.Domain.Department dept in ViewBag.Departments)
+                                                    {
+                                                        <option value="@dept.Id">@dept.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="margin-bottom: 15px;">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Specialization *</label>
+                                            <input asp-for="Specialization" class="form-control" placeholder="e.g. Cardiologist"
+                                                   style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="margin-bottom: 15px;">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">License Number *</label>
+                                            <input asp-for="LicenseNumber" class="form-control" placeholder="Enter license number"
+                                                   style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                            <i class="fa fa-lock" style="color: #8bc34b; margin-right: 5px;"></i> Password *
+                                        </label>
+                                        <input asp-for="Password" type="password" class="form-control" placeholder="Enter password"
+                                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;" />
+                                        <span asp-validation-for="Password" class="text-danger" style="font-size: 13px;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="margin-bottom: 20px;">
+                                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                                            <i class="fa fa-lock" style="color: #8bc34b; margin-right: 5px;"></i> Confirm Password *
+                                        </label>
+                                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password"
+                                               style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s;" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger" style="font-size: 13px;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 10px;">
+                                <button type="submit" class="theme-btn" style="width: 100%; padding: 15px; font-size: 16px; border-radius: 8px;">
+                                    <i class="fa fa-user-plus"></i> Create Account
+                                </button>
+                            </div>
+
+                            <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee;">
+                                <p style="color: #666; margin: 0;">
+                                    Already have an account?
+                                    <a asp-controller="Account" asp-action="Login" style="color: #8bc34b; font-weight: 600;">Login here</a>
+                                </p>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="login-register-area section-space-y-axis-100">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6 pt-5 pt-lg-0">
-                    <form method="post">
-                        <div class="login-form">
-                            <h4 class="login-title">Register</h4>
-                            <div class="row">
-                                <div class="col-md-6 col-12">
-                                    <label asp-for="FirstName">First Name</label>
-                                    <input asp-for="FirstName" placeholder="First Name" />
-                                    <span class="text-danger" asp-validation-for="FirstName"></span>
-                                </div>
-                                <br />
-
-                                <div class="col-md-6 col-12">
-                                    <label asp-for="LastName">Last Name</label>
-                                    <input asp-for="LastName" placeholder="Last Name" />
-                                    <span class="text-danger" asp-validation-for="LastName"></span>
-                                </div>
-                                <br />
-                                <div class="col-md-12 col-12">
-                                    <label asp-for="Email">Email</label>
-                                    <input asp-for="Email" placeholder="Email" />
-                                    <span class="text-danger" asp-validation-for="Email"></span>
-                                </div>
-                                <br />
-                                <div class="col-md-12 col-12">
-                                    <label asp-for="Phone">Phone</label>
-                                    <input asp-for="Phone" placeholder="Phone" />
-                                    <span class="text-danger" asp-validation-for="Phone"></span>
-                                </div>
-                                <br />
-                                <div class="col-md-12 col-12">
-                                    <label asp-for="UserType">User Type</label>
-                                    <select asp-for="UserType" id="userTypeSelect">
-                                        <option value="" disabled>Select</option>
-                                        <option value="Patient">Patient</option>
-                                        <option value="Doctor">Doctor</option>
-                                    </select>
-                                    <span class="text-danger" asp-validation-for="UserType"></span>
-                                </div>
-                                <br />
-                                <div id="doctorFields" style="display: none;">
-                                    <div class="col-md-12 col-12">
-                                        <label asp-for="DepartmentId">Department</label>
-                                        <select asp-for="DepartmentId">
-                                            <option value=""disabled>Select Department</option>
-                                            @if (ViewBag.Departments != null)
-                                            {
-                                                @foreach (var dept in ViewBag.Departments as IEnumerable<HospitalManagement.Domain.Department>)
-                                                {
-                                                    <option value="@dept.Id">@dept.Name</option>
-                                                }
-                                            }
-                                        </select>
-                                    </div>
-                                    <br />
-                                    <div class="col-md-12 col-12">
-                                        <label asp-for="Specialization">Specialization</label>
-                                        <input asp-for="Specialization" placeholder="Specialization" />
-                                    </div>
-                                    <br />
-                                    <div class="col-md-12 col-12">
-                                        <label asp-for="LicenseNumber">License Number</label>
-                                        <input asp-for="LicenseNumber" placeholder="License Number" />
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="col-md-6 col-12">
-                                    <label asp-for="Password">Password</label>
-                                    <input asp-for="Password" type="password" placeholder="Password" />
-                                    <span class="text-danger" asp-validation-for="Password"></span>
-                                </div>
-                                <br />
-                                <div class="col-md-6 col-12">
-                                    <label asp-for="ConfirmPassword">Confirm Password</label>
-                                    <input asp-for="ConfirmPassword" type="password" placeholder="Confirm Password" />
-                                    <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
-                                </div>
-                                <br />
-                                <div class="col-12">
-                                    <button type="submit" class="theme-btn">Register</button>
-                                </div>
-                                <br />
-                                <div class="col-12 mt-3">
-                                    <p>Already have an account? <a asp-action="Login">Login here</a></p>
-                                </div>
-                                <br />
-                                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 </main>
+
+<style>
+    .form-control:focus {
+        border-color: #8bc34b !important;
+        box-shadow: 0 0 0 3px rgba(139, 195, 75, 0.2) !important;
+        outline: none;
+    }
+</style>
 
 @section Scripts {
     <script>

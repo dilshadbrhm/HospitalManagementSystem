@@ -49,12 +49,12 @@
                                         <td>
                                             @if (product.DiscountPrice.HasValue)
                                             {
-                                                <del style="color: #999;">$@product.Price</del>
-                                                <span style="color: #28a745;">$@product.DiscountPrice</span>
+                                                <del style="color: #999;">@product.Price</del>
+                                                <span style="color: #28a745;">@product.DiscountPrice</span>
                                             }
                                             else
                                             {
-                                                <span>$@product.Price</span>
+                                                <span>@product.Price</span>
                                             }
                                         </td>
                                         <td>
