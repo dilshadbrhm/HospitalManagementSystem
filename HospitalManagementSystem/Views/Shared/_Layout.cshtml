@@ -16,7 +16,6 @@
     <link rel="icon" type="image/png" href="~/assets/image/fav/favicon-16x16.png" sizes="16x16">
 
     <style>
-
         .navbar-nav .submenu {
             background: #fff;
             border-radius: 8px;
@@ -25,6 +24,9 @@
             padding: 15px 0;
             min-width: 220px;
             animation: fadeIn 0.3s ease;
+            display: none;
+            position: absolute;
+            z-index: 9999;
         }
 
         @@keyframes fadeIn {
@@ -32,6 +34,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -41,6 +44,8 @@
         .navbar-nav .submenu .nav-item {
             padding: 0;
             margin: 0;
+            display: block;
+            width: 100%;
         }
 
         .navbar-nav .submenu .nav-link {
@@ -49,58 +54,92 @@
             font-size: 14px;
             transition: all 0.3s ease;
             border-left: 3px solid transparent;
+            display: block;
+            width: 100%;
         }
 
-        .navbar-nav .submenu .nav-link:hover {
-            background: #f8f9fa;
-            color: #8bc34b;
-            border-left: 3px solid #8bc34b;
-            padding-left: 30px;
+            .navbar-nav .submenu .nav-link:hover {
+                background: #f8f9fa;
+                color: #8bc34b;
+                border-left: 3px solid #8bc34b;
+                padding-left: 30px;
+            }
+
+            .navbar-nav .submenu .nav-link i {
+                margin-right: 10px;
+                width: 20px;
+                text-align: center;
+                color: #8bc34b;
+            }
+
+        .right-nav .nav-item.dropdown {
+            position: relative;
         }
 
-        .navbar-nav .submenu .nav-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-            color: #8bc34b;
+            .right-nav .nav-item.dropdown .submenu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: auto;
+                min-width: 250px;
+                margin-top: 15px;
+            }
+
+                .right-nav .nav-item.dropdown .submenu::before {
+                    content: '';
+                    position: absolute;
+                    top: -10px;
+                    right: 20px;
+                    border-left: 10px solid transparent;
+                    border-right: 10px solid transparent;
+                    border-bottom: 10px solid #fff;
+                }
+
+        .nav-item.dropdown:hover .submenu {
+            display: block;
         }
 
-        .right-nav .submenu {
-            right: 0;
-            left: auto;
+        .navbar-nav .submenu form button.nav-link {
+            padding: 12px 25px;
+            color: #e74c3c;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            display: block;
+            width: 100%;
+            text-align: left;
         }
 
-        .right-nav .submenu .nav-link {
-            white-space: nowrap;
-        }
+            .navbar-nav .submenu form button.nav-link:hover {
+                background: #fef0f0;
+                color: #c0392b;
+                border-left: 3px solid #e74c3c;
+                padding-left: 30px;
+            }
 
         .navbar-nav > .nav-item > .nav-link.link_hd {
             position: relative;
             transition: all 0.3s ease;
         }
 
-        .navbar-nav > .nav-item > .nav-link.link_hd:hover {
-            color: #8bc34b;
-        }
+            .navbar-nav > .nav-item > .nav-link.link_hd:hover {
+                color: #8bc34b;
+            }
 
-        .navbar-nav > .nav-item > .nav-link.link_hd::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: #8bc34b;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
+            .navbar-nav > .nav-item > .nav-link.link_hd::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: #8bc34b;
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
+            }
 
         .navbar-nav > .nav-item:hover > .nav-link.link_hd::after {
             width: 100%;
-        }
-
-        .nav-item.dropdown:hover .submenu {
-            display: block;
         }
 
         .footer-widget .footer-text ul li a:hover {
@@ -116,10 +155,10 @@
             transition: all 0.3s ease;
         }
 
-        .theme-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(139, 195, 75, 0.4);
-        }
+            .theme-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 20px rgba(139, 195, 75, 0.4);
+            }
 
         .alert {
             border-radius: 8px;
@@ -395,7 +434,7 @@
                                     <li><a asp-controller="Appointment" asp-action="Create">Book Appointment</a></li>
                                     <li><a asp-controller="Shop" asp-action="Index">Shop</a></li>
                                     <li><a asp-controller="Cart" asp-action="Index">Cart</a></li>
-                                    
+
                                 </ul>
                             </div>
                         </div>
@@ -423,7 +462,7 @@
                         <div class="left">
                             <p>© 2026 <span>Hospital Management.</span> All rights reserved.</p>
                         </div>
-                      
+
                     </div>
                 </div>
             </div>
